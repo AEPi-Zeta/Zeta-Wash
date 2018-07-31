@@ -1,0 +1,14 @@
+<mat-list>
+  <mat-list-item style="white-space: normal" *ngFor="let brother of queue"> 
+    <h3 matLine>
+      {{brother.name}} - {{brother.machine.charAt(0).toUpperCase() + brother.machine.slice(1)}}
+    </h3>
+    <span matLine>
+      Time remaining: {{SecondsTohhmmss(brother.endTime - now)}}
+    </span>
+    <button mat-icon-button (click)="this.removeFromQueue(brother)">
+        <mat-icon class="mat-24">clear</mat-icon>
+    </button>
+    <mat-divider></mat-divider>
+  </mat-list-item>
+</mat-list>
