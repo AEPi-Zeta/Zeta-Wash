@@ -11,12 +11,6 @@ export class PostsService {
     path: string;
 
     constructor(private http: Http) {
-        console.log('PostsService Initialized...');
-        if (USE_SSL) {
-            this.path = SERVER_URL_SSL_STRING;
-        } else {
-            this.path = SERVER_URL_STRING;
-        }
     }
 
     getServerStatus(): Observable<boolean> {
@@ -47,6 +41,11 @@ export class PostsService {
     removeFromList(listObj, queueOnly): Observable<any> {
         return this.http.post(this.path + 'removeFromList', {listObj: listObj, queueOnly: queueOnly})
             .map(res => res.json());
+    }
+
+    getConfig() {
+        return this.http.get(window.location.href + 'backend/config/default.json')
+                        .map(res => res.json());
     }
 }
 

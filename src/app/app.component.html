@@ -1,4 +1,4 @@
-<app-header></app-header>
+<app-header [topBarTitle]="topBarTitle"></app-header>
 <mat-tab-group [(selectedIndex)]="selectedIndex" style="height: 100%">
   <mat-tab label="Sign Up">
     <app-signin-component [(machine)]="machine" [queue]="queue"></app-signin-component>

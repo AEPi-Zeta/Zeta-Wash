@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { MatToolbarModule } from '@angular/material';
 
 @Component({
@@ -7,6 +7,8 @@ import { MatToolbarModule } from '@angular/material';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
+
+  @Input() topBarTitle: any;
 
   constructor() { }
 

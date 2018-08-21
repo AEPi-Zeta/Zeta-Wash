@@ -1,44 +1,50 @@
 var consts = require('./consts')
-
 const express = require('express')
-
+var config = require('config');
 var cors = require('cors')
-
 const app = express()
-
+var fs = require('fs');
+var path = require('path');
 const low = require('lowdb')
 const FileSync = require('lowdb/adapters/FileSync')
-
 const bodyParser = require("body-parser");
-
 const brothers = new FileSync('db.json')
 const db = low(brothers)
+var https = require('https');
 
 const port = consts.SERVER_PORT;
 const OBJECT_TYPE_TO_QUERY_STRING = consts.OBJECT_TYPE_TO_QUERY_STRING
-const URL_STRING = consts.URL_STRING
-const USE_SSL = consts.USE_SSL
+
+const frontendURL = config.get("ZetaWash.Host.frontendURL");
+const useEncryption = config.get("ZetaWash.Encryption.useEncryption");
 
 // Set some defaults (required if your JSON file is empty)
 db.defaults({ full_list: [], washer_list: [], dryer_list: [], full_queue: [], washer_queue: [], dryer_queue: [] })
   .write()
 
-// use it before all route definitions
-app.use(cors({origin: URL_STRING}));
+console.log(`origin: ${frontendURL}`)
 
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-let options;
+app.use(cors())
 
-if (USE_SSL) {
-    options = {
-        cert: fs.readFileSync('./ssl/fullchain.pem'),
-        key: fs.readFileSync('./ssl/privkey.pem')
-    };
-    app.use(require('helmet')());
-}
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", frontendURL);
+    res.header('Access-Control-Allow-Methods', 'DELETE, GET, POST, PUT, OPTIONS');
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
+    next();
+});
 
+app.options('*', (req, res) => {
+    console.log("Pre-flight sent");
+    res.send({
+        opCode: '200'
+    });
+
+    res.end("yes");
+})
 
 app.post('/removeFromList', (req, res) => {
     let onlyQueue = req.body.onlyQueue
@@ -51,6 +57,8 @@ app.post('/removeFromList', (req, res) => {
     });
 
     console.log(`Successfully removed ${listObj.name} from queue.`)
+
+    res.end("yes");
 })
 
 app.post('/addToList', (req, res) => {
@@ -70,6 +78,8 @@ app.post('/addToList', (req, res) => {
      });
 
      console.log(`Successfully added ${listObj.name} to queue.`)
+
+     res.end("yes");
 })
 
 app.post('/getList', (req, res) => {
@@ -86,6 +96,8 @@ app.post('/getList', (req, res) => {
         opCode: '200',
         list: list,
      });
+
+     res.end("yes");
 })
 
 function addListObjectDB(listObj, onlyQueue) {
@@ -170,11 +182,22 @@ function getNextObjectUIDFromQueue(queueType) {
     return nextQueueObj['uniqueID'];
 }
 
-if (USE_SSL) port -= 1;
+if (useEncryption) {
 
-app.listen(port, () => console.log(`ZetaWash server listening on port ${port}!`))
+    var certFilePath = path.resolve(config.get("ZetaWash.Encryption.certFilePath"));
+    var keyFilePath = path.resolve(config.get("ZetaWash.Encryption.keyFilePath"));
 
-if (USE_SSL) https.createServer(options, app).listen(port);
+    let options = {
+        cert: fs.readFileSync(certFilePath),
+        key: fs.readFileSync(keyFilePath)
+    };
+
+    https.createServer(options, app).listen(port);
+    console.log(`ZetaWash server listening on port ${port}\nSSL: Enabled`)
+} else {
+    app.listen(port, () => console.log(`ZetaWash server listening on port ${port}\nSSL: Disabled`))
+}
+
 
 function checkDBs() {
 

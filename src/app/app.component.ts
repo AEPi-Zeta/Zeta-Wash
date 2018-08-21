@@ -19,8 +19,12 @@ export class AppComponent {
   machine: string;
   machineAvailability: object = null;
   selectedIndex: any;
-
+  topBarTitle: string;
   hasQueue = false;
+  useQueue = true;
+  isDev = false;
+  devPath = 'http://localhost:8088/';
+  mobile: boolean;
 
   // danny: Brother = new Brother('Danny Brandsdorfer', 10.2);
   // jeremy: Brother = new Brother('Jeremy Winter', 20.6);
@@ -29,10 +33,30 @@ export class AppComponent {
 
   constructor(private postsService: PostsService, ) { // init for the beginning of the app
     const queueType = 'both';
-    this.postsService.getList(queueType, false).subscribe(res => {
-      this.queue = this.queueResponseToQueue(res.list);
-      this.queueReached();
-    });
+
+    if (this.isDev) {
+      this.postsService.path = this.devPath;
+
+        this.postsService.getList(queueType, false).subscribe(res => {
+          this.queue = this.queueResponseToQueue(res.list);
+          this.queueReached();
+        });
+    } else {
+      this.postsService.getConfig().subscribe(result => { // loads settings
+        this.topBarTitle = result.ZetaWash.Extra.titleTop;
+        this.useQueue = result.ZetaWash.Machines.useQueue;
+
+        this.postsService.path = result.ZetaWash.Host.backendURL;
+
+        this.postsService.getList(queueType, false).subscribe(res => {
+          this.queue = this.queueResponseToQueue(res.list);
+          this.queueReached();
+        });
+      },
+      error => {
+        console.log(error);
+      });
+    }
   }
 
 

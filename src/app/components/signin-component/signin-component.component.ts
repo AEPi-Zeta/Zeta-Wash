@@ -23,6 +23,7 @@ export class SigninComponentComponent implements OnChanges {
   name: string;
   isOnlyQueue: boolean;
   selected: any;
+  mobile: boolean;
 
   @Input() queue: any[];
   @Input() machine: string;
@@ -34,6 +35,13 @@ export class SigninComponentComponent implements OnChanges {
   }
 
   @ViewChild(NgForm) signinForm: NgForm;
+
+  ngOnInit() {
+    if (window.screen.width < 360) { // 768px portrait
+      this.mobile = true;
+      console.log('oh yeah');
+    }
+  }
 
   onSubmitSignin() {
     const startTime = Math.round((new Date()).getTime() / 1000);
