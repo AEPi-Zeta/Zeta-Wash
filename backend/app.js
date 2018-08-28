@@ -133,8 +133,6 @@ function removeListObjectDB(listObj, onlyQueue) {
 
     listObjUID = listObj.uniqueID
 
-    console.log("list obj & listObjUID is " + + listObj.toString() + listObjUID)
-
     let queueType, queryString, fullString
 
     if (onlyQueue) {
@@ -156,7 +154,6 @@ function removeListObjectDB(listObj, onlyQueue) {
     db.get(queueType)
         .remove(function (parent) {
             listObjSelected = parent.listObj;
-            console.log("listObjid is " + " and objselectedid ")
             return listObj.uniqueID == listObjSelected.uniqueID;
         })
         .write()
