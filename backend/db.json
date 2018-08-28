@@ -2,7 +2,29 @@
   "full_queue": [],
   "washer_queue": [],
   "dryer_queue": [],
-  "full_list": [],
-  "washer_list": [],
+  "full_list": [
+    {
+      "listObj": {
+        "name": "Isaac Grynsztein",
+        "machine": "washer",
+        "startTime": 1535481743,
+        "endTime": 1535483543,
+        "minutes": 30,
+        "uniqueID": "8415dfd0-2aba-4897-ae9b-a6f33a43c77c"
+      }
+    }
+  ],
+  "washer_list": [
+    {
+      "listObj": {
+        "name": "Isaac Grynsztein",
+        "machine": "washer",
+        "startTime": 1535481743,
+        "endTime": 1535483543,
+        "minutes": 30,
+        "uniqueID": "8415dfd0-2aba-4897-ae9b-a6f33a43c77c"
+      }
+    }
+  ],
   "dryer_list": []
 }

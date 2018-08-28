@@ -1,33 +1,44 @@
 <app-header [topBarTitle]="topBarTitle"></app-header>
 <mat-tab-group [(selectedIndex)]="selectedIndex" style="height: 100%">
   <mat-tab label="Sign Up">
-    <app-signin-component [(machine)]="machine" [queue]="queue"></app-signin-component>
+    <app-signin-component [machineAvailability]="machineAvailability" [MACHINES_LIST]="MACHINES_LIST" [(machine)]="machine" [list]="list" [queue]="queue"></app-signin-component>
   </mat-tab>
   <mat-tab label="Status">
-    <table>
+    <!--<table>
       <td style="position: relative; width: 40%; height: 100%; padding: 10px; top: -5px">
-          <mat-card id="card" class="big demo-basic">
-            <div style="padding-top: 10px; padding-left: 30px; padding-right: 30px; padding-bottom: 30px">
-                <h3>Queue</h3>
-                <br/>
-                <app-brothers-queue [queue]="queue"></app-brothers-queue>
-            </div>
-            
           
-          </mat-card>
       </td>
     
       <td style="width: 60%; height: 100%; padding: 10px;">
+          
+          
+      </td>
+    </table>-->
+    <div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4 col-sm-12" style="padding: 10px;">
+          <mat-card id="card" class="big demo-basic">
+            <div style="padding-top: 10px; padding-left: 30px; padding-right: 30px; padding-bottom: 30px">
+                <h4>List</h4>
+                <br/>
+                <app-brothers-list [usingListOnly]="true" [list]="list" [machineAvailability]="machineAvailability" [queue]="queue"></app-brothers-list>
+            </div>   
+          </mat-card>
+        </div>
+        <div class="col-md-8 col-sm-12" style="padding: 10px;">
           <mat-card id="card" class="big demo-basic">
             <div *ngIf="machineAvailability !== null" style="padding-top: 10px; padding-left: 30px; padding-right: 30px; padding-bottom: 30px">
                 <app-machine-status [(selectedIndex)]="selectedIndex" [machineAvailability]="machineAvailability" (notify)="onNotifyMachine($event)"></app-machine-status>
             </div>
-              
           </mat-card>
-          
-      </td>
-    </table>
+        </div>
+      </div>
+    </div>
   </mat-tab>
 </mat-tab-group>
+
+<button toggleFullscreen class="bottom-right" mat-icon-button (click)="this.toggleFullScreen()">
+  <mat-icon class="fullscreen-icon">{{isFullScreen ? 'fullscreen_exit' : 'fullscreen'}}</mat-icon>
+</button>
 
 

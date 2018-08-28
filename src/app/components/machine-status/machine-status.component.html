@@ -1,3 +1,4 @@
+<!--
 <table width="100%" height="100%">
 
 
@@ -27,4 +28,23 @@
       
   </td>
 
-</table>
+</table>-->
+
+<div class="row">
+  <div class="col col-sm-6 container">
+      <h5>Washer</h5>
+      <br/>
+    <img [style.background-color]="washerColor" class="icons" src="../../../assets/washer.png">
+    <button class="btn" mat-mini-fab color="primary" (click)="changeTab('Washer')" [disabled]="!machineAvailability.washer">
+      <mat-icon>{{machineAvailability.washer ? 'check' : 'close'}}</mat-icon>
+    </button>
+  </div>
+  <div class="col col-sm-6 container">
+      <h5>Dryer</h5>
+      <br/>
+    <img [style.background-color]="dryerColor" class="icons" src="../../../assets/dryer.png">
+    <button class="btn" mat-mini-fab color="primary" (click)="changeTab('Dryer')" [disabled]="!machineAvailability.dryer">
+      <mat-icon>{{machineAvailability.dryer ? 'check' : 'close'}}</mat-icon>
+    </button>
+  </div>
+</div>

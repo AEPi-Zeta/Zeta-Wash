@@ -28,23 +28,27 @@ export class PostsService {
             .map(res => res.json());
     }
 
-    getList(listType, queueOnly): Observable<any> {
-        return this.http.post(this.path + 'getList', {listType: listType, queueOnly: queueOnly})
+    getList(listType): Observable<any> {
+        return this.http.post(this.path + 'getList', {listType: listType})
             .map(res => res.json());
     }
 
-    addToList(listObj, queueOnly): Observable<any> {
-        return this.http.post(this.path + 'addToList', {listObj: listObj, queueOnly: queueOnly})
+    addToList(listObj, onlyQueue): Observable<any> {
+        return this.http.post(this.path + 'addToList', {listObj: listObj, onlyQueue: onlyQueue})
             .map(res => res.json());
     }
 
-    removeFromList(listObj, queueOnly): Observable<any> {
-        return this.http.post(this.path + 'removeFromList', {listObj: listObj, queueOnly: queueOnly})
+    removeFromList(listObj, onlyQueue): Observable<any> {
+        return this.http.post(this.path + 'removeFromList', {listObj: listObj, onlyQueue: onlyQueue})
             .map(res => res.json());
     }
 
-    getConfig() {
-        return this.http.get(window.location.href + 'backend/config/default.json')
+    getConfig(getDev = false) {
+        let url = window.location.href + 'backend/config/default.json';
+        if (getDev) {
+            url = 'http://localhost:4200/assets/dev_config.json';
+        }
+        return this.http.get(url)
                         .map(res => res.json());
     }
 }

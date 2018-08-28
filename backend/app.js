@@ -56,7 +56,7 @@ app.post('/removeFromList', (req, res) => {
         opCode: '200'
     });
 
-    console.log(`Successfully removed ${listObj.name} from queue.`)
+    console.log(`Successfully removed ${listObj.name} from ${onlyQueue ? 'queue' : 'list'}.`)
 
     res.end("yes");
 })
@@ -77,24 +77,28 @@ app.post('/addToList', (req, res) => {
         listObj: listObj
      });
 
-     console.log(`Successfully added ${listObj.name} to queue.`)
+     console.log(`Successfully added ${listObj.name} to ${onlyQueue ? 'queue' : 'list'}.`)
 
      res.end("yes");
 })
 
 app.post('/getList', (req, res) => {
-    let onlyQueue = req.body.onlyQueue
     let listType = req.body.listType
 
-    if (onlyQueue) queryString = 'queue_query_string'; else queryString = 'list_query_string'
+    let fullList = {}
 
-    queryString = OBJECT_TYPE_TO_QUERY_STRING[listType.toLowerCase()][queryString]
+    const queueQueryString = 'queue_query_string';
+    const listQueryString = 'list_query_string';
 
-    list = db.get(queryString).value();
+    const convertedQueueQueryString = OBJECT_TYPE_TO_QUERY_STRING[listType.toLowerCase()][queueQueryString]
+    const convertedListQueryString = OBJECT_TYPE_TO_QUERY_STRING[listType.toLowerCase()][listQueryString]
+
+    fullList.list = db.get(convertedListQueryString).value();
+    fullList.queue = db.get(convertedQueueQueryString).value();
 
     res.send({ 
         opCode: '200',
-        list: list,
+        fullList: fullList,
      });
 
      res.end("yes");
@@ -109,9 +113,11 @@ function addListObjectDB(listObj, onlyQueue) {
         queryString = 'queue_query_string';
         fullString = 'full_queue';
     }  else {
-        queryString = 'list_query_string'
+        queryString = 'list_query_string';
         fullString = 'full_list';
-    } 
+    }
+
+    console.log("only queue is " + onlyQueue)
 
     queueType = OBJECT_TYPE_TO_QUERY_STRING[listObj.machine.toLowerCase()][queryString]
     
@@ -124,7 +130,10 @@ function addListObjectDB(listObj, onlyQueue) {
 }
 
 function removeListObjectDB(listObj, onlyQueue) {
+
     listObjUID = listObj.uniqueID
+
+    console.log("list obj & listObjUID is " + + listObj.toString() + listObjUID)
 
     let queueType, queryString, fullString
 
@@ -139,10 +148,17 @@ function removeListObjectDB(listObj, onlyQueue) {
     queueType = OBJECT_TYPE_TO_QUERY_STRING[listObj.machine.toLowerCase()][queryString]
 
     db.get(fullString)
-        .remove({ listObj })
+        .remove(function (parent) {
+            listObjSelected = parent.listObj;
+            return listObj.uniqueID == listObjSelected.uniqueID;
+        })
         .write()
     db.get(queueType)
-        .remove({ listObj })
+        .remove(function (parent) {
+            listObjSelected = parent.listObj;
+            console.log("listObjid is " + " and objselectedid ")
+            return listObj.uniqueID == listObjSelected.uniqueID;
+        })
         .write()
 }
 

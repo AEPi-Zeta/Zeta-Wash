@@ -8,7 +8,7 @@
             </div>
             <div class="col col-md-2">
                 <mat-form-field>
-                    <mat-select style="float: right" [(ngModel)]="machine" [(value)]="selected" placeholder="Machine" name="machine" required>
+                    <mat-select style="float: right" [(ngModel)]="machine" (ngModelChange)="onMachineChange()" [(value)]="selected" placeholder="Machine" name="machine" required>
                         <mat-option value="Washer">
                             Washer
                         </mat-option>
@@ -18,10 +18,14 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div class="col col-md-3">
+            <div class="col col-md-2">
                 <mat-form-field class="example-full-width">
                     <input matInput [(ngModel)]="minutes" placeholder="Minutes" type="number" name="minutes" required>
                 </mat-form-field>
+            </div>
+
+            <div class="col col-md-2">
+                <mat-checkbox [(ngModel)]="isOnlyQueue" color="primary" style="bottom:30px; position:absolute" [ngModelOptions]="{standalone: true}" required>Only Queue</mat-checkbox>      
             </div>
         </div>
 
@@ -44,13 +48,13 @@
 
         -->
     <div *ngIf="!mobile; else isMobile">
-        <button mat-raised-button [disabled]="!signinForm.form.valid || buttonDisable" (click)="onSubmitSignin()" type="button" color="primary" style="width: 250px; height: 50px; font-size: 20px">
+        <button mat-raised-button [disabled]="!signinForm.form.valid || buttonDisable || (machineAvailability && !machineAvailability[machine.toLowerCase()] && !isOnlyQueue)" (click)="onSubmitSignin()" type="button" color="primary" style="width: 250px; height: 50px; font-size: 20px">
             Sign in
         </button>
     </div>
     <ng-template #isMobile>
         <div class="centered">
-            <button mat-raised-button [disabled]="!signinForm.form.valid || buttonDisable" (click)="onSubmitSignin()" type="button" color="primary" style="width: 100%; height: 50px; font-size: 20px">
+            <button mat-raised-button [disabled]="!signinForm.form.valid || buttonDisable || (machineAvailability && !machineAvailability[machine.toLowerCase()] && !isOnlyQueue)" (click)="onSubmitSignin()" type="button" color="primary" style="width: 100%; height: 50px; font-size: 20px">
                 Sign in
             </button>
         </div>
@@ -62,9 +66,9 @@
 
   <mat-divider></mat-divider>
 
-    <table style="width: 50%">
+    <table style="width: 62%">
         <td>
-            <app-brothers-queue [queue]="queue"></app-brothers-queue>
+            <app-brothers-list [machineAvailability]="machineAvailability" [list]="list" [queue]="queue"></app-brothers-list>
         </td>
     </table>
 

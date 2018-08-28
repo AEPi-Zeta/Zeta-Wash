@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { MachineStatusComponent } from './components/machine-status/machine-status.component';
 import { HeaderComponent } from './components/header/header.component';
 import { MatToolbarModule, MatCardModule, MatGridListModule, MatTabsModule, MatButtonModule, MatExpansionModule,
-  MatSelectModule, } from '@angular/material';
+  MatSelectModule, MatCheckboxModule } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -19,7 +19,7 @@ import { Http, HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { PostsService } from './posts.services';
 import { SigninComponentComponent } from './components/signin-component/signin-component.component';
-import { BrothersQueueComponent } from './components/brothers-queue/brothers-queue.component';
+import { BrothersListComponent } from './components/brothers-queue/brothers-list.component';
 
 
 @NgModule({
@@ -28,7 +28,7 @@ import { BrothersQueueComponent } from './components/brothers-queue/brothers-que
     MachineStatusComponent,
     HeaderComponent,
     SigninComponentComponent,
-    BrothersQueueComponent
+    BrothersListComponent
   ],
   imports: [
     BrowserModule,
@@ -48,7 +48,8 @@ import { BrothersQueueComponent } from './components/brothers-queue/brothers-que
     MatExpansionModule,
     MatSelectModule,
     MatListModule,
-    MatIconModule
+    MatIconModule,
+    MatCheckboxModule
   ],
   providers: [PostsService],
   bootstrap: [AppComponent]

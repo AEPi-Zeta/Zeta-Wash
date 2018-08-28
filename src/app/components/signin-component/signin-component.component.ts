@@ -1,7 +1,6 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, OnChanges, ViewEncapsulation, SimpleChanges } from '@angular/core';
 import {PostsService} from '../../posts.services';
-import { Brother } from '../brothers-queue/brothers-queue.component';
-import MACHINES_LIST from './../../utils/consts';
+
 import {
   ReactiveFormsModule,
   FormsModule,
@@ -15,19 +14,25 @@ import {
 @Component({
   selector: 'app-signin-component',
   templateUrl: './signin-component.component.html',
-  styleUrls: ['./signin-component.component.css']
+  styleUrls: ['./signin-component.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class SigninComponentComponent implements OnChanges {
   minutes: number;
   buttonDisable: boolean;
   name: string;
-  isOnlyQueue: boolean;
+  isOnlyQueue = true;
   selected: any;
   mobile: boolean;
 
   @Input() queue: any[];
+  @Input() list: any[];
+
   @Input() machine: string;
   @Output() machineChange = new EventEmitter<string>();
+  @Input() MACHINES_LIST: any;
+
+  @Input() machineAvailability: any;
 
   constructor(private postsService: PostsService, ) {
     this.minutes = 30;
@@ -39,8 +44,24 @@ export class SigninComponentComponent implements OnChanges {
   ngOnInit() {
     if (window.screen.width < 360) { // 768px portrait
       this.mobile = true;
-      console.log('oh yeah');
     }
+  }
+
+  addToList(queueObj, isOnlyQueue) {
+    this.postsService.addToList(queueObj, isOnlyQueue)
+      .subscribe(res => {
+        const didSucceed = res.opCode === '200';
+        const uniqueID = res.uniqueID;
+
+        if (didSucceed) {
+          this.handleAddToListSuccess(queueObj, uniqueID, isOnlyQueue);
+        } else {
+          this.handleAddToListFailure(queueObj);
+        }
+      },
+      err => {
+        this.handleAddToListFailure(queueObj);
+      });
   }
 
   onSubmitSignin() {
@@ -58,28 +79,22 @@ export class SigninComponentComponent implements OnChanges {
       machine: this.machine.toLowerCase(),
       startTime: startTime,
       endTime: endTime,
+      minutes: this.minutes,
       uniqueID: '',
     };
 
-    this.postsService.addToList(queueObj, false)
-      .subscribe(res => {
-        const didSucceed = res.opCode === '200';
-        const uniqueID = res.uniqueID;
-
-        if (didSucceed) {
-          this.handleAddToListSuccess(queueObj, uniqueID);
-        } else {
-          this.handleAddToListFailure(queueObj);
-        }
-      },
-      err => {
-        this.handleAddToListFailure(queueObj);
-      });
+    this.addToList(queueObj, this.isOnlyQueue);
   }
 
-  handleAddToListSuccess(queueObj, uniqueID) {
+  handleAddToListSuccess(queueObj, uniqueID, isOnlyQueue) {
     queueObj['uniqueID'] = uniqueID;
-    this.queue.push(queueObj);
+
+    if (!isOnlyQueue) {
+      this.list.push(queueObj);
+    } else {
+      this.queue.push(queueObj);
+    }
+
     this.resetSignInForm();
   }
 
@@ -91,6 +106,15 @@ export class SigninComponentComponent implements OnChanges {
     this.signinForm.resetForm();
   }
 
+  onMachineChange() {
+    if (this.machine && this.machine.length > 0 && this.machineAvailability && this.machineAvailability[this.machine.toLowerCase()]) {
+      this.isOnlyQueue = false;
+    } else if (this.machine && this.machine.length > 0
+      && this.machineAvailability && !this.machineAvailability[this.machine.toLowerCase()]) {
+        this.isOnlyQueue = true;
+    }
+  }
+
   ngOnChanges(changes) {
     for (const propName in changes) {
       if (changes.hasOwnProperty(propName)) {
@@ -100,9 +124,16 @@ export class SigninComponentComponent implements OnChanges {
           const prevVal = change.previousValue;
           if (curVal) {
             this.machineChange.emit(curVal);
-            this.minutes = MACHINES_LIST[curVal.toLowerCase()]['default_minutes'];
+            this.minutes = this.MACHINES_LIST[curVal.toLowerCase()]['default_minutes'];
           }
         }
+      }
+    }
+
+    if (changes['machineAvailability']) {
+      this.machineAvailability = this.machineAvailability;
+      if (this.machineAvailability && this.machineAvailability.washer && this.machineAvailability.dryer) {
+        this.isOnlyQueue = false;
       }
     }
   }

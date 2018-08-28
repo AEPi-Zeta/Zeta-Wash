@@ -63,3 +63,26 @@ mat-form-field.mat-form-field {
   .right-aligned-header > .mat-content {
     justify-content: space-between;
 }
+
+.bottom-right {
+    bottom: 10px;
+    right: 12px; 
+    float: right;
+    position: fixed;
+}
+
+.fullscreen-icon {
+    font-size: 36px;
+    height: 36px;
+    width: 36px;
+}
+
+#container:fullscreen {
+    background-color: rgba(255,255,255,0);
+}
+#container:-webkit-full-screen {
+    background-color: rgba(255,255,255,0);
+}
+#container:-moz-full-screen {
+    background-color: rgba(255,255,255,0);
+}

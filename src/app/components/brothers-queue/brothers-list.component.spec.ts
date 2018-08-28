@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BrothersQueueComponent } from './brothers-queue.component';
+import { BrothersListComponent } from './brothers-list.component';
 
-describe('BrothersQueueComponent', () => {
-  let component: BrothersQueueComponent;
-  let fixture: ComponentFixture<BrothersQueueComponent>;
+describe('BrothersListComponent', () => {
+  let component: BrothersListComponent;
+  let fixture: ComponentFixture<BrothersListComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BrothersQueueComponent ]
+      declarations: [ BrothersListComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BrothersQueueComponent);
+    fixture = TestBed.createComponent(BrothersListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

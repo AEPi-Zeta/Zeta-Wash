@@ -1,0 +1,54 @@
+<div class="row border-between">
+  <div class="col" ng-class="{'col-sm-12': usingListOnly, 'col-sm-6': !usingListOnly}" ng-if="usingListOnly">
+      <div style="text-align: center; top: 50%; left: 50%; margin: 0 auto"><h5 class="pt-2">Using</h5></div>
+      <div *ngIf="list && list.length == 0">
+          <br/>
+          <br/>
+          <br/>
+          <div class="centered">
+              <h4>All machines are free</h4>
+          </div>
+        </div>
+    <mat-list>
+        <mat-list-item style="white-space: normal" *ngFor="let brother of list"> 
+          <h5 matLine>
+            {{brother.name}} - {{brother.machine.charAt(0).toUpperCase() + brother.machine.slice(1)}}
+          </h5>
+          <span matLine>
+            Time remaining: {{SecondsTohhmmss(brother.endTime - now)}}
+          </span>
+          <button mat-icon-button (click)="this.removeFromList(brother)">
+              <mat-icon class="mat-24">clear</mat-icon>
+          </button>
+          <mat-divider></mat-divider>
+        </mat-list-item>
+      </mat-list>
+  </div>
+  <div class="col col-sm-6" *ngIf="!usingListOnly">
+    <div class="centered"><h5 class="pt-2">Queue</h5></div>
+    <div *ngIf="queue && queue.length == 0">
+      <br/>
+      <br/>
+      <br/>
+      <div class="centered">
+          <h4>The queue is empty</h4>
+      </div>
+    </div>
+    <mat-list>
+      <mat-list-item style="white-space: normal" *ngFor="let brother of queue"> 
+          <h5 matLine style="vertical-align: middle">
+            {{brother.name}} - {{brother.machine.charAt(0).toUpperCase() + brother.machine.slice(1)}} <button mat-raised-button (click)="this.moveFromQueueToList(brother)" color="primary" style="float: right" [disabled]="!machineAvailability[brother.machine]">Start</button>
+          </h5>
+          <span matLine>
+          </span>
+          <button mat-icon-button (click)="this.removeFromQueue(brother)">
+              <mat-icon class="mat-24">clear</mat-icon>
+          </button>
+          <mat-divider></mat-divider>
+        </mat-list-item>
+    </mat-list>
+  </div>
+</div>
+
+
+

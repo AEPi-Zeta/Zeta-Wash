@@ -57,3 +57,18 @@ mat-form-field.mat-form-field {
 .my-headers-align .mat-expansion-panel-header-description {
   flex-basis: 0;
 }
+
+/* To display a border for the input */
+.mat-input-flex.mat-form-field-flex{
+    border-bottom: 1px solid black;
+ }
+ 
+ /* To remove the default underline */
+ .mat-input-underline.mat-form-field-underline {
+    background: transparent;
+ }
+ 
+ /* To remove the underline ripple */
+ .mat-input-ripple.mat-form-field-ripple{
+    background-color: transparent; 
+ }
