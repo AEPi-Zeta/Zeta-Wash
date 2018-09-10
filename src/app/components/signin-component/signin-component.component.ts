@@ -24,6 +24,7 @@ export class SigninComponentComponent implements OnChanges {
   isOnlyQueue = true;
   selected: any;
   mobile: boolean;
+  autoQueue: boolean = true;
 
   @Input() queue: any[];
   @Input() list: any[];
@@ -55,6 +56,14 @@ export class SigninComponentComponent implements OnChanges {
 
         if (didSucceed) {
           this.handleAddToListSuccess(queueObj, uniqueID, isOnlyQueue);
+          if (this.autoQueue && !isOnlyQueue && queueObj['machine'] === 'washer') {
+            const queueBrotherObject = res.listObj;
+            queueBrotherObject['machine'] = 'dryer';
+            this.postsService.addToList(queueBrotherObject, true)
+              .subscribe(res2 => {
+                console.log('Auto added to queue successfully.');
+              });
+          }
         } else {
           this.handleAddToListFailure(queueObj);
         }

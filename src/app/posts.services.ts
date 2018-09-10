@@ -33,6 +33,11 @@ export class PostsService {
             .map(res => res.json());
     }
 
+    getLog(logType): Observable<any> {
+        return this.http.post(this.path + 'getLog', {logType: logType})
+            .map(res => res.json());
+    }
+
     addToList(listObj, onlyQueue): Observable<any> {
         return this.http.post(this.path + 'addToList', {listObj: listObj, onlyQueue: onlyQueue})
             .map(res => res.json());

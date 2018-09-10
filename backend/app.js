@@ -1,15 +1,16 @@
-var consts = require('./consts')
-const express = require('express')
+var consts = require('./consts');
+const express = require('express');
 var config = require('config');
-var cors = require('cors')
-const app = express()
+var cors = require('cors');
+const app = express();
 var fs = require('fs');
 var path = require('path');
+var nodemailer = require('nodemailer');
 const low = require('lowdb')
 const FileSync = require('lowdb/adapters/FileSync')
 const bodyParser = require("body-parser");
-const brothers = new FileSync('db.json')
-const db = low(brothers)
+const db_file = new FileSync('db.json');
+const db = low(db_file);
 var https = require('https');
 
 const port = consts.SERVER_PORT;
@@ -17,9 +18,47 @@ const OBJECT_TYPE_TO_QUERY_STRING = consts.OBJECT_TYPE_TO_QUERY_STRING
 
 const frontendURL = config.get("ZetaWash.Host.frontendURL");
 const useEncryption = config.get("ZetaWash.Encryption.useEncryption");
+const useCustomUsersList = config.get("ZetaWash.Users.customUsersList");
+let alertService;
+
+// mailing variables
+
+let templates;
+let dryerEmail;
+let washerEmail;
+let transporter;
+let mailOptions;
+let users;
+let emailUser;
+
+if (useCustomUsersList) {
+    var users_json = JSON.parse(fs.readFileSync('./config/users.json', 'utf8'));
+    users = users_json['users'];
+    alertService = config.get("ZetaWash.Users.alertService");
+    emailUser = config.get("ZetaWash.Users.Email.auth.user");
+    if (alertService === 'email') {
+        const transportOptions = {
+            service: config.get("ZetaWash.Users.Email.service"),
+            auth: {
+                user: emailUser,
+                pass: config.get("ZetaWash.Users.Email.auth.pass")
+            }
+        }
+
+        washerEmail = config.get("ZetaWash.Users.Email.dryerEmail");
+        dryerEmail = config.get("ZetaWash.Users.Email.washerEmail");
+
+        templates = {
+            'washer': washerEmail,
+            'dryer': dryerEmail
+        }
+
+        transporter = nodemailer.createTransport(transportOptions);
+    }
+}
 
 // Set some defaults (required if your JSON file is empty)
-db.defaults({ full_list: [], washer_list: [], dryer_list: [], full_queue: [], washer_queue: [], dryer_queue: [] })
+db.defaults({ full_list: [], washer_list: [], dryer_list: [], full_queue: [], washer_queue: [], dryer_queue: [], washer_log: [], dryer_log: [], full_log: []})
   .write()
 
 console.log(`origin: ${frontendURL}`)
@@ -104,6 +143,26 @@ app.post('/getList', (req, res) => {
      res.end("yes");
 })
 
+app.post('/getLog', (req, res) => {
+    let logType = req.body.logType
+
+    const convertedLogQueryString = OBJECT_TYPE_TO_QUERY_STRING[logType.toLowerCase()]['log_query_string']
+
+    log = db.get(convertedLogQueryString).value();
+
+    let new_log = [];
+    for (let i = 0; i < log.length; i++) {
+        new_log.push(log[i]['listObj'])
+    }
+
+    res.send({ 
+        opCode: '200',
+        log: new_log,
+     });
+
+     res.end("yes");
+})
+
 function addListObjectDB(listObj, onlyQueue) {
     listObjUID = listObj.uniqueID
 
@@ -116,8 +175,6 @@ function addListObjectDB(listObj, onlyQueue) {
         queryString = 'list_query_string';
         fullString = 'full_list';
     }
-
-    console.log("only queue is " + onlyQueue)
 
     queueType = OBJECT_TYPE_TO_QUERY_STRING[listObj.machine.toLowerCase()][queryString]
     
@@ -171,16 +228,63 @@ function checkList() {
         db.get(dbToCheck)
             .remove(function (parent) {
                 listObj = parent.listObj;
-                const queryString = 'queue_query_string';
-                const queueType = OBJECT_TYPE_TO_QUERY_STRING[listObj.machine.toLowerCase()][queryString]
 
-                return listObj.endTime < Math.floor(new Date() / 1000)
+                const shouldRemove = listObj.endTime < Math.floor(new Date() / 1000);
+
+                // does actions when the listObj is to be removed from the list
+                if (shouldRemove) {
+                    onRemoveFromList(listObj)
+                }
+
+                return shouldRemove;
             })
             .write()
     }
 
     // DEBUG: console.log("Queues checked.")
     
+}
+
+function onRemoveFromList(listObj) {
+
+    // adds item to the log 
+    const fullString = 'full_log';
+    const queryString = 'log_query_string';
+    const queueType = OBJECT_TYPE_TO_QUERY_STRING[listObj.machine.toLowerCase()][queryString]
+
+    db.get(fullString)  // adds object to the full log of objects
+        .push({ listObj })
+        .write()
+    db.get(queueType)   // adds object to the machine-specific log of objects
+        .push({ listObj })
+        .write()
+
+    // sends email if necessary
+    if (useCustomUsersList && alertService == 'email') {
+        console.log("sending email");
+        const email = users.find(function(element) {
+            return element.name === listObj['name'];
+          })['email'];
+        const machine = listObj['machine'];
+
+        console.log(listObj['endTime']);
+        
+        var mailOptions = {
+            from: emailUser,
+            to: email,
+            subject: emailParser(templates[machine]['subject'], listObj['name'], parseInt(listObj['endTime'])),
+            text: emailParser(templates[machine]['text'],listObj['name'], parseInt(listObj['endTime']))
+          };
+        
+        console.log("sending mail to " + listObj['name']);
+        transporter.sendMail(mailOptions, function(error, info){
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent: ' + info.response);
+            }
+        });
+    }
 }
 
 function getNextObjectUIDFromQueue(queueType) {
@@ -211,6 +315,27 @@ if (useEncryption) {
     app.listen(port, () => console.log(`ZetaWash server listening on port ${port}\nSSL: Disabled`))
 }
 
+function emailParser(inputString, name, endTime) {
+    inputString = inputString.replace("${date}", timeConverter(endTime));
+    inputString = inputString.replace("${name}", name);
+    return inputString;
+}
+
+function timeConverter(UNIX_timestamp){
+    var a = new Date(UNIX_timestamp * 1000);
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var year = a.getFullYear();
+    var month = months[a.getMonth()];
+    var date = a.getDate();
+    var hour = a.getHours();
+    var min = a.getMinutes();
+    var sec = a.getSeconds();
+    if (sec < 10) sec = "0" + sec;
+    if (hour < 10) hour = "0" + hour;
+    if (min < 10) min = "0" + min;
+    var time = hour + ':' + min + ':' + sec + ' ' + date + ' ' + month + ' ' + year ;
+    return time;
+}
 
 function checkDBs() {
 

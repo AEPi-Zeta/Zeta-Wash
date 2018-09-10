@@ -1,5 +1,5 @@
 <div class="row border-between">
-  <div class="col" ng-class="{'col-sm-12': usingListOnly, 'col-sm-6': !usingListOnly}" ng-if="usingListOnly">
+  <div class="col col-md-6" ng-class="{'col-sm-12': usingListOnly, 'col-sm-6': !usingListOnly}" ng-if="usingListOnly">
       <div style="text-align: center; top: 50%; left: 50%; margin: 0 auto"><h5 class="pt-2">Using</h5></div>
       <div *ngIf="list && list.length == 0">
           <br/>
@@ -24,7 +24,7 @@
         </mat-list-item>
       </mat-list>
   </div>
-  <div class="col col-sm-6" *ngIf="!usingListOnly">
+  <div class="col col-md-6 col-sm-6" *ngIf="!usingListOnly">
     <div class="centered"><h5 class="pt-2">Queue</h5></div>
     <div *ngIf="queue && queue.length == 0">
       <br/>
@@ -37,10 +37,16 @@
     <mat-list>
       <mat-list-item style="white-space: normal" *ngFor="let brother of queue"> 
           <h5 matLine style="vertical-align: middle">
-            {{brother.name}} - {{brother.machine.charAt(0).toUpperCase() + brother.machine.slice(1)}} <button mat-raised-button (click)="this.moveFromQueueToList(brother)" color="primary" style="float: right" [disabled]="!machineAvailability[brother.machine]">Start</button>
+            <div class="row">
+              <div class="col col-md-8 col-sm-12">
+                {{brother.name}} - {{brother.machine.charAt(0).toUpperCase() + brother.machine.slice(1)}}
+              </div>
+                <div class="col col-md-4 col-sm-12">
+                  <button mat-raised-button (click)="this.moveFromQueueToList(brother)" color="primary" style="float: right; margin-left: 10px;" [disabled]="!machineAvailability[brother.machine]">Start</button>
+                </div>
+            </div>
           </h5>
-          <span matLine>
-          </span>
+          <span matLine></span>
           <button mat-icon-button (click)="this.removeFromQueue(brother)">
               <mat-icon class="mat-24">clear</mat-icon>
           </button>

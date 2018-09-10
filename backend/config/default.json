@@ -26,6 +26,26 @@
       },
       "Extra": {
         "titleTop": "Zeta Wash"
+      },
+      "Users": {
+        "customUsersList": true,
+        "forceCustomusersList": false,
+        "alertService": "email",
+        "Email": {
+          "service": "gmail",
+          "auth": {
+            "user": "",
+            "pass": "" 
+          },
+          "dryerEmail": {
+            "subject": "[Zeta Wash - Dryer] Your clothes are dry!",
+            "text": "Your clothes finished drying at ${date}."
+          },
+          "washerEmail": {
+            "subject": "[Zeta Wash - Dryer] Your clothes are washed!",
+            "text": "Your clothes finished drying at ${date}."
+          }
+        }
       }
     }
 }
