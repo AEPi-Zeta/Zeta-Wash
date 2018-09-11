@@ -112,6 +112,14 @@ export class BrothersListComponent {
     }
   }
 
+  machineToIndex(name) {
+    return parseInt(name.substring(name.length - 1, name.length), 10) - 1;
+  }
+
+  machineToPlural(name) {
+    return name.substring(0, name.length - 1) + 's';
+  }
+
 }
 
 export class Brother {

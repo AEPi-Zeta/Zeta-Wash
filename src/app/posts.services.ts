@@ -48,6 +48,11 @@ export class PostsService {
             .map(res => res.json());
     }
 
+    getUsers(): Observable<any> {
+        return this.http.post(this.path + 'getUsers', {})
+            .map(res => res.json());
+    }
+
     getConfig(getDev = false) {
         let url = window.location.href + 'backend/config/default.json';
         if (getDev) {

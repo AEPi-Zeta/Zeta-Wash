@@ -2,188 +2,54 @@
   "full_list": [],
   "washer_list": [],
   "dryer_list": [],
-  "full_queue": [],
-  "washer_queue": [],
+  "full_queue": [
+    {
+      "listObj": {
+        "name": "Isaac Grynsztein",
+        "machine": "washer",
+        "machineNumber": "1",
+        "startTime": 1536650994,
+        "endTime": null,
+        "minutes": 30,
+        "uniqueID": "b29bbfec-d497-4d66-9416-5b4286f49fec"
+      }
+    }
+  ],
+  "washer_queue": [
+    {
+      "listObj": {
+        "name": "Isaac Grynsztein",
+        "machine": "washer",
+        "machineNumber": "1",
+        "startTime": 1536650994,
+        "endTime": null,
+        "minutes": 30,
+        "uniqueID": "b29bbfec-d497-4d66-9416-5b4286f49fec"
+      }
+    }
+  ],
   "dryer_queue": [],
   "washer_log": [
     {
       "listObj": {
         "name": "Isaac Grynsztein",
         "machine": "washer",
-        "startTime": 1536556842,
-        "endTime": 1536556902,
-        "minutes": 1,
-        "uniqueID": "bd311ebc-c5f1-4936-9987-0ce71be3faa4"
-      }
-    },
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "startTime": 1536556842,
-        "endTime": 1536556902,
-        "minutes": 1,
-        "uniqueID": "bd311ebc-c5f1-4936-9987-0ce71be3faa4"
-      }
-    },
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "startTime": 1536556887,
-        "endTime": 1536556905,
-        "minutes": 0.3,
-        "uniqueID": "483ad827-5f76-4b6d-a339-9993657bce4c"
-      }
-    },
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "startTime": 1536556887,
-        "endTime": 1536556905,
-        "minutes": 0.3,
-        "uniqueID": "483ad827-5f76-4b6d-a339-9993657bce4c"
-      }
-    },
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "startTime": 1536557080,
-        "endTime": 1536557086,
-        "minutes": 0.1,
-        "uniqueID": "2195b9ba-f1a2-4c29-b8b5-8a60352042fd"
-      }
-    },
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "startTime": 1536557080,
-        "endTime": 1536557086,
-        "minutes": 0.1,
-        "uniqueID": "2195b9ba-f1a2-4c29-b8b5-8a60352042fd"
-      }
-    },
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "startTime": 1536557196,
-        "endTime": 1536557199,
-        "minutes": 0.05,
-        "uniqueID": "94aba44a-1be0-4577-a5fa-1bcba273ac6a"
-      }
-    },
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "startTime": 1536557196,
-        "endTime": 1536557199,
-        "minutes": 0.05,
-        "uniqueID": "94aba44a-1be0-4577-a5fa-1bcba273ac6a"
-      }
-    },
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "startTime": 1536557430,
-        "endTime": 1536557433,
-        "minutes": 0.05,
-        "uniqueID": "0815ca01-100a-4bad-9dea-0be2be2a5047"
-      }
-    },
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "startTime": 1536557430,
-        "endTime": 1536557433,
-        "minutes": 0.05,
-        "uniqueID": "0815ca01-100a-4bad-9dea-0be2be2a5047"
-      }
-    },
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "startTime": 1536557526,
-        "endTime": 1536557526.6,
-        "minutes": 0.01,
-        "uniqueID": "39df27d5-3663-49e6-900f-27511f34b8fa"
-      }
-    },
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "startTime": 1536557526,
-        "endTime": 1536557526.6,
-        "minutes": 0.01,
-        "uniqueID": "39df27d5-3663-49e6-900f-27511f34b8fa"
-      }
-    },
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "startTime": 1536557846,
-        "endTime": 1536557846.6,
-        "minutes": 0.01,
-        "uniqueID": "66a858fd-83ee-4217-bdb3-58f4d83e04fd"
-      }
-    },
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "startTime": 1536557846,
-        "endTime": 1536557846.6,
-        "minutes": 0.01,
-        "uniqueID": "66a858fd-83ee-4217-bdb3-58f4d83e04fd"
-      }
-    },
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "startTime": 1536560010,
-        "endTime": 1536561810,
+        "machineNumber": "1",
+        "startTime": 1536647581,
+        "endTime": 1536649381,
         "minutes": 30,
-        "uniqueID": "02254f18-2cbd-4e50-96c9-64617b5cf7aa"
+        "uniqueID": "21b3adb4-9e06-4ea7-973f-b64d4b6a9e60"
       }
     },
     {
       "listObj": {
         "name": "Isaac Grynsztein",
         "machine": "washer",
-        "startTime": 1536560010,
-        "endTime": 1536561810,
+        "machineNumber": "1",
+        "startTime": 1536647581,
+        "endTime": 1536649381,
         "minutes": 30,
-        "uniqueID": "02254f18-2cbd-4e50-96c9-64617b5cf7aa"
-      }
-    },
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "startTime": 1536564835,
-        "endTime": 1536564841,
-        "minutes": 0.1,
-        "uniqueID": "7c5a5e9d-cc4a-4e08-8790-9a52cd1a1b2a"
-      }
-    },
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "startTime": 1536564835,
-        "endTime": 1536564841,
-        "minutes": 0.1,
-        "uniqueID": "7c5a5e9d-cc4a-4e08-8790-9a52cd1a1b2a"
+        "uniqueID": "21b3adb4-9e06-4ea7-973f-b64d4b6a9e60"
       }
     }
   ],
@@ -193,180 +59,22 @@
       "listObj": {
         "name": "Isaac Grynsztein",
         "machine": "washer",
-        "startTime": 1536556842,
-        "endTime": 1536556902,
-        "minutes": 1,
-        "uniqueID": "bd311ebc-c5f1-4936-9987-0ce71be3faa4"
-      }
-    },
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "startTime": 1536556842,
-        "endTime": 1536556902,
-        "minutes": 1,
-        "uniqueID": "bd311ebc-c5f1-4936-9987-0ce71be3faa4"
-      }
-    },
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "startTime": 1536556887,
-        "endTime": 1536556905,
-        "minutes": 0.3,
-        "uniqueID": "483ad827-5f76-4b6d-a339-9993657bce4c"
-      }
-    },
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "startTime": 1536556887,
-        "endTime": 1536556905,
-        "minutes": 0.3,
-        "uniqueID": "483ad827-5f76-4b6d-a339-9993657bce4c"
-      }
-    },
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "startTime": 1536557080,
-        "endTime": 1536557086,
-        "minutes": 0.1,
-        "uniqueID": "2195b9ba-f1a2-4c29-b8b5-8a60352042fd"
-      }
-    },
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "startTime": 1536557080,
-        "endTime": 1536557086,
-        "minutes": 0.1,
-        "uniqueID": "2195b9ba-f1a2-4c29-b8b5-8a60352042fd"
-      }
-    },
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "startTime": 1536557196,
-        "endTime": 1536557199,
-        "minutes": 0.05,
-        "uniqueID": "94aba44a-1be0-4577-a5fa-1bcba273ac6a"
-      }
-    },
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "startTime": 1536557196,
-        "endTime": 1536557199,
-        "minutes": 0.05,
-        "uniqueID": "94aba44a-1be0-4577-a5fa-1bcba273ac6a"
-      }
-    },
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "startTime": 1536557430,
-        "endTime": 1536557433,
-        "minutes": 0.05,
-        "uniqueID": "0815ca01-100a-4bad-9dea-0be2be2a5047"
-      }
-    },
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "startTime": 1536557430,
-        "endTime": 1536557433,
-        "minutes": 0.05,
-        "uniqueID": "0815ca01-100a-4bad-9dea-0be2be2a5047"
-      }
-    },
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "startTime": 1536557526,
-        "endTime": 1536557526.6,
-        "minutes": 0.01,
-        "uniqueID": "39df27d5-3663-49e6-900f-27511f34b8fa"
-      }
-    },
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "startTime": 1536557526,
-        "endTime": 1536557526.6,
-        "minutes": 0.01,
-        "uniqueID": "39df27d5-3663-49e6-900f-27511f34b8fa"
-      }
-    },
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "startTime": 1536557846,
-        "endTime": 1536557846.6,
-        "minutes": 0.01,
-        "uniqueID": "66a858fd-83ee-4217-bdb3-58f4d83e04fd"
-      }
-    },
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "startTime": 1536557846,
-        "endTime": 1536557846.6,
-        "minutes": 0.01,
-        "uniqueID": "66a858fd-83ee-4217-bdb3-58f4d83e04fd"
-      }
-    },
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "startTime": 1536560010,
-        "endTime": 1536561810,
+        "machineNumber": "1",
+        "startTime": 1536647581,
+        "endTime": 1536649381,
         "minutes": 30,
-        "uniqueID": "02254f18-2cbd-4e50-96c9-64617b5cf7aa"
+        "uniqueID": "21b3adb4-9e06-4ea7-973f-b64d4b6a9e60"
       }
     },
     {
       "listObj": {
         "name": "Isaac Grynsztein",
         "machine": "washer",
-        "startTime": 1536560010,
-        "endTime": 1536561810,
+        "machineNumber": "1",
+        "startTime": 1536647581,
+        "endTime": 1536649381,
         "minutes": 30,
-        "uniqueID": "02254f18-2cbd-4e50-96c9-64617b5cf7aa"
-      }
-    },
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "startTime": 1536564835,
-        "endTime": 1536564841,
-        "minutes": 0.1,
-        "uniqueID": "7c5a5e9d-cc4a-4e08-8790-9a52cd1a1b2a"
-      }
-    },
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "startTime": 1536564835,
-        "endTime": 1536564841,
-        "minutes": 0.1,
-        "uniqueID": "7c5a5e9d-cc4a-4e08-8790-9a52cd1a1b2a"
+        "uniqueID": "21b3adb4-9e06-4ea7-973f-b64d4b6a9e60"
       }
     }
   ]

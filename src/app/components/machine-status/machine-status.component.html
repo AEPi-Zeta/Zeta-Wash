@@ -30,6 +30,8 @@
 
 </table>-->
 
+<!--
+
 <div class="row">
   <div class="col col-sm-6 container">
       <h5>Washer</h5>
@@ -45,6 +47,30 @@
     <img [style.background-color]="dryerColor" class="icons" src="../../../assets/dryer.png">
     <button class="btn" mat-mini-fab color="primary" (click)="changeTab('Dryer')" [disabled]="!machineAvailability.dryer">
       <mat-icon>{{machineAvailability.dryer ? 'check' : 'close'}}</mat-icon>
+    </button>
+  </div>
+</div>
+
+-->
+
+<div class="row">
+  <div *ngFor="let washer of machineAvailability['washers']; let i = index" class="col col-sm-6 container">
+      <div class="centered">
+        <h6>Washer {{i+1}}</h6>
+      </div>
+    <img style="width: 60%" [style.background-color]="washerColor" class="icons img-responsive" src="../../../assets/washer.png">
+    <button class="btn" mat-mini-fab color="primary" (click)="changeTab('washer' + (i + 1))" [disabled]="machineAvailability['washers'][i]['inUse']">
+      <mat-icon>{{!machineAvailability['washers'][i]['inUse'] ? 'check' : 'close'}}</mat-icon>
+    </button>
+  </div>
+
+  <div *ngFor="let dryer of machineAvailability['dryers']; let i = index" class="col col-sm-6 container">
+    <div class="centered">
+      <h6>Dryer {{i+1}}</h6>
+    </div>
+    <img style="width: 60%" [style.background-color]="dryerColor" class="icons img-responsive" src="../../../assets/dryer.png">
+    <button class="btn" mat-mini-fab color="primary" (click)="changeTab('dryer' + (i + 1))" [disabled]="machineAvailability['dryers'][i]['inUse']">
+      <mat-icon>{{!machineAvailability['dryers'][i]['inUse'] ? 'check' : 'close'}}</mat-icon>
     </button>
   </div>
 </div>

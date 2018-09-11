@@ -34,8 +34,8 @@
         "Email": {
           "service": "gmail",
           "auth": {
-            "user": "",
-            "pass": "" 
+            "user": "aepizetawash@gmail.com",
+            "pass": "kupmnwtlrskcjsfw" 
           },
           "dryerEmail": {
             "subject": "[Zeta Wash - Dryer] Your clothes are dry!",

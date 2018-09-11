@@ -12,7 +12,7 @@
     <mat-list>
         <mat-list-item style="white-space: normal" *ngFor="let brother of list"> 
           <h5 matLine>
-            {{brother.name}} - {{brother.machine.charAt(0).toUpperCase() + brother.machine.slice(1)}}
+            {{brother.name}} - {{brother.machine.charAt(0).toUpperCase() + brother.machine.slice(1) + ' ' + brother.machineNumber}}
           </h5>
           <span matLine>
             Time remaining: {{SecondsTohhmmss(brother.endTime - now)}}
@@ -39,10 +39,10 @@
           <h5 matLine style="vertical-align: middle">
             <div class="row">
               <div class="col col-md-8 col-sm-12">
-                {{brother.name}} - {{brother.machine.charAt(0).toUpperCase() + brother.machine.slice(1)}}
+                {{brother.name}} - {{brother.machine.charAt(0).toUpperCase() + brother.machine.slice(1) + ' ' + brother.machineNumber}}
               </div>
                 <div class="col col-md-4 col-sm-12">
-                  <button mat-raised-button (click)="this.moveFromQueueToList(brother)" color="primary" style="float: right; margin-left: 10px;" [disabled]="!machineAvailability[brother.machine]">Start</button>
+                  <button mat-raised-button (click)="this.moveFromQueueToList(brother)" color="primary" style="float: right; margin-left: 10px;" [disabled]="machineAvailability[machineToPlural(brother.machine + brother.machineNumber)][machineToIndex(brother.machine + brother.machineNumber + 1)]['inUse']">Start</button>
                 </div>
             </div>
           </h5>

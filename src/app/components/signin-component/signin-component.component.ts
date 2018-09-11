@@ -10,6 +10,8 @@ import {
   FormBuilder,
   NgForm
 } from '@angular/forms';
+import { Observable } from 'rxjs/Observable';
+import { startWith, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-signin-component',
@@ -24,10 +26,15 @@ export class SigninComponentComponent implements OnChanges {
   isOnlyQueue = true;
   selected: any;
   mobile: boolean;
-  autoQueue: boolean = true;
+  autoQueue: boolean = false;
+
+  myControl = new FormControl();
+  filteredOptions: Observable<string[]>;
 
   @Input() queue: any[];
   @Input() list: any[];
+
+  @Input() users: any[];
 
   @Input() machine: string;
   @Output() machineChange = new EventEmitter<string>();
@@ -46,6 +53,11 @@ export class SigninComponentComponent implements OnChanges {
     if (window.screen.width < 360) { // 768px portrait
       this.mobile = true;
     }
+    this.filteredOptions = this.myControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filter(value))
+      );
   }
 
   addToList(queueObj, isOnlyQueue) {
@@ -85,7 +97,8 @@ export class SigninComponentComponent implements OnChanges {
 
     const queueObj = {
       name: this.name,
-      machine: this.machine.toLowerCase(),
+      machine: this.machine.toLowerCase().substring(0, this.machine.length - 1),
+      machineNumber: this.machine.toLowerCase().substring(this.machine.length - 1, this.machine.length),
       startTime: startTime,
       endTime: endTime,
       minutes: this.minutes,
@@ -116,10 +129,17 @@ export class SigninComponentComponent implements OnChanges {
   }
 
   onMachineChange() {
-    if (this.machine && this.machine.length > 0 && this.machineAvailability && this.machineAvailability[this.machine.toLowerCase()]) {
+    let machinePlural;
+    let machineIndex;
+    if (this.machine) {
+      machinePlural = this.machineToPlural(this.machine);
+      machineIndex = this.machineToIndex(this.machine);
+    }
+    if (this.machine && this.machine.length > 0 && this.machineAvailability 
+      && !this.machineAvailability[machinePlural][machineIndex]['inUse']) {
       this.isOnlyQueue = false;
     } else if (this.machine && this.machine.length > 0
-      && this.machineAvailability && !this.machineAvailability[this.machine.toLowerCase()]) {
+      && this.machineAvailability && this.machineAvailability[machinePlural][machineIndex]['inUse']) {
         this.isOnlyQueue = true;
     }
   }
@@ -132,8 +152,8 @@ export class SigninComponentComponent implements OnChanges {
           const curVal  = change.currentValue;
           const prevVal = change.previousValue;
           if (curVal) {
-            this.machineChange.emit(curVal);
-            this.minutes = this.MACHINES_LIST[curVal.toLowerCase()]['default_minutes'];
+            this.machineChange.emit(curVal.toLowerCase());
+            this.minutes = this.MACHINES_LIST[curVal.toLowerCase().substring(0, curVal.length - 1)]['default_minutes'];
           }
         }
       }
@@ -145,6 +165,20 @@ export class SigninComponentComponent implements OnChanges {
         this.isOnlyQueue = false;
       }
     }
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.users.filter(option => option.toLowerCase().includes(filterValue));
+  }
+
+  machineToIndex(name) {
+    return parseInt(name.substring(name.length - 1, name.length), 10) - 1;
+  }
+
+  machineToPlural(name) {
+    return name.substring(0, name.length - 1) + 's';
   }
 
 }

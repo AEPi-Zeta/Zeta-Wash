@@ -20,6 +20,7 @@ export class MachineStatusComponent implements OnInit {
 
   @Input() machineAvailability: any;
   @Input() selectedIndex: number;
+  @Input() MACHINES_LIST: any;
   @Output() selectedIndexChange = new EventEmitter();
   @Output() notify = new EventEmitter<string>();
 
@@ -31,6 +32,10 @@ export class MachineStatusComponent implements OnInit {
     // only run when property "data" changed
     if (changes['machineAvailability']) {
         this.machineAvailability = this.machineAvailability;
+    }
+
+    if (changes['MACHINES_LIST']) {
+      this.MACHINES_LIST = this.MACHINES_LIST;
     }
   }
 

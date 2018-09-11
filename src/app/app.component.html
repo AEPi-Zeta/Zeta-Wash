@@ -1,7 +1,7 @@
 <app-header [topBarTitle]="topBarTitle"></app-header>
 <mat-tab-group [(selectedIndex)]="selectedIndex" style="height: 100%">
   <mat-tab label="Sign Up">
-    <app-signin-component [machineAvailability]="machineAvailability" [MACHINES_LIST]="MACHINES_LIST" [(machine)]="machine" [list]="list" [queue]="queue"></app-signin-component>
+    <app-signin-component [machineAvailability]="machineAvailability" [MACHINES_LIST]="MACHINES_LIST" [(machine)]="machine" [list]="list" [queue]="queue" [users]="users"></app-signin-component>
   </mat-tab>
   <mat-tab label="Status">
     <!--<table>
@@ -42,4 +42,3 @@
 </button>
 
 <app-log></app-log>
-

@@ -163,6 +163,24 @@ app.post('/getLog', (req, res) => {
      res.end("yes");
 })
 
+app.post('/getUsers', (req, res) => {
+    var users_json = JSON.parse(fs.readFileSync('./config/users.json', 'utf8'));
+    var users = users_json['users'];
+
+    var users_names = [];
+
+    for (var i = 0; i < users.length; i++) {
+        users_names.push(users[i]['name'])
+    }
+
+    res.send({ 
+        opCode: '200',
+        users: users_names,
+     });
+
+     res.end("yes");
+})
+
 function addListObjectDB(listObj, onlyQueue) {
     listObjUID = listObj.uniqueID
 

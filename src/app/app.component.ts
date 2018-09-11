@@ -29,6 +29,7 @@ export class AppComponent {
   mobile: boolean;
   isFullScreen = false;
   MACHINES_LIST: any;
+  users: any[] = [];
 
   // danny: Brother = new Brother('Danny Brandsdorfer', 10.2);
   // jeremy: Brother = new Brother('Jeremy Winter', 20.6);
@@ -50,8 +51,12 @@ export class AppComponent {
         this.queue = this.queueResponseToQueue(res.fullList.queue);
 
         // sorts queue
-        this.queue.sort(function(a, b) {return (a.starTime > b.starTime) ? 1 : ((b.starTime > a.starTime) ? -1 : 0); });
+        this.queue.sort(function(a, b) {return (a.startTime > b.startTime) ? 1 : ((b.startTime > a.startTime) ? -1 : 0); });
         this.listReached();
+      });
+
+      this.postsService.getUsers().subscribe(res => {
+        this.users = res.users;
       });
     },
     error => {
@@ -63,12 +68,23 @@ export class AppComponent {
   listReached() {
     this.hasList = true;
     this.machineAvailability = {};
-    for (const machine in this.MACHINES_LIST) {
-      if (machine !== null) {
-        this.machineAvailability[machine] = null;
-      }
+    this.machineAvailability['washers'] = [];
+    for (let i = 0; i < this.MACHINES_LIST['washer']['count']; i++) {
+      this.machineAvailability['washers'][i] = {};
+      const washer = this.machineAvailability['washers'][i];
+      washer['inUse'] = this.checkIfMachineInUse(this.list, 'washer' + (i + 1)); // checks whether it's in use or not
+      washer['key'] = 'washer' + (i + 1); // sets the key
+      washer['longName'] = 'Washer ' + (i + 1); // sets the long name for the machine
     }
-    this.checkMachinesForAvailability();
+
+    this.machineAvailability['dryers'] = [];
+    for (let i = 0; i < this.MACHINES_LIST['dryer']['count']; i++) {
+      this.machineAvailability['dryers'][i] = {};
+      const dryer = this.machineAvailability['dryers'][i];
+      dryer['inUse'] = this.checkIfMachineInUse(this.list, 'dryer' + (i + 1)); // checks whether it's in use or not
+      dryer['key'] = 'dryer' + (i + 1); // sets the key
+      dryer['longName'] = 'Dryer ' + (i + 1); // sets the long name for the machine
+    }
   }
 
   ngOnInit() {
@@ -81,11 +97,11 @@ export class AppComponent {
         this.queue = this.queueResponseToQueue(res.fullList.queue);
 
         // sorts queue
-        this.queue.sort(function(a, b) {return (a.starTime > b.starTime) ? 1 : ((b.starTime > a.starTime) ? -1 : 0); });
+        this.queue.sort(function(a, b) {return (a.startTime > b.startTime) ? 1 : ((b.startTime > a.startTime) ? -1 : 0); });
       });
       if (this.hasList) {
         this.checkQueue();
-        this.checkMachinesForAvailability();
+        this.listReached();
       }
     });
   }
@@ -109,7 +125,7 @@ export class AppComponent {
     }
   }
 
-  checkMachinesForAvailability() {
+  /*checkMachinesForAvailability() {
     for (const machine in this.MACHINES_LIST) {
       if (machine !== null) {
         const machine_count = this.MACHINES_LIST[machine]['count'];
@@ -124,7 +140,7 @@ export class AppComponent {
         }
       }
     }
-  }
+  }*/
 
   getMachineCountInUse(queue, machine: string) {
     let machineCount = 0;
@@ -134,6 +150,16 @@ export class AppComponent {
       }
     });
     return machineCount;
+  }
+
+  checkIfMachineInUse(queue, specificMachine: string) {
+    let isInUse = false;
+    queue.forEach(element => {
+      if (element['machine'] + element['machineNumber'] === specificMachine) {
+        isInUse = true;
+      }
+    });
+    return isInUse;
   }
 
 

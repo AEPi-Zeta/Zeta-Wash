@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { MachineStatusComponent } from './components/machine-status/machine-status.component';
 import { HeaderComponent } from './components/header/header.component';
 import { MatToolbarModule, MatCardModule, MatGridListModule, MatTabsModule, MatButtonModule, MatExpansionModule,
-  MatSelectModule, MatCheckboxModule, MatPaginatorModule, MatSortModule, MatProgressSpinnerModule } from '@angular/material';
+  MatSelectModule, MatCheckboxModule, MatPaginatorModule, MatSortModule, MatProgressSpinnerModule, MatAutocompleteModule } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -55,7 +55,8 @@ import { LogComponent } from './components/log/log.component';
     MatPaginatorModule,
     MatTableModule,
     MatSortModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatAutocompleteModule
   ],
   providers: [PostsService],
   bootstrap: [AppComponent]
