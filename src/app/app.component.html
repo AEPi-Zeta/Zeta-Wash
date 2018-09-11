@@ -1,4 +1,4 @@
-<app-header [topBarTitle]="topBarTitle"></app-header>
+<app-header [topBarTitle]="topBarTitle" [postsService]="postsService"></app-header>
 <mat-tab-group [(selectedIndex)]="selectedIndex" style="height: 100%">
   <mat-tab label="Sign Up">
     <app-signin-component [machineAvailability]="machineAvailability" [MACHINES_LIST]="MACHINES_LIST" [(machine)]="machine" [list]="list" [queue]="queue" [users]="users"></app-signin-component>
@@ -40,5 +40,3 @@
 <button toggleFullscreen class="bottom-right" mat-icon-button (click)="this.toggleFullScreen()">
   <mat-icon class="fullscreen-icon">{{isFullScreen ? 'fullscreen_exit' : 'fullscreen'}}</mat-icon>
 </button>
-
-<app-log></app-log>

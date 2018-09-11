@@ -2,80 +2,10 @@
   "full_list": [],
   "washer_list": [],
   "dryer_list": [],
-  "full_queue": [
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "machineNumber": "1",
-        "startTime": 1536650994,
-        "endTime": null,
-        "minutes": 30,
-        "uniqueID": "b29bbfec-d497-4d66-9416-5b4286f49fec"
-      }
-    }
-  ],
-  "washer_queue": [
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "machineNumber": "1",
-        "startTime": 1536650994,
-        "endTime": null,
-        "minutes": 30,
-        "uniqueID": "b29bbfec-d497-4d66-9416-5b4286f49fec"
-      }
-    }
-  ],
+  "full_queue": [],
+  "washer_queue": [],
   "dryer_queue": [],
-  "washer_log": [
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "machineNumber": "1",
-        "startTime": 1536647581,
-        "endTime": 1536649381,
-        "minutes": 30,
-        "uniqueID": "21b3adb4-9e06-4ea7-973f-b64d4b6a9e60"
-      }
-    },
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "machineNumber": "1",
-        "startTime": 1536647581,
-        "endTime": 1536649381,
-        "minutes": 30,
-        "uniqueID": "21b3adb4-9e06-4ea7-973f-b64d4b6a9e60"
-      }
-    }
-  ],
+  "washer_log": [],
   "dryer_log": [],
-  "full_log": [
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "machineNumber": "1",
-        "startTime": 1536647581,
-        "endTime": 1536649381,
-        "minutes": 30,
-        "uniqueID": "21b3adb4-9e06-4ea7-973f-b64d4b6a9e60"
-      }
-    },
-    {
-      "listObj": {
-        "name": "Isaac Grynsztein",
-        "machine": "washer",
-        "machineNumber": "1",
-        "startTime": 1536647581,
-        "endTime": 1536649381,
-        "minutes": 30,
-        "uniqueID": "21b3adb4-9e06-4ea7-973f-b64d4b6a9e60"
-      }
-    }
-  ]
+  "full_log": []
 }

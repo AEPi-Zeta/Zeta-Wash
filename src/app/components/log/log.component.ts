@@ -17,7 +17,7 @@ export class LogComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
 
-  constructor(private postsService: PostsService) { }
+  constructor(public postsService: PostsService) { }
 
   ngOnInit() {
     this.getArray();

@@ -2,35 +2,42 @@
     <form class="example-form" #signinForm="ngForm">
         <div class="row">
             <div class="col col-md-6">
-                <mat-form-field class="example-full-width">
-                    <input matInput [formControl]="myControl" [matAutocomplete]="auto" [(ngModel)]="name" placeholder="Name" type="url" name="name" required>
-                    <mat-autocomplete #auto="matAutocomplete">
-                        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-                            {{option}}
-                        </mat-option>
-                    </mat-autocomplete>
-                </mat-form-field>
+                <div class="centered">
+                    <mat-form-field class="example-full-width">
+                        <input matInput [formControl]="myControl" [matAutocomplete]="auto" [(ngModel)]="name" placeholder="Name" type="url" name="name" required>
+                        <mat-autocomplete #auto="matAutocomplete">
+                            <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                                {{option}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col col-md-3">
+                <div class="centered">
+                    <mat-form-field>
+                        <mat-select style="float: right" [(ngModel)]="machine" (ngModelChange)="onMachineChange()" [(value)]="selected" placeholder="Machine" name="machine" required>
+                            <div *ngIf="machineAvailability">
+                                <mat-option *ngFor="let washer of machineAvailability['washers']" [value]="washer.key">
+                                        {{washer.longName}}
+                                </mat-option>
+                                <mat-option *ngFor="let dryer of machineAvailability['dryers']" [value]="dryer.key">
+                                        {{dryer.longName}}
+                                </mat-option>
+                            </div>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
             </div>
             <div class="col col-md-2">
-                <mat-form-field>
-                    
-                    <mat-select style="float: right" [(ngModel)]="machine" (ngModelChange)="onMachineChange()" [(value)]="selected" placeholder="Machine" name="machine" required>
-                            <mat-option *ngFor="let washer of machineAvailability['washers']" [value]="washer.key">
-                                    {{washer.longName}}
-                            </mat-option>
-                            <mat-option *ngFor="let dryer of machineAvailability['dryers']" [value]="dryer.key">
-                                    {{dryer.longName}}
-                            </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div class="col col-md-2">
-                <mat-form-field class="example-full-width">
-                    <input matInput [(ngModel)]="minutes" placeholder="Minutes" type="number" name="minutes" required>
-                </mat-form-field>
+                <div class="centered">
+                    <mat-form-field class="example-full-width">
+                        <input matInput [(ngModel)]="minutes" placeholder="Minutes" type="number" name="minutes" required>
+                    </mat-form-field>
+                </div>
             </div>
 
-            <div class="col col-md-2">
+            <div class="col col-md-1">
                 <mat-checkbox [(ngModel)]="isOnlyQueue" color="primary" style="bottom:30px; position:absolute" [ngModelOptions]="{standalone: true}" required>Only Queue</mat-checkbox>      
             </div>
         </div>
