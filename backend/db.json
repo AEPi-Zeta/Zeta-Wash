@@ -27,6 +27,28 @@
         "minutes": 0.1,
         "uniqueID": "c8fcad37-8fb1-44a9-9525-71e6455a440f"
       }
+    },
+    {
+      "listObj": {
+        "name": "Isaac Grynsztein",
+        "machine": "washer",
+        "machineNumber": "1",
+        "startTime": 1536725315,
+        "endTime": 1536725321,
+        "minutes": 0.1,
+        "uniqueID": "421a8f01-73ff-4f26-8f4c-3e5f91234f31"
+      }
+    },
+    {
+      "listObj": {
+        "name": "Isaac Grynsztein",
+        "machine": "washer",
+        "machineNumber": "1",
+        "startTime": 1536725315,
+        "endTime": 1536725321,
+        "minutes": 0.1,
+        "uniqueID": "421a8f01-73ff-4f26-8f4c-3e5f91234f31"
+      }
     }
   ],
   "dryer_log": [
@@ -50,6 +72,28 @@
         "endTime": 1536724123,
         "minutes": 0.1,
         "uniqueID": "d8682243-d6e6-4cc1-b35f-d30a057cfe11"
+      }
+    },
+    {
+      "listObj": {
+        "name": "Isaac Grynsztein",
+        "machine": "dryer",
+        "machineNumber": "2",
+        "startTime": 1536725507,
+        "endTime": 1536725513,
+        "minutes": 0.1,
+        "uniqueID": "e7a26595-10f9-4896-a799-4695fd503f1b"
+      }
+    },
+    {
+      "listObj": {
+        "name": "Isaac Grynsztein",
+        "machine": "dryer",
+        "machineNumber": "2",
+        "startTime": 1536725507,
+        "endTime": 1536725513,
+        "minutes": 0.1,
+        "uniqueID": "e7a26595-10f9-4896-a799-4695fd503f1b"
       }
     }
   ],
@@ -96,6 +140,50 @@
         "endTime": 1536724123,
         "minutes": 0.1,
         "uniqueID": "d8682243-d6e6-4cc1-b35f-d30a057cfe11"
+      }
+    },
+    {
+      "listObj": {
+        "name": "Isaac Grynsztein",
+        "machine": "washer",
+        "machineNumber": "1",
+        "startTime": 1536725315,
+        "endTime": 1536725321,
+        "minutes": 0.1,
+        "uniqueID": "421a8f01-73ff-4f26-8f4c-3e5f91234f31"
+      }
+    },
+    {
+      "listObj": {
+        "name": "Isaac Grynsztein",
+        "machine": "washer",
+        "machineNumber": "1",
+        "startTime": 1536725315,
+        "endTime": 1536725321,
+        "minutes": 0.1,
+        "uniqueID": "421a8f01-73ff-4f26-8f4c-3e5f91234f31"
+      }
+    },
+    {
+      "listObj": {
+        "name": "Isaac Grynsztein",
+        "machine": "dryer",
+        "machineNumber": "2",
+        "startTime": 1536725507,
+        "endTime": 1536725513,
+        "minutes": 0.1,
+        "uniqueID": "e7a26595-10f9-4896-a799-4695fd503f1b"
+      }
+    },
+    {
+      "listObj": {
+        "name": "Isaac Grynsztein",
+        "machine": "dryer",
+        "machineNumber": "2",
+        "startTime": 1536725507,
+        "endTime": 1536725513,
+        "minutes": 0.1,
+        "uniqueID": "e7a26595-10f9-4896-a799-4695fd503f1b"
       }
     }
   ]
