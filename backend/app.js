@@ -249,8 +249,8 @@ function checkList() {
 
                 const shouldRemove = listObj.endTime < Math.floor(new Date() / 1000);
 
-                // does actions when the listObj is to be removed from the list
-                if (shouldRemove) {
+                // does actions when the listObj is to be removed from the full list ONLY
+                if (shouldRemove && dbsToCheck === 'full_list') {
                     onRemoveFromList(listObj)
                 }
 
@@ -280,28 +280,33 @@ function onRemoveFromList(listObj) {
     // sends email if necessary
     if (useCustomUsersList && alertService == 'email') {
         console.log("sending email");
-        const email = users.find(function(element) {
+        const user = users.find(function(element) {
             return element.name === listObj['name'];
-          })['email'];
-        const machine = listObj['machine'];
+          });
 
-        console.log(listObj['endTime']);
-        
-        var mailOptions = {
-            from: emailUser,
-            to: email,
-            subject: emailParser(templates[machine]['subject'], listObj['name'], parseInt(listObj['endTime'])),
-            text: emailParser(templates[machine]['text'],listObj['name'], parseInt(listObj['endTime']))
-          };
-        
-        console.log("sending mail to " + listObj['name']);
-        transporter.sendMail(mailOptions, function(error, info){
-            if (error) {
-                console.log(error);
-            } else {
-                console.log('Email sent: ' + info.response);
-            }
-        });
+        if (user) {
+            email = user['email'];
+    
+            const machine = listObj['machine'];
+
+            console.log(listObj['endTime']);
+            
+            var mailOptions = {
+                from: emailUser,
+                to: email,
+                subject: emailParser(templates[machine]['subject'], listObj['name'], parseInt(listObj['endTime'])),
+                text: emailParser(templates[machine]['text'],listObj['name'], parseInt(listObj['endTime']))
+            };
+            
+            console.log("sending mail to " + listObj['name']);
+            transporter.sendMail(mailOptions, function(error, info){
+                if (error) {
+                    console.log(error);
+                } else {
+                    console.log('Email sent: ' + info.response);
+                }
+            });
+        }
     }
 }
 

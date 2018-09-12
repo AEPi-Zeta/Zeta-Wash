@@ -42,6 +42,10 @@ export class LogComponent implements OnInit {
     this.postsService.getLog('both')
       .subscribe((response) => {
         const data = response.log;
+
+        // Sorts the data by last finished
+        data.sort((a, b) => b.startTime - a.startTime);
+
         const filteredData = [];
         for (let i = 0; i < data.length; i++) {
           filteredData.push(this.createElement(data[i]));

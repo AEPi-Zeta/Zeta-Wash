@@ -38,6 +38,7 @@ td.topbar {
   /* Style the button and place it in the middle of the container/image */
   .container .btn {
     position: absolute;
+    z-index: 10;
     top: 100%;
     left: 50%;
     transform: translate(-50%, -50%);
