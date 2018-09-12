@@ -24,7 +24,7 @@ export class AppComponent {
   topBarTitle: string;
   hasList = false;
   useQueue = true;
-  isDev = true;
+  isDev = false;
   devPath = 'http://localhost:8088/';
   mobile: boolean;
   isFullScreen = false;
@@ -36,7 +36,7 @@ export class AppComponent {
 
   // tempBros: Brother[] = [this.danny, this.jeremy];
 
-  constructor(private postsService: PostsService, ) { // init for the beginning of the app
+  constructor(public postsService: PostsService, ) { // init for the beginning of the app
     const queueType = 'both';
     this.postsService.getConfig(this.isDev).subscribe(result => { // loads settings
       this.topBarTitle = result.ZetaWash.Extra.titleTop;

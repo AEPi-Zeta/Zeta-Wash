@@ -240,6 +240,7 @@ let checkListID = setInterval(() => checkList(), 500);
 function checkList() {
 
     let dbsToCheck = ['washer_list', 'dryer_list', 'full_list']
+    let primaryList = 'full_list'
 
     for (let i = 0; i < dbsToCheck.length; i++) {
         let dbToCheck = dbsToCheck[i]
@@ -250,7 +251,7 @@ function checkList() {
                 const shouldRemove = listObj.endTime < Math.floor(new Date() / 1000);
 
                 // does actions when the listObj is to be removed from the full list ONLY
-                if (shouldRemove && dbsToCheck === 'full_list') {
+                if (shouldRemove && dbsToCheck === primaryList) {
                     onRemoveFromList(listObj)
                 }
 
