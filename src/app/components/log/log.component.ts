@@ -44,7 +44,7 @@ export class LogComponent implements OnInit {
         const data = response.log;
 
         // Sorts the data by last finished
-        data.sort((a, b) => b.endTime - a.endTime);
+        data.sort((a, b) => b.startTime - a.startTime);
 
         const filteredData = [];
         for (let i = 0; i < data.length; i++) {
