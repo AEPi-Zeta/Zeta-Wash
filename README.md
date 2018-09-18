@@ -17,11 +17,12 @@ Here's an image of what it'll look like once you're done:
 
 On mobile:
 
-![mobile_status](https://i.imgur.com/zBoXDUf.png)
+<img src="https://i.imgur.com/zBoXDUf.png" width="40%">
 
 Log on mobile:
 
-![mobile_log](https://i.imgur.com/SSafFYp.png)
+<img src="https://i.imgur.com/SSafFYp.png" width="40%">
+
 
 ### Prerequisites
 
