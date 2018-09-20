@@ -26,7 +26,26 @@ export class SigninComponentComponent implements OnChanges {
   isOnlyQueue = true;
   selected: any;
   mobile: boolean;
-  autoQueue: boolean = false;
+  autoQueue = false;
+  forceCustom: boolean = false;
+
+  minuteOptions = [
+    {
+      'key': '30',
+      'amount': 30,
+      'label': '30 - Quick'
+    },
+    {
+      'key': '45',
+      'amount': 45,
+      'label': '60 - Normal'
+    },
+    {
+      'key': '60',
+      'amount': 45,
+      'label': '80 - Long'
+    }
+  ];
 
   myControl = new FormControl();
   filteredOptions: Observable<string[]>;
@@ -41,6 +60,9 @@ export class SigninComponentComponent implements OnChanges {
   @Input() MACHINES_LIST: any;
 
   @Input() machineAvailability: any;
+
+  minutesControl = new FormControl();
+  minutesWrong = false;
 
   constructor(private postsService: PostsService, ) {
     this.minutes = 30;
@@ -128,6 +150,10 @@ export class SigninComponentComponent implements OnChanges {
     this.signinForm.resetForm();
   }
 
+  triggerForceCustom(forceOrNot) {
+    this.forceCustom = forceOrNot;
+  }
+
   onMachineChange() {
     let machinePlural;
     let machineIndex;
@@ -135,12 +161,34 @@ export class SigninComponentComponent implements OnChanges {
       machinePlural = this.machineToPlural(this.machine);
       machineIndex = this.machineToIndex(this.machine);
     }
-    if (this.machine && this.machine.length > 0 && this.machineAvailability 
+    if (this.machine && this.machine.length > 0 && this.machineAvailability
       && !this.machineAvailability[machinePlural][machineIndex]['inUse']) {
       this.isOnlyQueue = false;
     } else if (this.machine && this.machine.length > 0
       && this.machineAvailability && this.machineAvailability[machinePlural][machineIndex]['inUse']) {
         this.isOnlyQueue = true;
+    }
+
+    if (this.machine && this.MACHINES_LIST && this.MACHINES_LIST[this.machine.toLowerCase().substring(0, this.machine.length - 1)]) {
+      const minMinutes = this.MACHINES_LIST[this.machine.toLowerCase().substring(0, this.machine.length - 1)]['min_minutes'];
+      const maxMinutes = this.MACHINES_LIST[this.machine.toLowerCase().substring(0, this.machine.length - 1)]['max_minutes'];
+      // checks if the minutes have exceeded the maximums in the confuig
+      if (minMinutes !== null && maxMinutes !== null) {
+        this.minutesControl = new FormControl('', [Validators.max(maxMinutes), Validators.min(minMinutes)]);
+      }
+    }
+  }
+
+  onMinutesChange() {
+    if (this.machine && this.MACHINES_LIST && this.MACHINES_LIST[this.machine.toLowerCase().substring(0, this.machine.length - 1)]) {
+      const minMinutes = this.MACHINES_LIST[this.machine.toLowerCase().substring(0, this.machine.length - 1)]['min_minutes'];
+      const maxMinutes = this.MACHINES_LIST[this.machine.toLowerCase().substring(0, this.machine.length - 1)]['max_minutes'];
+
+      if (this.machine && this.minutes && (this.minutes < minMinutes || this.minutes > maxMinutes)) {
+        this.minutesWrong = true;
+      } else {
+        this.minutesWrong = false;
+      }
     }
   }
 

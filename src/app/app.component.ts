@@ -24,7 +24,7 @@ export class AppComponent {
   topBarTitle: string;
   hasList = false;
   useQueue = true;
-  isDev = false;
+  isDev = true;
   devPath = 'http://localhost:8088/';
   mobile: boolean;
   isFullScreen = false;
@@ -55,9 +55,11 @@ export class AppComponent {
         this.listReached();
       });
 
-      this.postsService.getUsers().subscribe(res => {
-        this.users = res.users;
-      });
+      if (result.ZetaWash.Users.customUsersList) {
+        this.postsService.getUsers().subscribe(res => {
+          this.users = res.users;
+        });
+      }
     },
     error => {
       console.log(error);

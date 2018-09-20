@@ -1,6 +1,6 @@
 <div class="row border-between">
-  <div class="col col-md-6" ng-class="{'col-sm-12': usingListOnly, 'col-sm-6': !usingListOnly}" ng-if="usingListOnly">
-      <div style="text-align: center; top: 50%; left: 50%; margin: 0 auto"><h5 class="pt-2">Using</h5></div>
+  <div class="col" ng-class="{'col-sm-12': usingListOnly, 'col-md-12': usingListOnly, 'centered': usingListOnly, 'col-md-6': !usingListOnly, 'col-sm-6': !usingListOnly}" ng-if="usingListOnly">
+      <div style="text-align: center; top: 50%; left: 50%; margin: 0 auto"><h5 class="pt-2">Active</h5></div>
       <div *ngIf="list && list.length == 0">
           <br/>
           <br/>

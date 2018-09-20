@@ -15,12 +15,52 @@
           "washer": {
             "key": "washer",
             "count": 2,
-            "default_minutes": 34
+            "default_minutes": 60,
+            "min_minutes": 0,
+            "max_minutes": 240,
+            "useOptions": true,
+            "minuteOptions": [
+              {
+                "key": "30",
+                "amount": 30,
+                "label": "30 - Quick"
+              },
+              {
+                "key": "60",
+                "amount": 60,
+                "label": "60 - Normal"
+              },
+              {
+                "key": "80",
+                "amount": 80,
+                "label": "80 - Long"
+              }
+            ]
           },
           "dryer": {
               "key": "dryer",
               "count": 2,
-              "default_minutes": 40
+              "default_minutes": 50,
+              "min_minutes": 0,
+              "max_minutes": 240,
+              "useOptions": true,
+              "minuteOptions": [
+                {
+                  "key": "30",
+                  "amount": 30,
+                  "label": "30 - Quick"
+                },
+                {
+                  "key": "50",
+                  "amount": 50,
+                  "label": "50 - Normal"
+                },
+                {
+                  "key": "80",
+                  "amount": 80,
+                  "label": "80 - Long"
+                }
+              ]
           }
         }
       },
@@ -28,7 +68,7 @@
         "titleTop": "Zeta Wash"
       },
       "Users": {
-        "customUsersList": true,
+        "customUsersList": false,
         "forceCustomusersList": false,
         "alertService": "email",
         "Email": {

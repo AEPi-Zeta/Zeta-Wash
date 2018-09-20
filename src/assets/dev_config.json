@@ -15,17 +15,77 @@
           "washer": {
             "key": "washer",
             "count": 2,
-            "default_minutes": 34
+            "default_minutes": 60,
+            "min_minutes": 0,
+            "max_minutes": 240,
+            "useOptions": true,
+            "minuteOptions": [
+              {
+                "key": "30",
+                "amount": 30,
+                "label": "30 - Quick"
+              },
+              {
+                "key": "60",
+                "amount": 60,
+                "label": "60 - Normal"
+              },
+              {
+                "key": "80",
+                "amount": 80,
+                "label": "80 - Long"
+              }
+            ]
           },
           "dryer": {
               "key": "dryer",
               "count": 2,
-              "default_minutes": 40
+              "default_minutes": 50,
+              "min_minutes": 0,
+              "max_minutes": 240,
+              "useOptions": true,
+              "minuteOptions": [
+                {
+                  "key": "30",
+                  "amount": 30,
+                  "label": "30 - Quick"
+                },
+                {
+                  "key": "50",
+                  "amount": 50,
+                  "label": "50 - Normal"
+                },
+                {
+                  "key": "80",
+                  "amount": 80,
+                  "label": "80 - Long"
+                }
+              ]
           }
         }
       },
       "Extra": {
         "titleTop": "Zeta Wash Dev"
+      },
+      "Users": {
+        "customUsersList": false,
+        "forceCustomusersList": false,
+        "alertService": "email",
+        "Email": {
+          "service": "gmail",
+          "auth": {
+            "user": "aepizetawash@gmail.com",
+            "pass": "kupmnwtlrskcjsfw" 
+          },
+          "dryerEmail": {
+            "subject": "[Zeta Wash - Dryer] Your clothes are dry!",
+            "text": "Your clothes finished drying at ${date}."
+          },
+          "washerEmail": {
+            "subject": "[Zeta Wash - Dryer] Your clothes are washed!",
+            "text": "Your clothes finished drying at ${date}."
+          }
+        }
       }
     }
 }
