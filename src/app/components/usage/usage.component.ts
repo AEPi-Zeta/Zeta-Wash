@@ -2,11 +2,11 @@ import { Component, OnInit, Input, SimpleChanges, EventEmitter } from '@angular/
 import {PostsService} from '../../posts.services';
 
 @Component({
-  selector: 'app-brothers-list',
-  templateUrl: './brothers-list.component.html',
-  styleUrls: ['./brothers-list.component.css']
+  selector: 'app-usage',
+  templateUrl: './usage.component.html',
+  styleUrls: ['./usage.component.css']
 })
-export class BrothersListComponent {
+export class UsageComponent {
 
   machine: string;
 
@@ -28,8 +28,8 @@ export class BrothersListComponent {
   }
 
 
-  removeFromQueue(brother) {
-    const index = this.queue.indexOf(brother);
+  removeFromQueue(user) {
+    const index = this.queue.indexOf(user);
 
     const queueObj = this.queue[index];
 
@@ -39,8 +39,8 @@ export class BrothersListComponent {
     });
   }
 
-  removeFromList(brother) {
-    const index = this.list.indexOf(brother);
+  removeFromList(user) {
+    const index = this.list.indexOf(user);
 
     const queueObj = this.list[index];
 
@@ -50,8 +50,8 @@ export class BrothersListComponent {
     });
   }
 
-  moveFromQueueToList(brother) {
-    const index = this.queue.indexOf(brother);
+  moveFromQueueToList(user) {
+    const index = this.queue.indexOf(user);
 
     const queueObj = this.queue[index];
 
@@ -62,31 +62,31 @@ export class BrothersListComponent {
     queueObj.startTime = startTime;
     queueObj.endTime = endTime;
     this.addToList(queueObj);
-    this.removeFromQueue(brother);
+    this.removeFromQueue(user);
   }
 
-  addToList(brother) {
-    this.postsService.addToList(brother, false)
+  addToList(user) {
+    this.postsService.addToList(user, false)
       .subscribe(res => {
         const didSucceed = res.opCode === '200';
         const uniqueID = res.uniqueID;
 
         if (didSucceed) {
-          this.handleAddToListSuccess(brother, uniqueID);
+          this.handleAddToListSuccess(user, uniqueID);
         } else {
-          this.handleAddToListFailure(brother);
+          this.handleAddToListFailure(user);
         }
       },
       err => {
-        this.handleAddToListFailure(brother);
+        this.handleAddToListFailure(user);
       });
   }
 
-  handleAddToListSuccess(brother, uniqueID) {
-    // console.log('Brother with unique ID ' + uniqueID + ' added to list.');
+  handleAddToListSuccess(user, uniqueID) {
+    // console.log('user with unique ID ' + uniqueID + ' added to list.');
   }
 
-  handleAddToListFailure(brother) {
+  handleAddToListFailure(user) {
     // TODO: MAKE DO SOMETHING
   }
 
@@ -118,17 +118,6 @@ export class BrothersListComponent {
 
   machineToPlural(name) {
     return name.substring(0, name.length - 1) + 's';
-  }
-
-}
-
-export class Brother {
-  public name = '';
-  public time = 0;
-
-  constructor(name: string, time: number) {
-    this.name = name;
-    this.time = time;
   }
 
 }

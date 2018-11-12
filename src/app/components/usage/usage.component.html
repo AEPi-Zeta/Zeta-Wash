@@ -10,14 +10,14 @@
           </div>
         </div>
     <mat-list>
-        <mat-list-item style="white-space: normal" *ngFor="let brother of list"> 
+        <mat-list-item style="white-space: normal" *ngFor="let user of list"> 
           <h5 matLine>
-            {{brother.name}} - {{brother.machine.charAt(0).toUpperCase() + brother.machine.slice(1) + ' ' + brother.machineNumber}}
+            {{user.name}} - {{user.machine.charAt(0).toUpperCase() + user.machine.slice(1) + ' ' + user.machineNumber}}
           </h5>
           <span matLine>
-            Time remaining: {{SecondsTohhmmss(brother.endTime - now)}}
+            Time remaining: {{SecondsTohhmmss(user.endTime - now)}}
           </span>
-          <button mat-icon-button (click)="this.removeFromList(brother)">
+          <button mat-icon-button (click)="this.removeFromList(user)">
               <mat-icon class="mat-24">clear</mat-icon>
           </button>
           <mat-divider></mat-divider>
@@ -35,19 +35,19 @@
       </div>
     </div>
     <mat-list>
-      <mat-list-item style="white-space: normal" *ngFor="let brother of queue"> 
+      <mat-list-item style="white-space: normal" *ngFor="let user of queue"> 
           <h5 matLine style="vertical-align: middle">
             <div class="row">
               <div class="col col-md-8 col-sm-12">
-                {{brother.name}} - {{brother.machine.charAt(0).toUpperCase() + brother.machine.slice(1) + ' ' + brother.machineNumber}}
+                {{user.name}} - {{user.machine.charAt(0).toUpperCase() + user.machine.slice(1) + ' ' + user.machineNumber}}
               </div>
                 <div class="col col-md-4 col-sm-12">
-                  <button mat-raised-button (click)="this.moveFromQueueToList(brother)" color="primary" style="float: right; margin-left: 10px;" [disabled]="machineAvailability[machineToPlural(brother.machine + brother.machineNumber)][machineToIndex(brother.machine + brother.machineNumber + 1)]['inUse']">Start</button>
+                  <button mat-raised-button (click)="this.moveFromQueueToList(user)" color="primary" style="float: right; margin-left: 10px;" [disabled]="machineAvailability[machineToPlural(user.machine + user.machineNumber)][machineToIndex(user.machine + user.machineNumber + 1)]['inUse']">Start</button>
                 </div>
             </div>
           </h5>
           <span matLine></span>
-          <button mat-icon-button (click)="this.removeFromQueue(brother)">
+          <button mat-icon-button (click)="this.removeFromQueue(user)">
               <mat-icon class="mat-24">clear</mat-icon>
           </button>
           <mat-divider></mat-divider>

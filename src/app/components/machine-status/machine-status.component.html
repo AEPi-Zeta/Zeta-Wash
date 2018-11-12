@@ -1,76 +1,16 @@
-<!--
-<table width="100%" height="100%">
-
-
-  <td class="topbar" style="text-align: center">
-    
-  </td>
-    
-  <td class="topbar" style="text-align: center">
-      <h2>Washer</h2>
-      <br/>
-    <img [style.background-color]="washerColor" class="icons" src="../../../assets/washer.png">
-    <button class="readyButton" mat-mini-fab color="primary" (click)="changeTab('Washer')" [disabled]="!machineAvailability.washer">
-      <mat-icon>{{machineAvailability.washer ? 'check' : 'close'}}</mat-icon>
-    </button>
-  </td>
-
-  <td class="topbar" style="text-align: center">
-      <h2>Dryer</h2>
-      <br/>
-    <img [style.background-color]="dryerColor" class="icons" src="../../../assets/dryer.png">
-    <button class="readyButton" mat-mini-fab color="primary" (click)="changeTab('Dryer')" [disabled]="!machineAvailability.dryer">
-      <mat-icon>{{machineAvailability.dryer ? 'check' : 'close'}}</mat-icon>
-    </button>
-  </td>
-
-  <td class="topbar" style="text-align: center">
+<div class="row">
+  <ng-container *ngIf="machineAvailability && MACHINES_LIST">
+      <ng-container *ngFor="let key of objectKeys(machineAvailability)">
+          <div *ngFor="let machine of machineAvailability[key]; let i = index" class="col col-sm-6 container">
+            <div class="centered">
+              <h6>{{machine.longName}}</h6>
+            </div>
       
-  </td>
-
-</table>-->
-
-<!--
-
-<div class="row">
-  <div class="col col-sm-6 container">
-      <h5>Washer</h5>
-      <br/>
-    <img [style.background-color]="washerColor" class="icons" src="../../../assets/washer.png">
-    <button class="btn" mat-mini-fab color="primary" (click)="changeTab('Washer')" [disabled]="!machineAvailability.washer">
-      <mat-icon>{{machineAvailability.washer ? 'check' : 'close'}}</mat-icon>
-    </button>
-  </div>
-  <div class="col col-sm-6 container">
-      <h5>Dryer</h5>
-      <br/>
-    <img [style.background-color]="dryerColor" class="icons" src="../../../assets/dryer.png">
-    <button class="btn" mat-mini-fab color="primary" (click)="changeTab('Dryer')" [disabled]="!machineAvailability.dryer">
-      <mat-icon>{{machineAvailability.dryer ? 'check' : 'close'}}</mat-icon>
-    </button>
-  </div>
-</div>
-
--->
-
-<div class="row">
-  <div *ngFor="let washer of machineAvailability['washers']; let i = index" class="col col-sm-6 container">
-      <div class="centered">
-        <h6>Washer {{i+1}}</h6>
-      </div>
-    <img style="width: 60%" [style.background-color]="washerColor" class="icons img-responsive" src="../../../assets/washer.png">
-    <button class="btn" mat-mini-fab color="primary" (click)="changeTab('washer' + (i + 1))" [disabled]="machineAvailability['washers'][i]['inUse']">
-      <mat-icon>{{!machineAvailability['washers'][i]['inUse'] ? 'check' : 'close'}}</mat-icon>
-    </button>
-  </div>
-
-  <div *ngFor="let dryer of machineAvailability['dryers']; let i = index" class="col col-sm-6 container">
-    <div class="centered">
-      <h6>Dryer {{i+1}}</h6>
-    </div>
-    <img style="width: 60%" [style.background-color]="dryerColor" class="icons img-responsive" src="../../../assets/dryer.png">
-    <button class="btn" mat-mini-fab color="primary" (click)="changeTab('dryer' + (i + 1))" [disabled]="machineAvailability['dryers'][i]['inUse']">
-      <mat-icon>{{!machineAvailability['dryers'][i]['inUse'] ? 'check' : 'close'}}</mat-icon>
-    </button>
-  </div>
+            <img style="width: 60%" class="icons img-responsive" [src]="getImgSrc(MACHINES_LIST[key.substring(0,key.length-1)]['icon'])">
+            <button class="btn" mat-mini-fab color="primary" (click)="changeTab(key.substring(0,key.length-1) + (i + 1))" [disabled]="machineAvailability[key][i]['inUse']">
+              <mat-icon>{{!machineAvailability[key][i]['inUse'] ? 'check' : 'close'}}</mat-icon>
+            </button>
+          </div>
+        </ng-container>
+      </ng-container>
 </div>

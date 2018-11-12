@@ -5,16 +5,6 @@ const OBJECT_TYPE_TO_QUERY_STRING = {
         "queue_query_string": "full_queue",
         "list_query_string": "full_list",
         "log_query_string": "full_log",
-    },
-    "washer": {
-        "queue_query_string": "washer_queue",
-        "list_query_string": "washer_list",
-        "log_query_string": "washer_log",
-    },
-    "dryer": {
-        "queue_query_string": "dryer_queue",
-        "list_query_string": "dryer_list",
-        "log_query_string": "dryer_log",
     }
 }
 

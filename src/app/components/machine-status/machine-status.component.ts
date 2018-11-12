@@ -7,16 +7,12 @@ import { PostsService } from '../../posts.services';
   styleUrls: ['./machine-status.component.css']
 })
 export class MachineStatusComponent implements OnInit {
-  washerInUse = true;
-  washerDone: boolean;
 
-  dryerInUse: boolean;
-  dryerDone = true;
+  objectKeys = Object.keys;
+
+  baseImgSrc = '../../../assets/';
 
   serverQueried = false;
-
-  washerColor = 'transparent';
-  dryerColor = 'transparent';
 
   @Input() machineAvailability: any;
   @Input() selectedIndex: number;
@@ -40,26 +36,6 @@ export class MachineStatusComponent implements OnInit {
   }
 
   ngOnInit() {
-  }
-
-  getWasherColor() {
-    if (this.washerInUse) {
-      return 'red';
-    } else if (!this.serverQueried) {
-      return 'transparent';
-    } else {
-      return 'green';
-    }
-  }
-
-  getDryerColor() {
-    if (this.dryerInUse) {
-      return 'red';
-    } else if (!this.serverQueried) {
-      return 'transparent';
-    } else {
-      return 'green';
-    }
   }
 
   getWashingStatus() {
@@ -91,6 +67,10 @@ export class MachineStatusComponent implements OnInit {
 
   notifyMachineReady(machine) {
     this.notify.emit(machine);
+  }
+
+  getImgSrc(fileName) {
+    return this.baseImgSrc + fileName;
   }
 
 

@@ -26,8 +26,10 @@ export class SigninComponentComponent implements OnChanges {
   isOnlyQueue = true;
   selected: any;
   mobile: boolean;
-  autoQueue = false;
-  forceCustom: boolean = false;
+  // autoQueue = false;
+  forceCustom = false;
+
+  objectKeys = Object.keys;
 
   minuteOptions = [
     {
@@ -64,6 +66,8 @@ export class SigninComponentComponent implements OnChanges {
   minutesControl = new FormControl();
   minutesWrong = false;
 
+  machineOld = '';
+
   constructor(private postsService: PostsService, ) {
     this.minutes = 30;
     this.buttonDisable = false;
@@ -90,14 +94,20 @@ export class SigninComponentComponent implements OnChanges {
 
         if (didSucceed) {
           this.handleAddToListSuccess(queueObj, uniqueID, isOnlyQueue);
+
+          /*
+
           if (this.autoQueue && !isOnlyQueue && queueObj['machine'] === 'washer') {
-            const queueBrotherObject = res.listObj;
-            queueBrotherObject['machine'] = 'dryer';
-            this.postsService.addToList(queueBrotherObject, true)
+            const queueUserObject = res.listObj;
+            queueUserObject['machine'] = 'dryer';
+            this.postsService.addToList(queueUserObject, true)
               .subscribe(res2 => {
-                console.log('Auto added to queue successfully.');
+                // console.log('Auto added to queue successfully.');
               });
           }
+
+          */
+
         } else {
           this.handleAddToListFailure(queueObj);
         }
@@ -160,6 +170,9 @@ export class SigninComponentComponent implements OnChanges {
     if (this.machine) {
       machinePlural = this.machineToPlural(this.machine);
       machineIndex = this.machineToIndex(this.machine);
+      if (this.machine.toLowerCase().substring(0, this.machine.length - 1) !== this.machineOld) {
+        this.minutes = this.MACHINES_LIST[this.machine.toLowerCase().substring(0, this.machine.length - 1)]['default_minutes'];
+      }
     }
     if (this.machine && this.machine.length > 0 && this.machineAvailability
       && !this.machineAvailability[machinePlural][machineIndex]['inUse']) {
@@ -176,6 +189,11 @@ export class SigninComponentComponent implements OnChanges {
       if (minMinutes !== null && maxMinutes !== null) {
         this.minutesControl = new FormControl('', [Validators.max(maxMinutes), Validators.min(minMinutes)]);
       }
+    }
+    if (this.machine) {
+      this.machineOld = this.machine.toLowerCase().substring(0, this.machine.length - 1);
+    } else {
+      this.machineOld = '';
     }
   }
 

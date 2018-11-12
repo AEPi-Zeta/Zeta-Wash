@@ -1,7 +1,7 @@
 <div class="centered" style="padding-left: 75px; padding-top: 40px; padding-right: 75px;">
     <form class="example-form" #signinForm="ngForm">
         <div class="row">
-            <div class="col col-md-5">
+            <div class="col col-md-4">
                 <div class="centered">
                     <mat-form-field class="example-full-width">
                         <input matInput [formControl]="myControl" [matAutocomplete]="auto" [(ngModel)]="name" placeholder="Name" name="name" required>
@@ -13,25 +13,26 @@
                     </mat-form-field>
                 </div>
             </div>
-            <div class="col col-md-2">
+            <div class="col col-md-2 mr-lg-4 mr-5">
                 <div class="centered">
                     <mat-form-field>
                         <mat-select style="float: right" [(ngModel)]="machine" (ngModelChange)="onMachineChange()" [(value)]="selected" placeholder="Machine" name="machine" required>
                             <div *ngIf="machineAvailability">
-                                <mat-option *ngFor="let washer of machineAvailability['washers']" [value]="washer.key">
-                                        {{washer.longName}}
-                                </mat-option>
-                                <mat-option *ngFor="let dryer of machineAvailability['dryers']" [value]="dryer.key">
-                                        {{dryer.longName}}
-                                </mat-option>
+                                <ng-container *ngIf="machineAvailability">
+                                        <ng-container *ngFor="let key of objectKeys(machineAvailability)">
+                                                <mat-option *ngFor="let machine of machineAvailability[key]" [value]="machine.key">
+                                                        {{machine.longName}}
+                                                </mat-option>
+                                        </ng-container>
+                                </ng-container>
                             </div>
                         </mat-select>
                     </mat-form-field>
                 </div>
             </div>
-            <div class="col col-md-2">
+            <div class="col col-md-3 ml-md-4">
                 <div class="centered">
-                    <div *ngIf="machine && MACHINES_LIST && MACHINES_LIST[machine.toLowerCase().substring(0, machine.length - 1)]['useOptions']; else noOptions">
+                    <div *ngIf="machine && MACHINES_LIST && MACHINES_LIST[machine.toLowerCase().substring(0, machine.length - 1)]['useOptions'];">
                         <mat-form-field>
                             <mat-select [ngModelOptions]="{standalone: true}" [(ngModel)]="minutes" placeholder="Minutes" required>
                                 <mat-option (click)="triggerForceCustom(false)" *ngFor="let option of MACHINES_LIST[machine.toLowerCase().substring(0, machine.length - 1)]['minuteOptions']" [value]="option.amount">
@@ -51,9 +52,10 @@
                     </div>
                 </div>
             </div>
-
-            <div class="col col-md-2">
-                <mat-checkbox [(ngModel)]="isOnlyQueue" color="primary" style="bottom:30px; position:absolute" [ngModelOptions]="{standalone: true}" required>Only Queue</mat-checkbox>      
+            <div class="col col-md-1 col-sm-12 col-xs-12">
+                <div style="position: relative; top: 70%; transform: translateY(-100%);">
+                    <mat-checkbox [(ngModel)]="isOnlyQueue" color="primary" [ngModelOptions]="{standalone: true}" required>Only Queue</mat-checkbox>      
+                </div>
             </div>
         </div>
 
@@ -96,7 +98,7 @@
 
     <table style="width: 100%">
         <td>
-            <app-brothers-list [machineAvailability]="machineAvailability" [list]="list" [queue]="queue"></app-brothers-list>
+            <app-usage [machineAvailability]="machineAvailability" [list]="list" [queue]="queue"></app-usage>
         </td>
     </table>
 

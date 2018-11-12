@@ -20,9 +20,14 @@ import { Http, HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { PostsService } from './posts.services';
 import { SigninComponentComponent } from './components/signin-component/signin-component.component';
-import { BrothersListComponent } from './components/brothers-queue/brothers-list.component';
+import { UsageComponent } from './components/usage/usage.component';
 import { LogComponent } from './components/log/log.component';
-
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
+import { SettingsComponent } from './components/settings/settings.component';
+import { ModifyMachineComponent } from './components/modify-machine/modify-machine.component';
+import { ModifyMachinesComponent } from './components/modify-machines/modify-machines.component';
+import { PinInputComponent } from './components/pin-input/pin-input.component';
 
 @NgModule({
   declarations: [
@@ -30,8 +35,12 @@ import { LogComponent } from './components/log/log.component';
     MachineStatusComponent,
     HeaderComponent,
     SigninComponentComponent,
-    BrothersListComponent,
-    LogComponent
+    UsageComponent,
+    LogComponent,
+    SettingsComponent,
+    ModifyMachineComponent,
+    ModifyMachinesComponent,
+    PinInputComponent
   ],
   imports: [
     BrowserModule,
@@ -60,10 +69,15 @@ import { LogComponent } from './components/log/log.component';
     MatAutocompleteModule,
     MatSnackBarModule,
     MatMenuModule,
-    MatDialogModule
+    MatDialogModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   entryComponents: [
     LogComponent,
+    ModifyMachineComponent,
+    ModifyMachinesComponent,
+    SettingsComponent,
+    PinInputComponent
   ],
   providers: [PostsService],
   bootstrap: [AppComponent]

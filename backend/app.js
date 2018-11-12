@@ -12,6 +12,11 @@ const bodyParser = require("body-parser");
 const db_file = new FileSync('db.json');
 const db = low(db_file);
 var https = require('https');
+var passport = require('passport');
+var Strategy = require('passport-local').Strategy;
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 const port = consts.SERVER_PORT;
 const OBJECT_TYPE_TO_QUERY_STRING = consts.OBJECT_TYPE_TO_QUERY_STRING
@@ -19,13 +24,52 @@ const OBJECT_TYPE_TO_QUERY_STRING = consts.OBJECT_TYPE_TO_QUERY_STRING
 const frontendURL = config.get("ZetaWash.Host.frontendURL");
 const useEncryption = config.get("ZetaWash.Encryption.useEncryption");
 const useCustomUsersList = config.get("ZetaWash.Users.customUsersList");
+const machines = config.get("ZetaWash.Machines.List")
+
+let dbsToCheck = ['full_list'];
+let primaryList = 'full_list';
+
+let dbConfig = {
+    "full_list": [],
+    "full_queue": [],
+    "full_log": []
+};
+
+passport.use(new Strategy(
+    function(password, done) {
+      if (db.get(password)) {
+          if (db.get.password.value() == password) {
+              return done(null, true);
+          }
+      }
+      return done(null, false);
+    }));
+
+for (const machine in machines) { // creates db template and query string configuration
+    if (machine) {
+        const queueString = machine + '_queue';
+        const listString = machine + '_list';
+        const logString = machine + '_log';
+
+        dbConfig['queue_query_string'] = queueString;
+        dbConfig['list_query_string'] = listString;
+        dbConfig['log_query_string'] = logString;
+
+        OBJECT_TYPE_TO_QUERY_STRING[machine] = {};
+        let machineConfig = OBJECT_TYPE_TO_QUERY_STRING[machine];
+        machineConfig['queue_query_string'] = queueString
+        machineConfig['list_query_string'] = listString;
+        machineConfig['log_query_string'] = logString;
+
+        dbsToCheck.push(listString);
+    }
+}
+
 let alertService;
 
 // mailing variables
 
-let templates;
-let dryerEmail;
-let washerEmail;
+let templates = {};
 let transporter;
 let mailOptions;
 let users;
@@ -33,32 +77,37 @@ let emailUser;
 
 if (useCustomUsersList) {
     var users_json = JSON.parse(fs.readFileSync('./config/users.json', 'utf8'));
+    var auth_json = JSON.parse(fs.readFileSync('./config/auth.json', 'utf8'));
+
     users = users_json['users'];
     alertService = config.get("ZetaWash.Users.alertService");
-    emailUser = config.get("ZetaWash.Users.Email.auth.user");
+    
     if (alertService === 'email') {
+        emailUser = auth_json['Email']['user'];
         const transportOptions = {
             service: config.get("ZetaWash.Users.Email.service"),
             auth: {
                 user: emailUser,
-                pass: config.get("ZetaWash.Users.Email.auth.pass")
+                pass: auth_json['Email']['pass']
             }
         }
 
-        washerEmail = config.get("ZetaWash.Users.Email.dryerEmail");
-        dryerEmail = config.get("ZetaWash.Users.Email.washerEmail");
-
-        templates = {
-            'washer': washerEmail,
-            'dryer': dryerEmail
+        for (let machine in machines) {
+            if (machines[machine]['email']) {
+                templates[machine] = machines[machine]['email']
+            } else {
+                console.error('Machine ' + machine + ' in default.json is missing an email object! Skipping machine.');
+            }
         }
+
+        // console.log(templates);
 
         transporter = nodemailer.createTransport(transportOptions);
     }
 }
 
 // Set some defaults (required if your JSON file is empty)
-db.defaults({ full_list: [], washer_list: [], dryer_list: [], full_queue: [], washer_queue: [], dryer_queue: [], washer_log: [], dryer_log: [], full_log: []})
+db.defaults(dbConfig)
   .write()
 
 console.log(`origin: ${frontendURL}`)
@@ -95,7 +144,7 @@ app.post('/removeFromList', (req, res) => {
         opCode: '200'
     });
 
-    console.log(`Successfully removed ${listObj.name} from ${onlyQueue ? 'queue' : 'list'}.`)
+    // DEBUG: console.log(`Successfully removed ${listObj.name} from ${onlyQueue ? 'queue' : 'list'}.`)
 
     res.end("yes");
 })
@@ -116,7 +165,15 @@ app.post('/addToList', (req, res) => {
         listObj: listObj
      });
 
-     console.log(`Successfully added ${listObj.name} to ${onlyQueue ? 'queue' : 'list'}.`)
+     // DEBUG: console.log(`Successfully added ${listObj.name} to ${onlyQueue ? 'queue' : 'list'}.`)
+
+     res.end("yes");
+})
+
+app.post('/login', passport.authenticate('local', { failureRedirect: '/error'}), (req, res) => {
+    res.send({ 
+        opCode: '200',
+     });
 
      res.end("yes");
 })
@@ -158,7 +215,7 @@ app.post('/getLog', (req, res) => {
     res.send({ 
         opCode: '200',
         log: new_log,
-     });
+     });                                                   
 
      res.end("yes");
 })
@@ -178,6 +235,61 @@ app.post('/getUsers', (req, res) => {
         users: users_names,
      });
 
+     res.end("yes");
+})
+
+app.post('/checkPin', (req, res) => {
+    var auth_json = JSON.parse(fs.readFileSync('./config/auth.json', 'utf8'));
+    var auth_pin = auth_json['App']['pinCode'];
+
+    const pin_valid = auth_pin === req.body.pin;
+
+    res.send({
+        authenticated: pin_valid
+    })
+
+    res.end("yes");
+})
+
+app.post('/getAuth', (req, res) => {
+    var auth_json = JSON.parse(fs.readFileSync('./config/auth.json', 'utf8'));
+
+    res.send({ 
+        opCode: '200',
+        auth: auth_json,
+     });
+
+     res.end("yes");
+})
+
+app.post('/setAuth', (req, res) => {
+    var newAuth = req.body.auth;
+    fs.writeFileSync('config/auth.json', JSON.stringify(newAuth, null, 4), 'utf8', function (error) {
+        if (error) {
+            console.log("Error on writing to auth file!");
+        }
+    });
+
+    res.send({
+        opCode: '200'
+    });
+    console.log("auth set!");
+    res.end("yes");
+});
+
+app.post('/setConfig', (req, res) => {
+    var newConfig = {};
+    var config = req.body.config;
+    newConfig.ZetaWash = config;
+    fs.writeFileSync('config/default.json', JSON.stringify(newConfig, null, 4), 'utf8', function (error) {
+        if (error) {
+            console.log("Error on writing config!");
+        }
+    });
+    res.send({ 
+        opCode: '200'
+     });
+     console.log('config set!');
      res.end("yes");
 })
 
@@ -238,10 +350,6 @@ function removeListObjectDB(listObj, onlyQueue) {
 let checkListID = setInterval(() => checkList(), 500);
 
 function checkList() {
-
-    let dbsToCheck = ['washer_list', 'dryer_list', 'full_list']
-    let primaryList = 'full_list'
-
     for (let i = 0; i < dbsToCheck.length; i++) {
         let dbToCheck = dbsToCheck[i]
         db.get(dbToCheck)
@@ -280,7 +388,7 @@ function onRemoveFromList(listObj) {
 
     // sends email if necessary
     if (useCustomUsersList && alertService == 'email') {
-        console.log("sending email");
+        // DEBUG: console.log("sending email");
         const user = users.find(function(element) {
             return element.name === listObj['name'];
           });
@@ -289,8 +397,6 @@ function onRemoveFromList(listObj) {
             email = user['email'];
     
             const machine = listObj['machine'];
-
-            console.log(listObj['endTime']);
             
             var mailOptions = {
                 from: emailUser,
@@ -299,12 +405,12 @@ function onRemoveFromList(listObj) {
                 text: emailParser(templates[machine]['text'],listObj['name'], parseInt(listObj['endTime']))
             };
             
-            console.log("sending mail to " + listObj['name']);
+            // DEBUG: console.log("sending mail to " + listObj['name']);
             transporter.sendMail(mailOptions, function(error, info){
                 if (error) {
                     console.log(error);
                 } else {
-                    console.log('Email sent: ' + info.response);
+                    // DEBUG: console.log('Email sent: ' + info.response);
                 }
             });
         }
@@ -334,9 +440,9 @@ if (useEncryption) {
     };
 
     https.createServer(options, app).listen(port);
-    console.log(`ZetaWash server listening on port ${port}\nSSL: Enabled`)
+    console.log(`Zeta Wash server listening on port ${port}\nSSL: Enabled`)
 } else {
-    app.listen(port, () => console.log(`ZetaWash server listening on port ${port}\nSSL: Disabled`))
+    app.listen(port, () => console.log(`Zeta Wash server listening on port ${port}\nSSL: Disabled`))
 }
 
 function emailParser(inputString, name, endTime) {

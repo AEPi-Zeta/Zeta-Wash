@@ -48,8 +48,18 @@ export class PostsService {
             .map(res => res.json());
     }
 
+    checkAuth(pin: string): Observable<any> {
+        return this.http.post(this.path + 'checkPin', {pin: pin})
+            .map(res => res.json());
+    }
+
     getUsers(): Observable<any> {
         return this.http.post(this.path + 'getUsers', {})
+            .map(res => res.json());
+    }
+
+    getAuth(): Observable<any> {
+        return this.http.post(this.path + 'getAuth', {})
             .map(res => res.json());
     }
 
@@ -60,6 +70,16 @@ export class PostsService {
         }
         return this.http.get(url)
                         .map(res => res.json());
+    }
+
+    setConfig(config): Observable<any> {
+        return this.http.post(this.path + 'setConfig', {config: config})
+            .map(res => res.json());
+    }
+
+    setAuth(auth): Observable<any> {
+        return this.http.post(this.path + 'setAuth', {auth: auth})
+            .map(res => res.json());
     }
 }
 

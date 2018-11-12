@@ -1,0 +1,112 @@
+<div *ngIf="config && machineName" class="table table-responsive p-5">
+
+  <div class="col">
+    <div *ngIf="!isNewMachine; else isANewMachine" class="row">
+      <h4>{{machineName}}</h4>
+    </div>
+
+    
+      <ng-template #isANewMachine>
+        <div class="row">
+          <mat-form-field class="example-full-width">
+            <input matInput required placeholder="Machine Name" [(ngModel)]="machineName" type="text">
+            <mat-error>Please input a valid entry.</mat-error>
+          </mat-form-field>
+        </div>
+      </ng-template>
+    
+
+    <div class="row">
+      <mat-form-field class="example-full-width">
+        <input matInput required placeholder="Machine Count" [(ngModel)]="countInput" type="number">
+        <mat-error>Please input a valid entry.</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="row">
+      <mat-form-field class="example-full-width">
+        <input matInput required placeholder="Default Minutes" [(ngModel)]="defaultMinutesInput" type="number">
+        <mat-error>Please input a valid entry.</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="row">
+      <mat-form-field class="example-full-width">
+        <input matInput required placeholder="Minimum Minutes" [(ngModel)]="minMinutesInput" type="number">
+        <mat-error>Please input a valid entry.</mat-error>
+      </mat-form-field>
+    </div>  
+
+    <div class="row">
+      <mat-form-field class="example-full-width">
+        <input matInput placeholder="Maximum Minutes" [(ngModel)]="maxMinutesInput" type="number">
+        <mat-error>Please input a valid entry.</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="row">
+      <mat-form-field class="example-full-width">
+        <input matInput name="Icon" [(ngModel)]="iconInput" placeholder="Icon" type="text">
+        <mat-error>Please input a valid entry.</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="row">
+      <mat-form-field class="example-full-width">
+        <input matInput name="Subject" [(ngModel)]="emailSubjectInput" placeholder="Subject" type="text">
+        <mat-error>Please input a valid entry.</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="row">
+      <mat-form-field class="example-full-width">
+        <textarea matInput name="Text" [(ngModel)]="emailTextInput" placeholder="Text" type="text"></textarea>
+        <mat-error>Please input a valid entry.</mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="col">
+      <div class="row">
+        <h5>Time Options</h5>
+      </div>
+      <div class="row py-2">
+        <mat-checkbox [(ngModel)]="useOptionsInput" color="primary">Use time options</mat-checkbox> 
+
+        <mat-form-field class="example-full-width">
+          <input matInput [disabled]="!useOptionsInput" placeholder="Option Count" (ngModelChange)="optionsCountChange()" [(ngModel)]="optionsCount" type="number">
+          <mat-error>Please input a valid entry.</mat-error>
+        </mat-form-field>
+      </div>
+      <span *ngIf="useOptionsInput && optionsCount">
+      <div *ngFor="let index of counter(optionsCount)">
+        <div class="row">
+          <mat-form-field class="example-full-width">
+            <input matInput required [disabled]="!useOptionsInput" [(ngModel)]="minuteOptionsInput[index].key" placeholder="Name" type="text">
+            <mat-error>Please input a valid entry.</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <mat-form-field class="example-full-width">
+            <input matInput required [disabled]="!useOptionsInput" [(ngModel)]="minuteOptionsInput[index].label" placeholder="Label" type="text">
+            <mat-error>Please input a valid entry.</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <mat-form-field class="example-full-width">
+            <input matInput required [disabled]="!useOptionsInput" [(ngModel)]="minuteOptionsInput[index].amount" placeholder="Time (minutes)" type="number">
+            <mat-error>Please input a valid entry.</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </span>
+  </div>
+
+  <div class="col">
+    <div class="row">
+      <button mat-raised-button [mat-dialog-close]="true" [disabled]="checkSettingsSame() || inputsInvalid()" (click)="onSaveMachine()" type="button" color="primary" style="width: 250px; height: 50px; font-size: 20px; float: right;">
+          {{isNewMachine ? 'Add' : 'Save'}}
+      </button>
+    </div>
+  </div>
+</div>

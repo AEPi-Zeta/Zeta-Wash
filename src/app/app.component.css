@@ -71,6 +71,13 @@ mat-form-field.mat-form-field {
     position: fixed;
 }
 
+.bottom-left {
+    bottom: 10px;
+    left: 12px; 
+    float: left;
+    position: fixed;
+}
+
 .fullscreen-icon {
     font-size: 36px;
     height: 36px;

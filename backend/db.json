@@ -1,11 +1,8 @@
 {
   "full_list": [],
-  "washer_list": [],
-  "dryer_list": [],
   "full_queue": [],
-  "washer_queue": [],
-  "dryer_queue": [],
-  "washer_log": [],
-  "dryer_log": [],
-  "full_log": []
+  "full_log": [],
+  "queue_query_string": "dryer_queue",
+  "list_query_string": "dryer_list",
+  "log_query_string": "dryer_log"
 }

@@ -1,4 +1,4 @@
-<app-header [topBarTitle]="topBarTitle" [postsService]="postsService"></app-header>
+<app-header [(config)]="config" [auth]="auth" [requirePinForSettings]="requirePinForSettings" [pinSet]="pinSet" [topBarTitle]="topBarTitle" [postsService]="postsService"></app-header>
 <mat-tab-group [(selectedIndex)]="selectedIndex" style="height: 100%">
   <mat-tab label="Sign Up">
     <app-signin-component [machineAvailability]="machineAvailability" [MACHINES_LIST]="MACHINES_LIST" [(machine)]="machine" [list]="list" [queue]="queue" [users]="users"></app-signin-component>
@@ -21,14 +21,14 @@
             <div style="padding-top: 10px; padding-left: 30px; padding-right: 30px; padding-bottom: 30px">
                 <h4>List</h4>
                 <br/>
-                <app-brothers-list [usingListOnly]="true" [list]="list" [machineAvailability]="machineAvailability" [queue]="queue"></app-brothers-list>
+                <app-usage [usingListOnly]="true" [list]="list" [machineAvailability]="machineAvailability" [queue]="queue"></app-usage>
             </div>   
           </mat-card>
         </div>
         <div class="col-md-8 col-sm-12" style="padding: 10px;">
           <mat-card id="card" class="big demo-basic">
             <div *ngIf="machineAvailability !== null" style="padding-top: 10px; padding-left: 30px; padding-right: 30px; padding-bottom: 30px">
-                <app-machine-status [(selectedIndex)]="selectedIndex" [machineAvailability]="machineAvailability" (notify)="onNotifyMachine($event)"></app-machine-status>
+                <app-machine-status [(selectedIndex)]="selectedIndex" [machineAvailability]="machineAvailability" [MACHINES_LIST]="MACHINES_LIST" (notify)="onNotifyMachine($event)"></app-machine-status>
             </div>
           </mat-card>
         </div>
@@ -37,6 +37,31 @@
   </mat-tab>
 </mat-tab-group>
 
-<button toggleFullscreen class="bottom-right" mat-icon-button (click)="this.toggleFullScreen()">
-  <mat-icon class="fullscreen-icon">{{isFullScreen ? 'fullscreen_exit' : 'fullscreen'}}</mat-icon>
-</button>
+<!--
+
+
+<div *ngIf="config; else noConfig">
+  <app-settings [(config)]="config"></app-settings>
+</div>
+
+<ng-template #noConfig>
+  No config!
+</ng-template>
+
+<div *ngIf="config">
+  <app-modify-machines [(config)]="config"></app-modify-machines>
+</div>
+
+-->
+
+<span *ngIf="config && config.Extra.enableFullScreenButton">
+  <button toggleFullscreen class="bottom-right" mat-icon-button (click)="this.toggleFullScreen()">
+    <mat-icon class="fullscreen-icon">{{isFullScreen ? 'fullscreen_exit' : 'fullscreen'}}</mat-icon>
+  </button>
+</span>
+
+<span *ngIf="requirePinForSettings">
+  <button toggleFullscreen class="bottom-left" mat-icon-button (click)="this.authDialog()">
+    <mat-icon>{{isAuthenticated ? 'lock_open' : 'lock'}}</mat-icon>
+  </button>
+</span>

@@ -4,88 +4,97 @@
             "frontendURL": "http://localhost:4200",
             "backendURL": "http://localhost:8088/"
         },
-      "Encryption": {
-        "useEncryption": false,
-        "certFilePath": "/etc/letsencrypt/live/aepizeta.ga/fullchain.pem",
-        "keyFilePath": "/etc/letsencrypt/live/aepizeta.ga/privkey.pem"
-      },
-      "Machines": {
-        "useQueue": true,
-        "List": {
-          "washer": {
-            "key": "washer",
-            "count": 2,
-            "default_minutes": 60,
-            "min_minutes": 0,
-            "max_minutes": 240,
-            "useOptions": true,
-            "minuteOptions": [
-              {
-                "key": "30",
-                "amount": 30,
-                "label": "30 - Quick"
-              },
-              {
-                "key": "60",
-                "amount": 60,
-                "label": "60 - Normal"
-              },
-              {
-                "key": "80",
-                "amount": 80,
-                "label": "80 - Long"
-              }
-            ]
-          },
-          "dryer": {
-              "key": "dryer",
-              "count": 2,
-              "default_minutes": 50,
-              "min_minutes": 0,
-              "max_minutes": 240,
-              "useOptions": true,
-              "minuteOptions": [
-                {
-                  "key": "30",
-                  "amount": 30,
-                  "label": "30 - Quick"
+        "Encryption": {
+            "useEncryption": false,
+            "certFilePath": "/etc/letsencrypt/live/aepizeta.ga/fullchain.pem",
+            "keyFilePath": "/etc/letsencrypt/live/aepizeta.ga/privkey.pem"
+        },
+        "Machines": {
+            "useQueue": false,
+            "List": {
+                "washer": {
+                    "key": "washer",
+                    "count": 2,
+                    "default_minutes": 60,
+                    "min_minutes": 0,
+                    "max_minutes": 240,
+                    "useOptions": true,
+                    "minuteOptions": [
+                        {
+                            "key": "30",
+                            "amount": 30,
+                            "label": "30 - Quick"
+                        },
+                        {
+                            "key": "60",
+                            "amount": 60,
+                            "label": "60 - Normal"
+                        },
+                        {
+                            "key": "80",
+                            "amount": 79,
+                            "label": "80 - Long"
+                        }
+                    ],
+                    "icon": "washer.png",
+                    "email": {
+                        "subject": "[Zeta Wash - Washer] Your clothes are washed!",
+                        "text": "Your clothes finished washing at ${date}."
+                    }
                 },
-                {
-                  "key": "50",
-                  "amount": 50,
-                  "label": "50 - Normal"
+                "dryer": {
+                    "key": "dryer",
+                    "count": 2,
+                    "default_minutes": 50,
+                    "min_minutes": 0,
+                    "max_minutes": 240,
+                    "useOptions": true,
+                    "minuteOptions": [
+                        {
+                            "key": "30",
+                            "amount": 30,
+                            "label": "30 - Quick"
+                        },
+                        {
+                            "key": "50",
+                            "amount": 50,
+                            "label": "50 - Normal"
+                        },
+                        {
+                            "key": "80",
+                            "amount": 80,
+                            "label": "80 - Long"
+                        }
+                    ],
+                    "icon": "dryer.png",
+                    "email": {
+                        "subject": "[Zeta Wash - Dryer] Your clothes are dry!",
+                        "text": "Your clothes finished drying at ${date}."
+                    }
                 },
-                {
-                  "key": "80",
-                  "amount": 80,
-                  "label": "80 - Long"
+                "New Machine": {
+                    "key": "New Machine",
+                    "email": {}
                 }
-              ]
-          }
+            }
+        },
+        "Extra": {
+            "titleTop": "Zeta Wash Dev",
+            "enableFullScreenButton": true
+        },
+        "Users": {
+            "customUsersList": true,
+            "forceCustomUsersList": false,
+            "requirePinForSettings": true,
+            "pinSet": true,
+            "alertService": "email",
+            "Email": {
+                "service": "Gmail",
+                "auth": {
+                    "user": "aepizetawash@gmail.com",
+                    "pass": "kupmnwtlrskcjsfw"
+                }
+            }
         }
-      },
-      "Extra": {
-        "titleTop": "Zeta Wash"
-      },
-      "Users": {
-        "customUsersList": false,
-        "forceCustomusersList": false,
-        "alertService": "email",
-        "Email": {
-          "service": "gmail",
-          "auth": {
-            "user": "aepizetawash@gmail.com",
-            "pass": "kupmnwtlrskcjsfw" 
-          },
-          "dryerEmail": {
-            "subject": "[Zeta Wash - Dryer] Your clothes are dry!",
-            "text": "Your clothes finished drying at ${date}."
-          },
-          "washerEmail": {
-            "subject": "[Zeta Wash - Dryer] Your clothes are washed!",
-            "text": "Your clothes finished drying at ${date}."
-          }
-        }
-      }
     }
 }

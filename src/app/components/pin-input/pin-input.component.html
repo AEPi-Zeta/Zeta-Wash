@@ -1,0 +1,5 @@
+<h2>{{pinSet ? 'Enter the previously set pin' : 'Set up a pin to access settings'}}</h2>
+
+<input matInput type="number" [(ngModel)]="pinInput">
+
+<button mat-raised-button color="primary" type="submit" (click)="closedFromButton = true" [mat-dialog-close]="true">Submit</button>
