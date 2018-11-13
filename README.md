@@ -1,6 +1,6 @@
 # Zeta Wash
 
-Zeta Wash is a utilities management app for residencies. It currently allows you to "reserve" machines marking you're using that device, get the status of whether the utilities are being used, and use a log to track who used what.
+Zeta Wash is a utilities management app for residencies. It currently allows you to "reserve" machines marking you're using that device, get the status of whether the utilities are being used, and use a log to track historical usage.
 
 ## Getting Started
 
