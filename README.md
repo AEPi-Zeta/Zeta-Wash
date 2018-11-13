@@ -31,7 +31,7 @@ sudo apt-get install nodejs
 
 First, download the [latest release](https://github.com/AEPi-Zeta/Zeta-Wash/releases)!
 
-Drag all the files in `Zeta-Wash` to a location accessible to a web server. It works best if it's the root (usually right inside `public_html`. Once that's done, navigate to `backend` and type `npm install` to install all the backend dependencies. 
+Drag all the files in `Zeta-Wash` to a location accessible to a web server. It works best if it's the root (usually right inside `public_html`. Once that's done, navigate to `backend` and type `npm install` to install all the backend dependencies. You may need to install addition dependencies with `npm install <dependency name>`.
 
 Then edit the `default.json` file. You only need to modify these settings to get up and running (adding machines and other settings comes later):
 
@@ -69,7 +69,7 @@ This is an explanation of some key features you can set up, as well as an explan
 
 #### Authentication
 
-To make sure that only you can modify the settings, turn on `Require pin for settings.` Then reload your page.
+To make sure that only you can modify the settings, turn on `Require pin for settings`. Then reload your page.
 
 On the bottom left, you should see a lock button. Click it, and it will ask you to set a pin. Set this pin. It should successfully set. Then, click the lock again and type in the pin you just set. Now you're able to change your settings again!
 
