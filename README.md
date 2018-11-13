@@ -128,6 +128,10 @@ The default, maximum, and minimum time are self-explanatory.
 
 Once you set up the settings, you're all ready to add the machine.
 
+#### Queue
+
+To enable a queue for machines, go into settings and under `Queue` click `Use queue` to enable it. Now when you sign up for machines, you can queue it instead, and it won't start the timer until you hit start! Also when machines are full, people can queue up for them in advance. There is currently no priority system built in, but one is in the works. Right now it's first-come-first-serve for those in the queue.
+
 ## Deployment
 
 If you'd like to install Zeta Wash, go to the Installation section. If you want to build it yourself and/or develop the repository, then this section is for you.
