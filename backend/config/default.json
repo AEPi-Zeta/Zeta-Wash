@@ -89,11 +89,7 @@
             "pinSet": true,
             "alertService": "email",
             "Email": {
-                "service": "Gmail",
-                "auth": {
-                    "user": "aepizetawash@gmail.com",
-                    "pass": "kupmnwtlrskcjsfw"
-                }
+                "service": "Gmail"
             }
         }
     }

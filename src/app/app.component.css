@@ -69,6 +69,7 @@ mat-form-field.mat-form-field {
     right: 12px; 
     float: right;
     position: fixed;
+    z-index: 50;
 }
 
 .bottom-left {
@@ -76,6 +77,7 @@ mat-form-field.mat-form-field {
     left: 12px; 
     float: left;
     position: fixed;
+    z-index: 50;
 }
 
 .fullscreen-icon {

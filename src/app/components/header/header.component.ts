@@ -20,6 +20,8 @@ export class HeaderComponent implements OnInit {
 
   @Input() auth: any;
 
+  @Input() isAuthenticated: boolean;
+
   constructor(public dialog: MatDialog) {
 
   }

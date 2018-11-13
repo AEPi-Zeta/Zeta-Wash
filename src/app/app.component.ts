@@ -23,14 +23,14 @@ export class AppComponent {
   topBarTitle: string;
   hasList = false;
   useQueue = true;
-  isDev = true;
+  isDev = false;
   devPath = 'http://localhost:8088/';
   mobile: boolean;
   isFullScreen = false;
 
   pinSet: boolean;
   requirePinForSettings: boolean;
-  isAuthenticated: boolean;
+  isAuthenticated = false;
   authReached = false;
 
   config = null;
@@ -45,9 +45,6 @@ export class AppComponent {
       this.config = result.ZetaWash;
       this.topBarTitle = result.ZetaWash.Extra.titleTop;
       this.useQueue = result.ZetaWash.Machines.useQueue;
-
-      console.log(this.config);
-
       this.postsService.path = result.ZetaWash.Host.backendURL;
 
       this.MACHINES_LIST = result.ZetaWash.Machines.List;
@@ -168,9 +165,15 @@ export class AppComponent {
           const snackBarRef = this.snackBar.open('Logged in!', 'Close', {
             duration: 2000
           });
+        }, error => {
+          const snackBarRef = this.snackBar.open('Error authenticating.', 'Close', {
+            duration: 2000
+          });
         });
       } else {
-        // todo
+        const snackBarRef = this.snackBar.open('Authentication failed.', 'Close', {
+          duration: 2000
+        });
       }
     });
   }

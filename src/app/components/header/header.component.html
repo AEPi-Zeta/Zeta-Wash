@@ -27,10 +27,10 @@
         <button mat-icon-button [matMenuTriggerFor]="menu"><mat-icon class="mat-24">more_vert</mat-icon></button>
         <mat-menu #menu="matMenu">
           <button (click)="this.openLog()" mat-menu-item>Log</button>
-          <span *ngIf="!requirePinForSettings || pinSet">
+          <span *ngIf="!requirePinForSettings || isAuthenticated">
             <button (click)="this.openModifySettings()" mat-menu-item>Settings</button>
           </span>
-          <span *ngIf="!requirePinForSettings || pinSet">
+          <span *ngIf="!requirePinForSettings || isAuthenticated">
             <button (click)="this.openModifyMachines()" mat-menu-item>Modify Machines</button>
           </span>
         </mat-menu>

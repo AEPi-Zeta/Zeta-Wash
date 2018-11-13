@@ -1,19 +1,9 @@
-<app-header [(config)]="config" [auth]="auth" [requirePinForSettings]="requirePinForSettings" [pinSet]="pinSet" [topBarTitle]="topBarTitle" [postsService]="postsService"></app-header>
+<app-header [isAuthenticated]="isAuthenticated" [(config)]="config" [auth]="auth" [requirePinForSettings]="requirePinForSettings" [pinSet]="pinSet" [topBarTitle]="topBarTitle" [postsService]="postsService"></app-header>
 <mat-tab-group [(selectedIndex)]="selectedIndex" style="height: 100%">
   <mat-tab label="Sign Up">
     <app-signin-component [machineAvailability]="machineAvailability" [MACHINES_LIST]="MACHINES_LIST" [(machine)]="machine" [list]="list" [queue]="queue" [users]="users"></app-signin-component>
   </mat-tab>
   <mat-tab label="Status">
-    <!--<table>
-      <td style="position: relative; width: 40%; height: 100%; padding: 10px; top: -5px">
-          
-      </td>
-    
-      <td style="width: 60%; height: 100%; padding: 10px;">
-          
-          
-      </td>
-    </table>-->
     <div class="container-fluid">
     <div class="row">
         <div class="col-md-4 col-sm-12" style="padding: 10px;">
@@ -36,23 +26,6 @@
     </div>
   </mat-tab>
 </mat-tab-group>
-
-<!--
-
-
-<div *ngIf="config; else noConfig">
-  <app-settings [(config)]="config"></app-settings>
-</div>
-
-<ng-template #noConfig>
-  No config!
-</ng-template>
-
-<div *ngIf="config">
-  <app-modify-machines [(config)]="config"></app-modify-machines>
-</div>
-
--->
 
 <span *ngIf="config && config.Extra.enableFullScreenButton">
   <button toggleFullscreen class="bottom-right" mat-icon-button (click)="this.toggleFullScreen()">
