@@ -36,7 +36,6 @@ Drag all the files in `Zeta-Wash` to a location accessible to a web server. It w
 Then edit the `default.json` file. You only need to modify these settings to get up and running (adding machines and other settings comes later):
 
 ```
-
 In "Host":
 
 "frontendURL" <- This is the url to the web page that the user sees
@@ -54,7 +53,6 @@ In "Encryption":
 "keyFilePath" <- The path to the private key, sometimes called "privkey.pem".
 
 And then you're done for sure! There are other settings but you can modify that within Zeta Wash.
-
 ```
 
 Remember to port forward the port inside default.json. By default it's `8088`.
@@ -82,7 +80,6 @@ You may want to have a users list that people select from to reserve their machi
 You'll then want to have a JSON file in the config directory labeled `users.json`. It should be formatted like this:
 
 ```
-
 {
     "users": [
         {
@@ -97,8 +94,6 @@ You'll then want to have a JSON file in the config directory labeled `users.json
         }
     ]
 }
-
-
 ```
 
 Then try to sign in with one of the users in the list, it should pop us as an autocomplete option.
@@ -129,8 +124,6 @@ The default, maximum, and minimum time are self-explanatory.
 "Subject" <- If you are using email alerts, this is the subject header of the email people receive for when the machine they used is done. You can include these variables, and we'll fill them out for you: ${date}, ${name}
 "Text" <- If you are using email alerts, this is the text body of the email people receive for when the machine they used is done. You can include these variables, and we'll fill them out for you: ${date}, ${name}
 "Time options" <- If you want to have default time options available for this machine, select this. For example, if a machine only runs for 30 minutes, then add a 30 minute time option. The "Name" options is whatever you want (e.g. `30`), the "Label" (e.g. `30 Minutes`) is what the user sees, and the "Time" is the time for that option `(e.g. 30`).
-
-
 ```
 
 Once you set up the settings, you're all ready to add the machine.
