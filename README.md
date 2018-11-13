@@ -33,7 +33,7 @@ First, download the [latest release](https://github.com/AEPi-Zeta/Zeta-Wash/rele
 
 Drag all the files in `Zeta-Wash` to a location accessible to a web server. It works best if it's the root (usually right inside `public_html`. Once that's done, navigate to `backend` and type `npm install` to install all the backend dependencies. You may need to install addition dependencies with `npm install <dependency name>`.
 
-Then edit the `default.json` file. You only need to modify these settings to get up and running (adding machines and other settings comes later):
+Then edit the `default.json` file in the `config` folder. You only need to modify these settings to get up and running (adding machines and other settings comes later):
 
 ```
 In "Host":
@@ -56,6 +56,8 @@ And then you're done for sure! There are other settings but you can modify that 
 ```
 
 Remember to port forward the port inside default.json. By default it's `8088`.
+
+It's also recommended that you run `chmod 750 auth.json` in the config folder to protect the auth file from web crawlers.
 
 Once the configuration is done, type `sudo nodejs app.js` in the `backend` folder, located in the root directory. This will run the backend server. On your browser, navigate to your installation folder. Try signing up for a machine to see if it works. If it does, viola! Zeta Wash is now up and running. You'll probably want to 
 
@@ -95,6 +97,8 @@ You'll then want to have a JSON file in the config directory labeled `users.json
     ]
 }
 ```
+
+Run `chmod 750 users.json` to protect it from web crawlers.
 
 Then try to sign in with one of the users in the list, it should pop us as an autocomplete option.
 
