@@ -1,13 +1,13 @@
 {
     "ZetaWash": {
         "Host": {
-            "frontendURL": "http://localhost:4200",
-            "backendURL": "http://localhost:8088/"
+            "frontendURL": "http://example.com",
+            "backendURL": "http://example.com:8088/"
         },
         "Encryption": {
             "useEncryption": false,
-            "certFilePath": "/etc/letsencrypt/live/aepizeta.ga/fullchain.pem",
-            "keyFilePath": "/etc/letsencrypt/live/aepizeta.ga/privkey.pem"
+            "certFilePath": "/etc/letsencrypt/live/example.com/fullchain.pem",
+            "keyFilePath": "/etc/letsencrypt/live/example.com/privkey.pem"
         },
         "Machines": {
             "useQueue": false,
@@ -32,7 +32,7 @@
                         },
                         {
                             "key": "80",
-                            "amount": 79,
+                            "amount": 80,
                             "label": "80 - Long"
                         }
                     ],
@@ -71,23 +71,19 @@
                         "subject": "[Zeta Wash - Dryer] Your clothes are dry!",
                         "text": "Your clothes finished drying at ${date}."
                     }
-                },
-                "New Machine": {
-                    "key": "New Machine",
-                    "email": {}
                 }
             }
         },
         "Extra": {
-            "titleTop": "Zeta Wash Dev",
+            "titleTop": "Zeta Wash",
             "enableFullScreenButton": true
         },
         "Users": {
-            "customUsersList": true,
+            "customUsersList": false,
             "forceCustomUsersList": false,
-            "requirePinForSettings": true,
-            "pinSet": true,
-            "alertService": "email",
+            "requirePinForSettings": false,
+            "pinSet": false,
+            "alertService": "None",
             "Email": {
                 "service": "Gmail"
             }

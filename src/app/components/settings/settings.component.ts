@@ -21,7 +21,7 @@ export class SettingsComponent implements OnInit {
 
   @Output() configChange = new EventEmitter();
 
-  alertOptions = ['email'];
+  alertOptions = ['None', 'email'];
   emailServiceOptions = [
     'AOL',
     'Gmail',
@@ -41,6 +41,7 @@ export class SettingsComponent implements OnInit {
   configValue: any;
 
   titleInput: string;
+  requirePinForSettingsInput: boolean;
   customUsersListInput: boolean;
   forceCustomUsersListInput: boolean;
   alertServiceInput: string;
@@ -65,6 +66,7 @@ export class SettingsComponent implements OnInit {
   setValuesFromConfigAndAuth() {
     const newConfig = this.configValue;
     this.titleInput = newConfig.Extra.titleTop;
+    this.requirePinForSettingsInput = newConfig.Users.requirePinForSettings;
     this.customUsersListInput = newConfig.Users.customUsersList;
     this.forceCustomUsersListInput = newConfig.Users.forceCustomUsersList;
     this.alertServiceInput = newConfig.Users.alertService;
@@ -85,6 +87,7 @@ export class SettingsComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges) {
     const newConfig = changes.config.currentValue;
     this.titleInput = newConfig.Extra.titleTop;
+    this.requirePinForSettingsInput = newConfig.Users.requirePinForSettings;
     this.customUsersListInput = newConfig.Users.customUsersList;
     this.forceCustomUsersListInput = newConfig.Users.forceCustomUsersList;
     this.alertServiceInput = newConfig.Users.alertService;
@@ -112,6 +115,7 @@ export class SettingsComponent implements OnInit {
   createConfig(): any {
     const newConfig = JSON.parse(JSON.stringify(this.configValue));
     newConfig.Extra.titleTop = this.titleInput;
+    newConfig.Users.requirePinForSettings = this.requirePinForSettingsInput;
     newConfig.Users.customUsersList = this.customUsersListInput;
     newConfig.Users.forceCustomUsersList = this.forceCustomUsersListInput;
     newConfig.Users.alertService = this.alertServiceInput;

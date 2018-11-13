@@ -62,6 +62,8 @@ export class AppComponent {
         this.authReached = true;
         this.pinSet = result.ZetaWash.Users.pinSet;
         this.requirePinForSettings = result.ZetaWash.Users.requirePinForSettings;
+      } else {
+        this.getAuth();
       }
 
       if (result.ZetaWash.Users.customUsersList) {
@@ -75,6 +77,24 @@ export class AppComponent {
     });
   }
 
+  ngOnInit() {
+    // creates timer for checking times
+    const timer = Observable.timer(0, 1000);
+    timer.subscribe(t => {
+      const queueType = 'both';
+      this.postsService.getList(queueType).subscribe(res => {
+        this.list = this.queueResponseToQueue(res.fullList.list);
+        this.queue = this.queueResponseToQueue(res.fullList.queue);
+
+        // sorts queue
+        this.queue.sort(function(a, b) {return (a.startTime > b.startTime) ? 1 : ((b.startTime > a.startTime) ? -1 : 0); });
+      });
+      if (this.hasList) {
+        this.checkQueue();
+        this.listReached();
+      }
+    });
+  }
 
   listReached() {
     this.hasList = true;
@@ -99,25 +119,6 @@ export class AppComponent {
         }
       }
     }
-  }
-
-  ngOnInit() {
-    // creates timer for checking times
-    const timer = Observable.timer(0, 1000);
-    timer.subscribe(t => {
-      const queueType = 'both';
-      this.postsService.getList(queueType).subscribe(res => {
-        this.list = this.queueResponseToQueue(res.fullList.list);
-        this.queue = this.queueResponseToQueue(res.fullList.queue);
-
-        // sorts queue
-        this.queue.sort(function(a, b) {return (a.startTime > b.startTime) ? 1 : ((b.startTime > a.startTime) ? -1 : 0); });
-      });
-      if (this.hasList) {
-        this.checkQueue();
-        this.listReached();
-      }
-    });
   }
 
   queueResponseToQueue(queueResponse) {
@@ -159,17 +160,7 @@ export class AppComponent {
   checkAuth(pincode: string) {
     this.postsService.checkAuth(pincode).subscribe(res => {
       if (res.authenticated) {
-        this.postsService.getAuth().subscribe(res => {
-          this.auth = res.auth;
-          this.isAuthenticated = true;
-          const snackBarRef = this.snackBar.open('Logged in!', 'Close', {
-            duration: 2000
-          });
-        }, error => {
-          const snackBarRef = this.snackBar.open('Error authenticating.', 'Close', {
-            duration: 2000
-          });
-        });
+        this.getAuth();
       } else {
         const snackBarRef = this.snackBar.open('Authentication failed.', 'Close', {
           duration: 2000
@@ -217,6 +208,20 @@ export class AppComponent {
           this.setPin(String(instance.pinInput));
         }
       }
+    });
+  }
+
+  getAuth() {
+    this.postsService.getAuth().subscribe(res => {
+      this.auth = res.auth;
+      this.isAuthenticated = true;
+      const snackBarRef = this.snackBar.open('Logged in!', 'Close', {
+        duration: 2000
+      });
+    }, error => {
+      const snackBarRef = this.snackBar.open('Error authenticating.', 'Close', {
+        duration: 2000
+      });
     });
   }
 

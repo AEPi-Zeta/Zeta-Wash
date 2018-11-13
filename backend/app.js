@@ -12,11 +12,6 @@ const bodyParser = require("body-parser");
 const db_file = new FileSync('db.json');
 const db = low(db_file);
 var https = require('https');
-var passport = require('passport');
-var Strategy = require('passport-local').Strategy;
-
-app.use(passport.initialize());
-app.use(passport.session());
 
 const port = consts.SERVER_PORT;
 const OBJECT_TYPE_TO_QUERY_STRING = consts.OBJECT_TYPE_TO_QUERY_STRING
@@ -34,16 +29,6 @@ let dbConfig = {
     "full_queue": [],
     "full_log": []
 };
-
-passport.use(new Strategy(
-    function(password, done) {
-      if (db.get(password)) {
-          if (db.get.password.value() == password) {
-              return done(null, true);
-          }
-      }
-      return done(null, false);
-    }));
 
 for (const machine in machines) { // creates db template and query string configuration
     if (machine) {
@@ -163,16 +148,6 @@ app.post('/addToList', (req, res) => {
         uniqueID: uid,
         opCode: '200',
         listObj: listObj
-     });
-
-     // DEBUG: console.log(`Successfully added ${listObj.name} to ${onlyQueue ? 'queue' : 'list'}.`)
-
-     res.end("yes");
-})
-
-app.post('/login', passport.authenticate('local', { failureRedirect: '/error'}), (req, res) => {
-    res.send({ 
-        opCode: '200',
      });
 
      res.end("yes");
