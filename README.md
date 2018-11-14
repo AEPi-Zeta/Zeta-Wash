@@ -21,7 +21,7 @@ Log on mobile:
 
 ### Prerequisites
 
-You need to have a functioning web server for this to work. Also make sure you have these dependencies installed on your system: nodejs. If you don't, run this command:
+You need to have a functioning web server for this to work. Also make sure you have the following dependency installed on your system: nodejs. If you don't, run this command:
 
 ```
 sudo apt-get install nodejs
@@ -29,7 +29,7 @@ sudo apt-get install nodejs
 
 ### Installing
 
-First, download the [latest release](https://github.com/AEPi-Zeta/Zeta-Wash/releases)!
+First, [click here](https://github.com/AEPi-Zeta/Zeta-Wash/releases) to download the latest release!
 
 Drag all the files in `Zeta-Wash` to a location accessible to a web server. It works best if it's the root (usually right inside `public_html`. Once that's done, navigate to `backend` and type `npm install` to install all the backend dependencies. You may need to install addition dependencies with `npm install <dependency name>`.
 
