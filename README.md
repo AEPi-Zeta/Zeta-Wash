@@ -38,7 +38,7 @@ Then edit the `default.json` file in the `config` folder. You only need to modif
 ```
 In "Host":
 
-"frontendURL" <- This is the url to the web page that the user sees
+"frontendURL" <- This is the domain name of the web page that the user sees
 "backendURL" <- This is the url to the backend, which you will probably run on the same server.
                 Remember to set a port that is different than your front end port
                 The default is 8088, you can stick with this. You may need to run 'ufw allow 8088'
