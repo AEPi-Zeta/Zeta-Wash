@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
-import { MatToolbarModule, MatDialog, MatDialogRef } from '@angular/material';
+import { MatToolbarModule, MatDialog, MatDialogRef, MatDialogConfig } from '@angular/material';
 import { LogComponent } from '../log/log.component';
 import { PostsService } from '../../posts.services';
 import { ModifyMachinesComponent } from '../modify-machines/modify-machines.component';
@@ -22,6 +22,8 @@ export class HeaderComponent implements OnInit {
 
   @Input() isAuthenticated: boolean;
 
+  logAdminOnly = true;
+
   constructor(public dialog: MatDialog) {
 
   }
@@ -29,6 +31,9 @@ export class HeaderComponent implements OnInit {
   @Input()
   set config(val) {
     this.configValue = val;
+    if (val) {
+      this.logAdminOnly = this.configValue.Users.logAdminOnly;
+    }
     this.configChange.emit(this.config);
   }
 
@@ -44,7 +49,9 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    const newConfig = changes.config.currentValue;
+    if (changes.config) {
+      const newConfig = changes.config.currentValue;
+    }
   }
 
   openLog() {
@@ -59,10 +66,14 @@ export class HeaderComponent implements OnInit {
   }
 
   openModifyMachines() {
-    let dialogRef = this.dialog.open(ModifyMachinesComponent, {
-      height: '750px',
-      width: '1200px',
-    });
+    let dialogConfig = new MatDialogConfig();
+
+    dialogConfig = {
+      //height: '750px',
+      //width: '1200px'
+    };
+
+    let dialogRef = this.dialog.open(ModifyMachinesComponent, dialogConfig);
 
     let instance = dialogRef.componentInstance;
     instance.postsService = this.postsService;
@@ -71,8 +82,11 @@ export class HeaderComponent implements OnInit {
 
   openModifySettings() {
     let dialogRef = this.dialog.open(SettingsComponent, {
-      height: '750px',
       width: '1200px',
+      data: {
+        id: 21,
+        title: 'Settings'
+      }
     });
 
     let instance = dialogRef.componentInstance;

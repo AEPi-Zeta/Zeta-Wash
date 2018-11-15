@@ -1,27 +1,29 @@
-<h2>Modify Machines</h2>
+<h2 mat-dialog-title>Modify Machines</h2>
 
-<div style="float: right;">
-    <button (click)="openAddMachine()" mat-raised-button color="primary">Add Machine</button>
-</div>
+<mat-dialog-content>
+  <mat-accordion>
+    <div *ngFor="let machineKey of objectKeys(machines)">
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          {{machineKey.substring(0,1).toUpperCase() + machineKey.substring(1, machineKey.length)}}
+        </mat-expansion-panel-header>
+    
+        <ng-template matExpansionPanelContent>
+          <app-modify-machine [postsService]="postsService" [machineName]="machines[machineKey].key" [(config)]="configValue" isNewMachine="false"></app-modify-machine>
+        </ng-template>
 
-<br/>
-<br/>
+        <mat-action-row>
+            <button mat-icon-button (click)="deleteMachine(machineKey)"><mat-icon class="mat-24">delete</mat-icon></button>
+        </mat-action-row>
+    
+      </mat-expansion-panel>
+    </div>
+  </mat-accordion>
+  <br/>
+</mat-dialog-content>
 
-<mat-accordion>
-  <div *ngFor="let machineKey of objectKeys(machines)">
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        {{machineKey.substring(0,1).toUpperCase() + machineKey.substring(1, machineKey.length)}}
-      </mat-expansion-panel-header>
-  
-      <ng-template matExpansionPanelContent>
-        <app-modify-machine [machineName]="machines[machineKey].key" [(config)]="configValue" isNewMachine="false"></app-modify-machine>
-      </ng-template>
-
-      <mat-action-row>
-          <button mat-icon-button (click)="deleteMachine(machineKey)"><mat-icon class="mat-24">delete</mat-icon></button>
-      </mat-action-row>
-  
-    </mat-expansion-panel>
-  </div>
-</mat-accordion>
+<mat-dialog-actions>
+    <div style="float: right;">
+        <button (click)="openAddMachine()" mat-raised-button color="primary">Add Machine</button>
+    </div>
+</mat-dialog-actions>

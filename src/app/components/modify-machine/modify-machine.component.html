@@ -1,5 +1,9 @@
 <div *ngIf="config && machineName" class="table table-responsive p-5">
 
+  <div *ngIf="isNewMachine">
+    <h1 mat-dialog-title>Add New Machine</h1>
+  </div>
+
   <div class="col">
     <div *ngIf="!isNewMachine; else isANewMachine" class="row">
       <h4>{{machineName}}</h4>

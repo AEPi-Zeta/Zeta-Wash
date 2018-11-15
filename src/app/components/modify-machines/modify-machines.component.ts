@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { PostsService } from '../../posts.services';
 import { ModifyMachineComponent } from '../modify-machine/modify-machine.component';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-modify-machines',
@@ -22,13 +22,15 @@ export class ModifyMachinesComponent implements OnInit {
     return this.configValue;
   }
 
+  postsService: PostsService;
+
   machines: any;
 
   @Output() configChange = new EventEmitter();
 
   configValue: any;
 
-  constructor(public postsService: PostsService, public dialog: MatDialog) { }
+  constructor(public dialog: MatDialog, public snackBar: MatSnackBar) {}
 
   ngOnInit() {
     this.machines = this.configValue.Machines.List;
@@ -52,6 +54,9 @@ export class ModifyMachinesComponent implements OnInit {
       if (newConfig.Machines.List[machine]) {
         delete newConfig.Machines.List[machine];
         this.setConfig(newConfig);
+        const snackBarRef = this.snackBar.open('Successfully deleted machine. You may have to reload to see changes.', 'Close', {
+          duration: 3000
+        });
       } else {
         console.log('Machine does not exist!');
       }

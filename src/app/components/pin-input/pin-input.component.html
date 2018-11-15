@@ -2,7 +2,7 @@
 
 <br/>
 
-<form (submit)="closedFromButton = true" action="#">
+<form (submit)="closeDialog()" action="#">
     <table style="height: 70% !important; width: 100% !important">
         <tr style="height: 70% !important">
             <input matInput class="form-control" name="pin" type="number" [(ngModel)]="pinInput">
@@ -11,7 +11,7 @@
         <br/>
         <tr style="height: 30%">
             <div stlye="float: left">
-                <button mat-raised-button color="primary" type="submit" [mat-dialog-close]="true">Submit</button>
+                <button mat-raised-button (click)="closeDialog()" color="primary" type="submit" [mat-dialog-close]="true">Submit</button>
             </div>
         </tr>
     </table>

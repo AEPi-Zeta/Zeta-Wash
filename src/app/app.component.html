@@ -1,7 +1,7 @@
 <app-header [isAuthenticated]="isAuthenticated" [(config)]="config" [auth]="auth" [requirePinForSettings]="requirePinForSettings" [pinSet]="pinSet" [topBarTitle]="topBarTitle" [postsService]="postsService"></app-header>
 <mat-tab-group [(selectedIndex)]="selectedIndex" style="height: 100%">
   <mat-tab label="Sign Up">
-    <app-signin-component [machineAvailability]="machineAvailability" [MACHINES_LIST]="MACHINES_LIST" [(machine)]="machine" [list]="list" [queue]="queue" [users]="users"></app-signin-component>
+    <app-signin-component [machineAvailability]="machineAvailability" [MACHINES_LIST]="MACHINES_LIST" [useQueue]="useQueue" [(machine)]="machine" [list]="list" [queue]="queue" [users]="users"></app-signin-component>
   </mat-tab>
   <mat-tab label="Status">
     <div class="container-fluid">
@@ -28,13 +28,13 @@
 </mat-tab-group>
 
 <span *ngIf="config && config.Extra.enableFullScreenButton">
-  <button toggleFullscreen class="bottom-right" mat-icon-button (click)="this.toggleFullScreen()">
+  <button toggleFullscreen class="bottom-right lock-button" mat-icon-button (click)="this.toggleFullScreen()">
     <mat-icon class="fullscreen-icon">{{isFullScreen ? 'fullscreen_exit' : 'fullscreen'}}</mat-icon>
   </button>
 </span>
 
 <span *ngIf="requirePinForSettings">
-  <button toggleFullscreen class="bottom-left" mat-icon-button (click)="this.authDialog()">
+  <button toggleFullscreen class="bottom-left fullscreen-button" mat-icon-button (click)="this.authDialog()">
     <mat-icon>{{isAuthenticated ? 'lock_open' : 'lock'}}</mat-icon>
   </button>
 </span>

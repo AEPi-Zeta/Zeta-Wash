@@ -1,39 +1,40 @@
 <div *ngIf="dataSource; else loading">
-  <div class="example-header">
-      <mat-form-field>
-        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
-      </mat-form-field>
-    </div>
-    
-    <div class="example-container mat-elevation-z8">
-    
-      <mat-table [dataSource]="dataSource" matSort>
-    
-        <!-- Name Column -->
-        <ng-container matColumnDef="name">
-          <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
-          <mat-cell *matCellDef="let row"> {{row.name}} </mat-cell>
-        </ng-container>
-    
-        <!-- Machine Column -->
-        <ng-container matColumnDef="machine">
-          <mat-header-cell *matHeaderCellDef mat-sort-header> Machine </mat-header-cell>
-          <mat-cell *matCellDef="let row"> {{row.machine}} </mat-cell>
-        </ng-container>
-    
-        <!-- End Date Column -->
-        <ng-container matColumnDef="endDate">
-          <mat-header-cell *matHeaderCellDef mat-sort-header> End Date </mat-header-cell>
-          <mat-cell *matCellDef="let row"> {{row.endDate}} </mat-cell>
-        </ng-container>
-    
-        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;">
-        </mat-row>
-      </mat-table>
-    
-      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
-    </div>
+  <h1 mat-dialog-title>Log</h1>
+    <div class="example-header">
+        <mat-form-field>
+          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+        </mat-form-field>
+      </div>
+      
+      <div class="example-container mat-elevation-z8">
+      
+        <mat-table [dataSource]="dataSource" matSort>
+      
+          <!-- Name Column -->
+          <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.name}} </mat-cell>
+          </ng-container>
+      
+          <!-- Machine Column -->
+          <ng-container matColumnDef="machine">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Machine </mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.machine}} </mat-cell>
+          </ng-container>
+      
+          <!-- End Date Column -->
+          <ng-container matColumnDef="endDate">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> End Date </mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.endDate}} </mat-cell>
+          </ng-container>
+      
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;">
+          </mat-row>
+        </mat-table>
+      
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+      </div>
 </div>
 
 <div style="position: absolute" class="centered">
@@ -41,8 +42,3 @@
     <mat-spinner></mat-spinner>
   </ng-template>
 </div>
-
-
-<!-- Copyright 2018 Google Inc. All Rights Reserved.
-    Use of this source code is governed by an MIT-style license that
-    can be found in the LICENSE file at http://angular.io/license -->

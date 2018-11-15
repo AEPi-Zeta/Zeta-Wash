@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { PostsService } from '../../posts.services';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef, MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-modify-machine',
@@ -23,6 +23,8 @@ export class ModifyMachineComponent implements OnInit {
 
   configValue: any;
 
+  @Input() postsService: PostsService;
+
   @Input() isNewMachine: any;
   @Input() machineName: string;
   countInput: number;
@@ -42,7 +44,7 @@ export class ModifyMachineComponent implements OnInit {
   @Output()
   completed = new EventEmitter<string>();
 
-  constructor(public postsService: PostsService) {
+  constructor(public snackBar: MatSnackBar) {
 
   }
 
@@ -175,6 +177,13 @@ export class ModifyMachineComponent implements OnInit {
     this.setConfig();
     if (this.isNewMachine) {
       this.completed.emit('completed');
+      const snackBarRef = this.snackBar.open('Successfully added machine. You may have to reload to see changes.', 'Close', {
+        duration: 3000
+      });
+    } else {
+      const snackBarRef = this.snackBar.open('Successfully saved machine. You may have to reload to see changes.', 'Close', {
+        duration: 3000
+      });
     }
   }
 

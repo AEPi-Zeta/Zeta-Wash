@@ -20,121 +20,131 @@
 <br/>-->
 
 <div *ngIf="config" class="table table-responsive p-5">
-  <div class="col">
-    <div class="row">
-      <h5>Header</h5>
-    </div>
-    <div class="row">
-      <mat-form-field class="example-full-width">
-          <input matInput name="Title" [(ngModel)]="titleInput" placeholder="Title" type="text">
-        <mat-error>Please input a valid entry.</mat-error>
-      </mat-form-field>
-    </div>
-  </div>
-
-  <div class="col">
-    <div class="row">
-      <h5>Users</h5>
+  <h2 mat-dialog-title>Settings</h2>
+  <mat-dialog-content>
+    <div class="col">
+      <div class="row">
+        <h5>Header</h5>
+      </div>
+      <div class="row">
+        <mat-form-field class="example-full-width">
+            <input matInput name="Title" [(ngModel)]="titleInput" placeholder="Title" type="text">
+          <mat-error>Please input a valid entry.</mat-error>
+        </mat-form-field>
+      </div>
     </div>
 
-    <div class="row pt-3 pb-3">
-        <mat-checkbox [(ngModel)]="requirePinForSettingsInput" color="primary">Require pin for settings</mat-checkbox>
+    <div class="col">
+      <div class="row">
+        <h5>Users</h5>
       </div>
 
-    <div class="row pt-2 pb-3">
-      <mat-checkbox [(ngModel)]="customUsersListInput" color="primary">Custom users list</mat-checkbox>
-    </div>
-    <div class="row pt-2 pb-3">
-      <mat-checkbox [disabled]="!customUsersListInput" [(ngModel)]="forceCustomUsersListInput" color="primary">Force custom users list</mat-checkbox>
-    </div>
-    <div class="row">
-      <mat-form-field>
-        <mat-select [disabled]="!customUsersListInput" [(ngModel)]="alertServiceInput" placeholder="Alert service">
-          <mat-option *ngFor="let option of alertOptions" [value]="option">
-            {{option}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    
-    <span *ngIf="alertServiceInput == 'email' && customUsersListInput">
+      <div class="row pt-3 pb-3">
+          <mat-checkbox [(ngModel)]="requirePinForSettingsInput" color="primary">Require pin for settings</mat-checkbox>
+      </div>
+
+      <div class="row pt-2 pb-3">
+        <mat-checkbox [(ngModel)]="logAdminOnlyInput" color="primary">Require pin to view log</mat-checkbox>
+      </div>
+
+      <div class="row pt-2 pb-3">
+        <mat-checkbox [(ngModel)]="customUsersListInput" color="primary">Custom users list</mat-checkbox>
+      </div>
+      <div class="row pt-2 pb-3">
+        <mat-checkbox [disabled]="true || !customUsersListInput" [(ngModel)]="forceCustomUsersListInput" color="primary">Force custom users list (Coming soon!)</mat-checkbox>
+      </div>
       <div class="row">
         <mat-form-field>
-          <mat-select [(ngModel)]="emailServiceInput" placeholder="Email service">
-            <mat-option *ngFor="let option of emailServiceOptions" [value]="option">
+          <mat-select [disabled]="!customUsersListInput" [(ngModel)]="alertServiceInput" placeholder="Alert service">
+            <mat-option *ngFor="let option of alertOptions" [value]="option">
               {{option}}
             </mat-option>
           </mat-select>
         </mat-form-field>
       </div>
-      <div *ngIf="emailServiceInput != 'Custom'; else custom">
       
-      </div>
-      <ng-template #custom>
+      <span *ngIf="alertServiceInput == 'email' && customUsersListInput">
+        <div class="row">
+          <mat-form-field>
+            <mat-select [(ngModel)]="emailServiceInput" placeholder="Email service">
+              <mat-option *ngFor="let option of emailServiceOptions" [value]="option">
+                {{option}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div *ngIf="emailServiceInput != 'Custom'; else custom">
+        
+        </div>
+        <ng-template #custom>
+          <div class="row">
+            <mat-form-field class="example-full-width">
+              <input matInput required name="Host" [(ngModel)]="emailHostInput" placeholder="Host" type="text">
+              <mat-error>Please input a valid entry.</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="row">
+            <mat-form-field class="example-full-width">
+              <input matInput required name="Port" [(ngModel)]="emailPortInput" placeholder="Port" type="number">
+              <mat-error>Please input a valid entry.</mat-error>
+            </mat-form-field>
+          </div>
+        </ng-template>
         <div class="row">
           <mat-form-field class="example-full-width">
-            <input matInput required name="Host" [(ngModel)]="emailHostInput" placeholder="Host" type="text">
+            <input matInput name="User" [(ngModel)]="emailUserInput" placeholder="User" type="text">
             <mat-error>Please input a valid entry.</mat-error>
           </mat-form-field>
         </div>
         <div class="row">
           <mat-form-field class="example-full-width">
-            <input matInput required name="Port" [(ngModel)]="emailPortInput" placeholder="Port" type="number">
+            <input matInput name="Password" [(ngModel)]="emailPasswordInput" placeholder="Password" type="text">
             <mat-error>Please input a valid entry.</mat-error>
           </mat-form-field>
         </div>
-      </ng-template>
-      <div class="row">
-        <mat-form-field class="example-full-width">
-          <input matInput name="User" [(ngModel)]="emailUserInput" placeholder="User" type="text">
-          <mat-error>Please input a valid entry.</mat-error>
-        </mat-form-field>
-      </div>
-      <div class="row">
-        <mat-form-field class="example-full-width">
-          <input matInput name="Password" [(ngModel)]="emailPasswordInput" placeholder="Password" type="text">
-          <mat-error>Please input a valid entry.</mat-error>
-        </mat-form-field>
-      </div>
-    </span>
-    
-  </div>
-
-  <div class="col">
-    <div class="row">
-      <h5>Queue</h5>
+      </span>
+      
     </div>
-    <div class="row py-2">
-      <mat-checkbox [(ngModel)]="useQueueInput" color="primary">Use queue</mat-checkbox> 
-    </div>
-  </div>
 
-  <div class="col">
+    <div class="col">
       <div class="row">
-        <h5>Encryption</h5>
+        <h5>Queue</h5>
       </div>
       <div class="row py-2">
-        <mat-checkbox [(ngModel)]="useEncryptionInput" color="primary">Use encryption</mat-checkbox> 
+        <mat-checkbox [(ngModel)]="useQueueInput" color="primary">Use queue</mat-checkbox> 
       </div>
-      <div class="row">
-        <mat-form-field class="example-full-width">
-          <input matInput [disabled]="!useEncryptionInput" [(ngModel)]="certFilePathInput" placeholder="Cert file path" type="text">
-          <mat-error>Please input a valid entry.</mat-error>
-        </mat-form-field>
-      </div>
-      <div class="row">
-        <mat-form-field class="example-full-width">
-          <input matInput [disabled]="!useEncryptionInput" [(ngModel)]="keyFilePathInput" placeholder="Key file path" type="text">
-          <mat-error>Please input a valid entry.</mat-error>
-        </mat-form-field>
-      </div>
-  </div>
-
-  <div class="col">
-    <div class="row">
-      <button mat-raised-button [disabled]="checkSettingsSame()" (click)="onSaveConfig()" type="button" color="primary" style="width: 250px; height: 50px; font-size: 20px; float: right;">
-          Save
-      </button>
     </div>
-  </div>
+
+    <div class="col">
+        <div class="row">
+          <h5>Encryption</h5>
+        </div>
+        <div class="row py-2">
+          <mat-checkbox [(ngModel)]="useEncryptionInput" color="primary">Use encryption</mat-checkbox> 
+        </div>
+        <div class="row">
+          <mat-form-field class="example-full-width">
+            <input matInput [disabled]="!useEncryptionInput" [(ngModel)]="certFilePathInput" placeholder="Cert file path" type="text">
+            <mat-error>Please input a valid entry.</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <mat-form-field class="example-full-width">
+            <input matInput [disabled]="!useEncryptionInput" [(ngModel)]="keyFilePathInput" placeholder="Key file path" type="text">
+            <mat-error>Please input a valid entry.</mat-error>
+          </mat-form-field>
+        </div>
+    </div>
+
+    <div class="col">
+      <div class="row">
+        
+      </div>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-raised-button mat-primary [disabled]="checkSettingsSame()" (click)="onSaveConfig()" color="primary" type="button" style="width: 250px; height: 50px; font-size: 20px; float: right;">
+      Save
+  </button>
+</mat-dialog-actions>
 </div>

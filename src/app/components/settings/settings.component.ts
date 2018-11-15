@@ -1,5 +1,6 @@
-import { Component, OnInit, Input, SimpleChanges, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, EventEmitter, Output, Inject } from '@angular/core';
 import { PostsService } from '../../posts.services';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 
 @Component({
   selector: 'app-settings',
@@ -42,6 +43,7 @@ export class SettingsComponent implements OnInit {
 
   titleInput: string;
   requirePinForSettingsInput: boolean;
+  logAdminOnlyInput: boolean;
   customUsersListInput: boolean;
   forceCustomUsersListInput: boolean;
   alertServiceInput: string;
@@ -57,7 +59,10 @@ export class SettingsComponent implements OnInit {
 
 
 
-  constructor(public postsService: PostsService) { }
+  constructor(public postsService: PostsService, @Inject(MAT_DIALOG_DATA) public data: any,
+  private dialogRef: MatDialogRef<SettingsComponent>) {
+
+  }
 
   ngOnInit() {
     this.setValuesFromConfigAndAuth();
@@ -67,6 +72,7 @@ export class SettingsComponent implements OnInit {
     const newConfig = this.configValue;
     this.titleInput = newConfig.Extra.titleTop;
     this.requirePinForSettingsInput = newConfig.Users.requirePinForSettings;
+    this.logAdminOnlyInput = newConfig.Users.logAdminOnly;
     this.customUsersListInput = newConfig.Users.customUsersList;
     this.forceCustomUsersListInput = newConfig.Users.forceCustomUsersList;
     this.alertServiceInput = newConfig.Users.alertService;
@@ -88,6 +94,7 @@ export class SettingsComponent implements OnInit {
     const newConfig = changes.config.currentValue;
     this.titleInput = newConfig.Extra.titleTop;
     this.requirePinForSettingsInput = newConfig.Users.requirePinForSettings;
+    this.logAdminOnlyInput = newConfig.Users.logAdminOnly;
     this.customUsersListInput = newConfig.Users.customUsersList;
     this.forceCustomUsersListInput = newConfig.Users.forceCustomUsersList;
     this.alertServiceInput = newConfig.Users.alertService;
@@ -116,6 +123,7 @@ export class SettingsComponent implements OnInit {
     const newConfig = JSON.parse(JSON.stringify(this.configValue));
     newConfig.Extra.titleTop = this.titleInput;
     newConfig.Users.requirePinForSettings = this.requirePinForSettingsInput;
+    newConfig.Users.logAdminOnly = this.logAdminOnlyInput;
     newConfig.Users.customUsersList = this.customUsersListInput;
     newConfig.Users.forceCustomUsersList = this.forceCustomUsersListInput;
     newConfig.Users.alertService = this.alertServiceInput;
@@ -152,6 +160,10 @@ export class SettingsComponent implements OnInit {
   onSaveConfig(): any {
     this.setConfig();
     this.setAuth();
+  }
+
+  close(): any {
+    this.dialogRef.close();
   }
 
   checkSettingsSame(): boolean {

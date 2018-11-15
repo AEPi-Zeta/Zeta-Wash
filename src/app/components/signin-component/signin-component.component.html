@@ -53,7 +53,7 @@
                 </div>
             </div>
             <div class="col col-md-1 col-sm-12 col-xs-12">
-                <div style="position: relative; top: 70%; transform: translateY(-100%);">
+                <div *ngIf="useQueue" style="position: relative; top: 70%; transform: translateY(-100%);">
                     <mat-checkbox [(ngModel)]="isOnlyQueue" color="primary" [ngModelOptions]="{standalone: true}" required>Only Queue</mat-checkbox>      
                 </div>
             </div>
@@ -98,7 +98,7 @@
 
     <table style="width: 100%">
         <td>
-            <app-usage [machineAvailability]="machineAvailability" [list]="list" [queue]="queue"></app-usage>
+            <app-usage [usingListOnly]="!useQueue" [machineAvailability]="machineAvailability" [list]="list" [queue]="queue"></app-usage>
         </td>
     </table>
 

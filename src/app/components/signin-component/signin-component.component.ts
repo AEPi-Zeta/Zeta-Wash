@@ -54,6 +54,7 @@ export class SigninComponentComponent implements OnChanges {
 
   @Input() queue: any[];
   @Input() list: any[];
+  @Input() useQueue: boolean;
 
   @Input() users: any[];
 
@@ -174,12 +175,17 @@ export class SigninComponentComponent implements OnChanges {
         this.minutes = this.MACHINES_LIST[this.machine.toLowerCase().substring(0, this.machine.length - 1)]['default_minutes'];
       }
     }
-    if (this.machine && this.machine.length > 0 && this.machineAvailability
-      && !this.machineAvailability[machinePlural][machineIndex]['inUse']) {
+
+    if (this.useQueue) {
+      if (this.machine && this.machine.length > 0 && this.machineAvailability
+        && !this.machineAvailability[machinePlural][machineIndex]['inUse']) {
+        this.isOnlyQueue = false;
+      } else if (this.machine && this.machine.length > 0
+        && this.machineAvailability && this.machineAvailability[machinePlural][machineIndex]['inUse']) {
+          this.isOnlyQueue = true;
+      }
+    } else {
       this.isOnlyQueue = false;
-    } else if (this.machine && this.machine.length > 0
-      && this.machineAvailability && this.machineAvailability[machinePlural][machineIndex]['inUse']) {
-        this.isOnlyQueue = true;
     }
 
     if (this.machine && this.MACHINES_LIST && this.MACHINES_LIST[this.machine.toLowerCase().substring(0, this.machine.length - 1)]) {
@@ -220,6 +226,7 @@ export class SigninComponentComponent implements OnChanges {
           if (curVal) {
             this.machineChange.emit(curVal.toLowerCase());
             this.minutes = this.MACHINES_LIST[curVal.toLowerCase().substring(0, curVal.length - 1)]['default_minutes'];
+            this.onMachineChange();
           }
         }
       }

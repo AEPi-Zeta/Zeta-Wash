@@ -13,10 +13,12 @@ const db_file = new FileSync('db.json');
 const db = low(db_file);
 var https = require('https');
 
-const port = consts.SERVER_PORT;
+
 const OBJECT_TYPE_TO_QUERY_STRING = consts.OBJECT_TYPE_TO_QUERY_STRING
 
 const frontendURL = config.get("ZetaWash.Host.frontendURL");
+const backendURL = config.get("ZetaWash.Host.backendURL");
+const port = backendURL.split(":")[2].substring(0,4);
 const useEncryption = config.get("ZetaWash.Encryption.useEncryption");
 const useCustomUsersList = config.get("ZetaWash.Users.customUsersList");
 const machines = config.get("ZetaWash.Machines.List")

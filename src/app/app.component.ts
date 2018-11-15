@@ -38,7 +38,7 @@ export class AppComponent {
   auth = null;
   users: any[] = [];
 
-  constructor(public postsService: PostsService, private dialog: MatDialog, 
+  constructor(public postsService: PostsService, private dialog: MatDialog,
     public snackBar: MatSnackBar) { // init for the beginning of the app
     const queueType = 'both';
     this.postsService.getConfig(this.isDev).subscribe(result => { // loads settings
@@ -56,6 +56,10 @@ export class AppComponent {
         // sorts queue
         this.queue.sort(function(a, b) {return (a.startTime > b.startTime) ? 1 : ((b.startTime > a.startTime) ? -1 : 0); });
         this.listReached();
+      }, error => {
+        const snackBarRef = this.snackBar.open('ERROR: Failed to get list of current users from server.', 'Close', {
+          duration: 2000
+        });
       });
 
       if (result.ZetaWash.Users.requirePinForSettings) {
@@ -69,11 +73,17 @@ export class AppComponent {
       if (result.ZetaWash.Users.customUsersList) {
         this.postsService.getUsers().subscribe(res => {
           this.users = res.users;
+        }, error => {
+          const snackBarRef = this.snackBar.open('ERROR: Failed to get list of users from server.', 'Close', {
+            duration: 2000
+          });
         });
       }
     },
     error => {
-      console.log(error);
+      const snackBarRef = this.snackBar.open('ERROR: Cannot access server, see console for details. Check your ports and \
+      make sure the config file is web-accessable.', 'Close', {});
+      console.error('Server Error:\n\n' + error);
     });
   }
 
@@ -140,23 +150,6 @@ export class AppComponent {
     }
   }
 
-  /*checkMachinesForAvailability() {
-    for (const machine in this.MACHINES_LIST) {
-      if (machine !== null) {
-        const machine_count = this.MACHINES_LIST[machine]['count'];
-        const machinesInUse = this.getMachineCountInUse(this.list, machine);
-        if (machinesInUse === machine_count) {
-          this.machineAvailability[machine] = false;
-        } else if (machinesInUse < machine_count) {
-          this.machineAvailability[machine] = true;
-        } else {
-          console.error('More machines in use than exist!');
-          this.machineAvailability[machine] = false;
-        }
-      }
-    }
-  }*/
-
   checkAuth(pincode: string) {
     this.postsService.checkAuth(pincode).subscribe(res => {
       if (res.authenticated) {
@@ -176,8 +169,11 @@ export class AppComponent {
       this.postsService.setAuth(this.auth).subscribe(res => {
         this.config['Users']['pinSet'] = true;
         this.postsService.setConfig(this.config).subscribe (res => {
-          const snackBarRef = this.snackBar.open('Successfully set pin!', 'Close', {
+          const snackBarRef = this.snackBar.open('Successfully set pin! Reloading page...', 'Close', {
             duration: 2000
+          });
+          snackBarRef.afterDismissed().subscribe(snack => {
+            location.reload();
           });
         },
         error => {
@@ -219,7 +215,7 @@ export class AppComponent {
         duration: 2000
       });
     }, error => {
-      const snackBarRef = this.snackBar.open('Error authenticating.', 'Close', {
+      const snackBarRef = this.snackBar.open('ERRROR: Failed to authenticate.', 'Close', {
         duration: 2000
       });
     });

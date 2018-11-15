@@ -8,7 +8,7 @@ import { MatDialogRef, MatDialog } from '@angular/material';
 })
 export class PinInputComponent implements OnInit {
 
-  constructor(private dialog: MatDialog) { }
+  constructor(private dialog: MatDialog, private dialogRef: MatDialogRef<PinInputComponent>) { }
 
   pinSet: boolean;
 
@@ -17,6 +17,11 @@ export class PinInputComponent implements OnInit {
   closedFromButton = false;
 
   ngOnInit() {
+  }
+
+  closeDialog() {
+    this.closedFromButton = true;
+    this.dialogRef.close();
   }
 
 }
