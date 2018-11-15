@@ -1,11 +1,6 @@
 # Zeta Wash
 
-Zeta Wash is a utilities management app for residencies. It currently allows you to "sign in," marking you're using that device, get the status of whether the utilities are being used, and a log to track who used what. There are currently two types of utilities supported, in one category:
-
-### Laundry
-
-* Washer
-* Dryer
+Zeta Wash is a utilities management app for residencies or organizations. It currently allows you to "reserve" machines marking you're using that device, get the status of whether the utilities are being used, and use a log to track historical usage.
 
 ## Getting Started
 
@@ -26,7 +21,7 @@ Log on mobile:
 
 ### Prerequisites
 
-You need to have a functioning web server for this to work. Also make sure you have these dependencies installed on your system: nodejs. If you don't, run this command:
+You need to have a functioning web server for this to work. Also make sure you have the following dependency installed on your system: nodejs. If you don't, run this command:
 
 ```
 sudo apt-get install nodejs
@@ -34,15 +29,112 @@ sudo apt-get install nodejs
 
 ### Installing
 
-First, download the [latest release](https://github.com/AEPi-Zeta/Zeta-Wash/releases)!
+First, [click here](https://github.com/AEPi-Zeta/Zeta-Wash/releases) to download the latest release!
 
-Drag all the files in `Zeta-Wash` to a location accessible to a web server. It works best if it's the root (usually right inside `public_html`. Once that's done, navigate to `backend` and edit the `default.json` file.
+Drag all the files in `Zeta-Wash` to a location accessible to a web server. It works best if it's the root (usually right inside `public_html`. Once that's done, navigate to `backend` and type `npm install` to install all the backend dependencies. You may need to install addition dependencies with `npm install <dependency name>`.
+
+Then edit the `default.json` file in the `config` folder. You only need to modify these settings to get up and running (adding machines and other settings comes later):
+
+```
+In "Host":
+
+"frontendURL" <- This is the domain name of the web page that the user sees
+"backendURL" <- This is the url to the backend, which you will probably run on the same server.
+                Remember to set a port that is different than your front end port
+                The default is 8088, you can stick with this. You may need to run 'ufw allow 8088'
+                to let it through your firewall.
+       
+That's it! Unless you want to use encryption. Then follow the steps below.
+
+In "Encryption":
+
+"useEncryption" <- Set this to true
+"certFilePath" <- The path to the certificate, sometimes called "fullchain.pem".
+"keyFilePath" <- The path to the private key, sometimes called "privkey.pem".
+
+And then you're done for sure! There are other settings but you can modify that within Zeta Wash.
+```
 
 Remember to port forward the port inside default.json. By default it's `8088`.
 
-Once the configuration is done, type `sudo nodejs app.js`. This will run the backend server. On your browser, navigate to your installation folder. Try signing up for a machine to see if it works. If it does, viola! Zeta Wash is now up and running.
+It's also recommended that you run `chmod 750 auth.json` in the config folder to protect the auth file from web crawlers.
+
+Once the configuration is done, type `sudo nodejs app.js` in the `backend` folder, located in the root directory. This will run the backend server. On your browser, navigate to your installation folder. Try signing up for a machine to see if it works. If it does, viola! Zeta Wash is now up and running. You'll probably want to 
 
 If you experience problems, know that it's usually caused by a configuration problem. The first thing you should do is check the console. To get there, right click anywhere on the page and click "Inspect element." Then on the menu that pops up, click console. Look at the error there, and try to investigate.
+
+## Configuration
+
+This is an explanation of some key features you can set up, as well as an explanation of some configuration options.
+
+### Features
+
+#### Authentication
+
+To make sure that only you can modify the settings, turn on `Require pin for settings`. Then reload your page.
+
+On the bottom left, you should see a lock button. Click it, and it will ask you to set a pin. Set this pin. It should successfully set. Then, click the lock again and type in the pin you just set. Now you're able to change your settings again!
+
+#### Users list
+
+You may want to have a users list that people select from to reserve their machine. To enable this, go into settings and under `Users` click `Custom users list`.
+
+You'll then want to have a JSON file in the config directory labeled `users.json`. It should be formatted like this:
+
+```
+{
+    "users": [
+        {
+            "name": "Jane Doe",
+            "email": "janedoe@gmail.com",
+        },{
+            "name": "Bill Gates",
+            "email": "b.gates@hotmail.com",
+        },{
+            "name": "Steve Jobs",
+            "email": "jobs@apple.com",
+        }
+    ]
+}
+```
+
+Run `chmod 750 users.json` to protect it from web crawlers.
+
+Then try to sign in with one of the users in the list, it should pop us as an autocomplete option.
+
+#### Email notifications
+
+This requires you enable the users feature above. 
+
+Once you do that, go into settings and change alert service under `Users` from `None` to `email`.
+
+Then select your email server from the list. If it does *not* show up, click `Custom` and fill out the `host` and `port` options.
+
+Finally, fill out the `User` and `Password` fields for the email service. This isn't incredibly secure at the moment, so if someone gets access to the server they may be able to read this file in plain text. Just keep that in mind.
+
+You're all set!
+
+#### Adding a machine
+
+To add a machine, simply click `Modify Machines` in the top right dropdown. Then click `Add Machine`. There's a couple things to explain here:
+
+```
+"Machine Name" <- The machine name is the singular name of the machine that everyone sees, like 'Washer' or 'Hand saw'.
+"Machine Count" <- The number of machines available for this machine. For example, if you have 2 washers or 3 dryers.
+
+The default, maximum, and minimum time are self-explanatory.
+
+"Icon" <- The file name for the icon associated with this machine. This should be in your assets folder, in your web directory (where your index.html is).
+"Subject" <- If you are using email alerts, this is the subject header of the email people receive for when the machine they used is done. You can include these variables, and we'll fill them out for you: ${date}, ${name}
+"Text" <- If you are using email alerts, this is the text body of the email people receive for when the machine they used is done. You can include these variables, and we'll fill them out for you: ${date}, ${name}
+"Time options" <- If you want to have default time options available for this machine, select this. For example, if a machine only runs for 30 minutes, then add a 30 minute time option. The "Name" options is whatever you want (e.g. `30`), the "Label" (e.g. `30 Minutes`) is what the user sees, and the "Time" is the time for that option `(e.g. 30`).
+```
+
+Once you set up the settings, you're all ready to add the machine.
+
+#### Queue
+
+To enable a queue for machines, go into settings and under `Queue` click `Use queue` to enable it. Now when you sign up for machines, you can queue it instead, and it won't start the timer until you hit start! Also when machines are full, people can queue up for them in advance. There is currently no priority system built in, but one is in the works. Right now it's first-come-first-serve for those in the queue.
 
 ## Deployment
 
