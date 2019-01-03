@@ -9,17 +9,27 @@
               <h4>All machines are free</h4>
           </div>
         </div>
-    <mat-list>
-        <mat-list-item style="white-space: normal" *ngFor="let user of list"> 
+      <mat-list>
+        <mat-list-item *ngFor="let user of list"> 
           <h5 matLine>
             {{user.name}} - {{user.machine.charAt(0).toUpperCase() + user.machine.slice(1) + ' ' + user.machineNumber}}
           </h5>
           <span matLine>
             Time remaining: {{SecondsTohhmmss(user.endTime - now)}}
           </span>
-          <button mat-icon-button (click)="this.removeFromList(user)">
-              <mat-icon class="mat-24">clear</mat-icon>
-          </button>
+          <span *ngIf="MACHINES_LIST[user.machine]['useAlerts']">
+            <button mat-icon-button [disabled]="config && config.Users.alertService !== 'email'" [matMenuTriggerFor]="alertmenu"><mat-icon class="mat-24">notifications</mat-icon></button>
+            <mat-menu #alertmenu="matMenu">
+              <ng-template matMenuContent>
+                <span *ngFor="let alert of MACHINES_LIST[user.machine]['customAlerts']">
+                  <button (click)="this.sendEmailAlert(user.name, alert)" mat-menu-item>{{alert.key}}</button>
+                </span>
+              </ng-template>
+            </mat-menu>
+          </span>
+          <span *ngIf="canRemoveFromUsageList">
+            <button mat-icon-button (click)="this.removeFromList(user)"><mat-icon class="mat-24">clear</mat-icon></button>
+          </span>
           <mat-divider></mat-divider>
         </mat-list-item>
       </mat-list>

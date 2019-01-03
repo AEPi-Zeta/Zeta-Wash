@@ -81,6 +81,11 @@ export class PostsService {
         return this.http.post(this.path + 'setAuth', {auth: auth})
             .map(res => res.json());
     }
+
+    sendEmailAlert(user: any, alertObject: any): Observable<any> {
+        return this.http.post(this.path + 'sendEmailAlert', {user: user, alertObject: alertObject})
+            .map(res => res.json());
+    }
 }
 
 

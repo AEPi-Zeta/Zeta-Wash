@@ -32,12 +32,15 @@ export class ModifyMachineComponent implements OnInit {
   minMinutesInput: number;
   maxMinutesInput: number;
   useOptionsInput: boolean;
+  useAlertsInput: boolean;
   minuteOptionsInput: any[] = [];
+  alertOptionsInput: any[] = [];
   iconInput: string;
   emailSubjectInput: string;
   emailTextInput: string;
 
   optionsCount: number;
+  alertsCount: number;
 
   counterCount: number;
 
@@ -52,9 +55,10 @@ export class ModifyMachineComponent implements OnInit {
     if (this.isNewMachine === undefined || this.isNewMachine === 'false') {
       this.isNewMachine = false;
     } else {
-      if (!this.machineName) {
-        this.machineName = 'New Machine';
-      }
+      // initializes some variables when creating a new machine
+      this.machineName = 'New Machine';
+      this.useAlertsInput = false;
+      this.useOptionsInput = false;
     }
     if (this.config && this.isNewMachine === false) {
       const machine = this.config.Machines.List[this.machineName];
@@ -62,12 +66,23 @@ export class ModifyMachineComponent implements OnInit {
        if (machine.minuteOptions) {
          this.optionsCount = machine.minuteOptions.length;
        }
+       if (machine.customAlerts) {
+         this.alertsCount = machine.customAlerts.length;
+       }
       }
     }
 
     if (this.optionsCount < 10) { // fixes minute options since it's not long enough
       for (let i = 0; i < 10 - this.optionsCount; i++) {
         this.minuteOptionsInput.push({});
+      }
+    }
+
+    if (this.alertsCount < 10) { // fixes alert options since it's not long enough
+      for (let i = 0; i < 10 - this.alertsCount; i++) {
+        this.alertOptionsInput.push({
+          'email': {}
+        });
       }
     }
 
@@ -83,6 +98,7 @@ export class ModifyMachineComponent implements OnInit {
       this.minMinutesInput = newMachine.min_minutes;
       this.maxMinutesInput = newMachine.max_minutes;
       this.useOptionsInput = newMachine.useOptions;
+      this.useAlertsInput = newMachine.useAlerts;
 
       this.iconInput = newMachine.icon;
       this.emailSubjectInput = newMachine.email.subject;
@@ -91,6 +107,10 @@ export class ModifyMachineComponent implements OnInit {
       if (newMachine.minuteOptions) {
         this.minuteOptionsInput = newMachine.minuteOptions.slice();
       }
+
+      if (newMachine.alertOptions) {
+        this.alertOptionsInput = newMachine.alertOptions.slice();
+      }
     }
   }
 
@@ -98,6 +118,16 @@ export class ModifyMachineComponent implements OnInit {
     if (this.optionsCount > this.minuteOptionsInput.length) { // fixes minute options since it's not long enough
       for (let i = 0; i < this.optionsCount - this.minuteOptionsInput.length; i++) {
         this.minuteOptionsInput.push({});
+      }
+    }
+  }
+
+  alertsCountChange() {
+    if (this.alertsCount > this.alertOptionsInput.length) { // fixes alert options since it's not long enough
+      for (let i = 0; i < this.alertsCount - this.alertOptionsInput.length; i++) {
+        this.alertOptionsInput.push({
+          'email': {}
+        });
       }
     }
   }
@@ -111,6 +141,7 @@ export class ModifyMachineComponent implements OnInit {
       this.minMinutesInput = machine.min_minutes;
       this.maxMinutesInput = machine.max_minutes;
       this.useOptionsInput = machine.useOptions;
+      this.useAlertsInput = machine.useAlerts;
 
       this.iconInput = machine.icon;
       this.emailSubjectInput = machine.email.subject;
@@ -122,6 +153,14 @@ export class ModifyMachineComponent implements OnInit {
           newMinuteOptions.push(Object.assign({}, machine.minuteOptions[i]));
         }
         this.minuteOptionsInput = newMinuteOptions;
+      }
+
+      if (this.useAlertsInput) {
+        const newAlertOptions = [];
+        for (let i = 0; i < this.alertsCount; i++) {
+          newAlertOptions.push(JSON.parse(JSON.stringify(machine.customAlerts[i])));
+        }
+        this.alertOptionsInput = newAlertOptions;
       }
     }
   }
@@ -142,6 +181,7 @@ export class ModifyMachineComponent implements OnInit {
     newMachine.min_minutes = this.minMinutesInput;
     newMachine.max_minutes = this.maxMinutesInput;
     newMachine.useOptions = this.useOptionsInput;
+    newMachine.useAlerts = this.useAlertsInput;
     newMachine.icon = this.iconInput;
 
     newMachine.email.subject = this.emailSubjectInput;
@@ -156,6 +196,14 @@ export class ModifyMachineComponent implements OnInit {
       newMachine.minuteOptions = newMinuteOptions;
     }
 
+    if (this.useAlertsInput) {
+      const newAlertOptions = [];
+      newMachine.customAlerts = [];
+      for (let i = 0; i < this.alertsCount; i++) {
+        newAlertOptions.push(JSON.parse(JSON.stringify(this.alertOptionsInput[i])));
+      }
+      newMachine.customAlerts = newAlertOptions;
+    }
     return newConfig;
   }
 
@@ -170,7 +218,26 @@ export class ModifyMachineComponent implements OnInit {
 
   inputsInvalid(): any {
     const machineAlreadyExists = this.isNewMachine && this.configValue.Machines.List[this.machineName];
-    return machineAlreadyExists;
+    let requiredsEmpty = !this.countInput || !this.defaultMinutesInput || !this.minMinutesInput;
+    if (this.useOptionsInput) {
+      for (let i = 0; i < this.optionsCount; i++) {
+        const minuteOption = this.minuteOptionsInput[i];
+        if (!minuteOption.key || !minuteOption.label || !minuteOption.amount) {
+          requiredsEmpty = true;
+        }
+      }
+    }
+
+    if (this.useAlertsInput) {
+      for (let i = 0; i < this.alertsCount; i++) {
+        const alertOption = this.alertOptionsInput[i];
+        if (!alertOption.key || !alertOption.email.subject || !alertOption.email.text) {
+          requiredsEmpty = true;
+        }
+      }
+    }
+
+    return machineAlreadyExists || requiredsEmpty;
   }
 
   onSaveMachine(): any {
@@ -190,6 +257,26 @@ export class ModifyMachineComponent implements OnInit {
   checkSettingsSame(): boolean {
     const newConfig = this.createConfig();
     return JSON.stringify(newConfig) === JSON.stringify(this.configValue);
+  }
+
+  incrementAlertsCount() {
+    this.alertsCount++;
+    this.alertsCountChange();
+  }
+
+  decrementAlertsCount() {
+    this.alertsCount--;
+    this.alertsCountChange();
+  }
+
+  incrementOptionsCount() {
+    this.optionsCount++;
+    this.optionsCountChange();
+  }
+
+  decrementOptionsCount() {
+    this.optionsCount--;
+    this.optionsCountChange();
   }
 
   counter(count) {

@@ -6,54 +6,69 @@
 
   <div class="col">
     <div *ngIf="!isNewMachine; else isANewMachine" class="row">
-      <h4>{{machineName}}</h4>
+      <!--<h4>{{machineName}}</h4>-->
     </div>
 
-    
       <ng-template #isANewMachine>
         <div class="row">
           <mat-form-field class="example-full-width">
             <input matInput required placeholder="Machine Name" [(ngModel)]="machineName" type="text">
+            <mat-hint>The name of the machine you want your users to see, in singular form.</mat-hint>
             <mat-error>Please input a valid entry.</mat-error>
           </mat-form-field>
         </div>
       </ng-template>
-    
 
     <div class="row">
       <mat-form-field class="example-full-width">
         <input matInput required placeholder="Machine Count" [(ngModel)]="countInput" type="number">
+        <mat-hint>The number of machines of this type that you have available.</mat-hint>
         <mat-error>Please input a valid entry.</mat-error>
       </mat-form-field>
     </div>
+
+    <br/>
 
     <div class="row">
       <mat-form-field class="example-full-width">
         <input matInput required placeholder="Default Minutes" [(ngModel)]="defaultMinutesInput" type="number">
+        <mat-hint>The default amount of minutes associated with this machine.</mat-hint>
         <mat-error>Please input a valid entry.</mat-error>
       </mat-form-field>
     </div>
+
+    <br/>
 
     <div class="row">
       <mat-form-field class="example-full-width">
         <input matInput required placeholder="Minimum Minutes" [(ngModel)]="minMinutesInput" type="number">
+        <mat-hint>The minimum minutes allowed for this machine.</mat-hint>
         <mat-error>Please input a valid entry.</mat-error>
       </mat-form-field>
     </div>  
 
+    <br/>
+
     <div class="row">
       <mat-form-field class="example-full-width">
         <input matInput placeholder="Maximum Minutes" [(ngModel)]="maxMinutesInput" type="number">
+        <mat-hint>The maximum minutes allowed for this machine.</mat-hint>
         <mat-error>Please input a valid entry.</mat-error>
       </mat-form-field>
     </div>
 
+    <br/>
+
     <div class="row">
       <mat-form-field class="example-full-width">
         <input matInput name="Icon" [(ngModel)]="iconInput" placeholder="Icon" type="text">
+        <mat-hint>The file name for the icon associated with this machine, stored in the assets folder.</mat-hint>
         <mat-error>Please input a valid entry.</mat-error>
       </mat-form-field>
     </div>
+
+    <br/>
+    <br/>
 
     <div class="row">
       <mat-form-field class="example-full-width">
@@ -61,6 +76,8 @@
         <mat-error>Please input a valid entry.</mat-error>
       </mat-form-field>
     </div>
+
+    <br/>
 
     <div class="row">
       <mat-form-field class="example-full-width">
@@ -71,18 +88,29 @@
   </div>
 
   <div class="col">
-      <div class="row">
-        <h5>Time Options</h5>
-      </div>
-      <div class="row py-2">
-        <mat-checkbox [(ngModel)]="useOptionsInput" color="primary">Use time options</mat-checkbox> 
+    <div class="row">
+      <h5>Time Options<sup><button mat-icon-button matTooltip="This allows you to predefine time options for each machine."><mat-icon>info</mat-icon></button></sup></h5>
+    </div>
+    <div class="row py-2">
+      <mat-checkbox [(ngModel)]="useOptionsInput" color="primary">Use time options</mat-checkbox> 
+    </div>
 
-        <mat-form-field class="example-full-width">
-          <input matInput [disabled]="!useOptionsInput" placeholder="Option Count" (ngModelChange)="optionsCountChange()" [(ngModel)]="optionsCount" type="number">
+    <br/>
+
+    <div *ngIf="useOptionsInput" class="row">
+      <span style="display: inline-block; position: relative; left: -16px">
+        <button [disabled]="!useOptionsInput" mat-icon-button (click)="this.decrementOptionsCount()"><mat-icon>remove_circle</mat-icon></button>
+        &nbsp;&nbsp;
+        <mat-form-field style="width: 110px" class="example-full-width">
+          <input matInput [disabled]="true" placeholder="Option Count" (ngModelChange)="optionsCountChange()" [(ngModel)]="optionsCount" type="number">
           <mat-error>Please input a valid entry.</mat-error>
         </mat-form-field>
-      </div>
-      <span *ngIf="useOptionsInput && optionsCount">
+        &nbsp;&nbsp;
+        <button [disabled]="!useOptionsInput" mat-icon-button (click)="this.incrementOptionsCount()"><mat-icon>add_circle</mat-icon></button>
+      </span>
+    </div>
+
+    <span *ngIf="useOptionsInput && optionsCount">
       <div *ngFor="let index of counter(optionsCount)">
         <div class="row">
           <mat-form-field class="example-full-width">
@@ -105,6 +133,49 @@
       </div>
     </span>
   </div>
+
+  <div class="col">
+    <div class="row">
+      <h5>Alert Options<sup><button mat-icon-button matTooltip="These appear on the usage monitor, allowing users to easily contact others"><mat-icon>info</mat-icon></button></sup></h5>
+    </div>
+    <div class="row py-2">
+      <mat-checkbox [(ngModel)]="useAlertsInput" color="primary">Use custom alerts</mat-checkbox> 
+    </div>
+    <div *ngIf="useAlertsInput" class="row">
+      <span style="display: inline-block; position: relative; left: -16px">
+          <button [disabled]="!useAlertsInput" mat-icon-button (click)="this.decrementAlertsCount()"><mat-icon>remove_circle</mat-icon></button>
+          &nbsp;&nbsp;
+          <mat-form-field style="width: 110px">
+            <input matInput [disabled]="true" placeholder="Alerts Count" (ngModelChange)="alertsCountChange()" [(ngModel)]="alertsCount" type="number">
+            <mat-error>Please input a valid entry.</mat-error>
+          </mat-form-field>
+          &nbsp;&nbsp;
+          <button [disabled]="!useAlertsInput" mat-icon-button (click)="this.incrementAlertsCount()"><mat-icon>add_circle</mat-icon></button>
+      </span>
+    </div>
+    <span *ngIf="useAlertsInput && alertsCount">
+      <div *ngFor="let index of counter(alertsCount)">
+        <div class="row">
+          <mat-form-field class="example-full-width">
+            <input matInput required [disabled]="!useAlertsInput" [(ngModel)]="alertOptionsInput[index].key" placeholder="Label" type="text">
+            <mat-error>Please input a valid entry.</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <mat-form-field class="example-full-width">
+            <input matInput required [disabled]="!useAlertsInput" [(ngModel)]="alertOptionsInput[index].email.subject" placeholder="Subject" type="text">
+            <mat-error>Please input a valid entry.</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <mat-form-field class="example-full-width">
+            <textarea matInput required [disabled]="!useAlertsInput" [(ngModel)]="alertOptionsInput[index].email.text" placeholder="Text" type="text"></textarea>
+            <mat-error>Please input a valid entry.</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+  </span>
+</div>
 
   <div class="col">
     <div class="row">

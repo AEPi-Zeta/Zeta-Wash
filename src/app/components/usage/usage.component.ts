@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, SimpleChanges, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, EventEmitter, Output } from '@angular/core';
 import {PostsService} from '../../posts.services';
 
 @Component({
@@ -13,9 +13,26 @@ export class UsageComponent {
   @Input() queue: any[];
   @Input() list: any[];
 
+  @Input() canRemoveFromUsageList: boolean;
+  @Input() MACHINES_LIST: any;
+
   @Input() machineAvailability: any;
 
   @Input() usingListOnly ? = false; // optional parameter for having only the usingList available
+
+  configValue: any;
+
+  @Input()
+  set config(val) {
+    this.configValue = val;
+    this.configChange.emit(this.config);
+  }
+
+  get config() {
+    return this.configValue;
+  }
+
+  @Output() configChange = new EventEmitter();
 
   public now: number = Math.floor(new Date().getTime() / 1000);
 
@@ -94,6 +111,12 @@ export class UsageComponent {
     setInterval(() => {
       this.now = Math.floor(new Date().getTime() / 1000);
     }, 1);
+  }
+
+  sendEmailAlert(user, alertObject) {
+    this.postsService.sendEmailAlert(user, alertObject).subscribe(res => {
+      console.log('alert sent!');
+    });
   }
 
   SecondsTohhmmss(totalSeconds) {
