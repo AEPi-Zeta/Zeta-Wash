@@ -46,5 +46,4 @@ Thumbs.db
 
 # Backend
 /backend/config/users.json
-/backend/config/auth.json
-/backend/db.json
+backend/db.json
