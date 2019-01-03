@@ -69,8 +69,7 @@ export class HeaderComponent implements OnInit {
     let dialogConfig = new MatDialogConfig();
 
     dialogConfig = {
-      //height: '750px',
-      //width: '1200px'
+      width: '1200px'
     };
 
     let dialogRef = this.dialog.open(ModifyMachinesComponent, dialogConfig);
