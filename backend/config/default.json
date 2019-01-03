@@ -73,13 +73,13 @@
             "enableFullScreenButton": true
         },
         "Users": {
-            "customUsersList": true,
-            "forceCustomUsersList": true,
-            "requirePinForSettings": false,
+            "customUsersList": false,
+            "forceCustomUsersList": false,
+            "requirePinForSettings": true,
             "logAdminOnly": false,
-            "removeMachineAdminOnly": true,
+            "removeMachineAdminOnly": false,
             "pinSet": true,
-            "alertService": "email",
+            "alertService": "None",
             "Email": {
                 "service": "Gmail"
             }

@@ -80,14 +80,12 @@ if (useCustomUsersList) {
         }
 
         for (let machine in machines) {
-            if (machines[machine]['email']) {
+            if (machines[machine]['email'] && !(Object.keys(machines[machine]['email']).length === 0 && machines[machine]['email'].constructor === Object)) {
                 templates[machine] = machines[machine]['email']
             } else {
-                console.error('Machine ' + machine + ' in default.json is missing an email object! Skipping machine.');
+                console.error('Machine \'' + machine + '\' in default.json is missing an email object! Skipping machine.');
             }
         }
-
-        // console.log(templates);
 
         transporter = nodemailer.createTransport(transportOptions);
     }
@@ -270,6 +268,42 @@ app.post('/setConfig', (req, res) => {
      res.end("yes");
 })
 
+app.post('/sendEmailAlert', (req, res) => {
+    var user = req.body.user;
+    var alertEmailObject = req.body.alertObject['email'];
+
+    // sends email if user found
+    if (useCustomUsersList && alertService == 'email') {
+        const userObj = users.find(function(element) {
+            return element.name === user;
+          });
+
+        if (userObj) {
+            email = userObj['email'];
+            
+            var mailOptions = {
+                from: emailUser,
+                to: email,
+                subject: emailParser(alertEmailObject['subject'], user, 0),
+                text: emailParser(alertEmailObject['text'], user, 0)
+            };
+            
+            // DEBUG: console.log("sending mail to " + listObj['name']);
+            transporter.sendMail(mailOptions, function(error, info){
+                if (error) {
+                    console.log(error);
+                } else {
+                    // DEBUG: console.log('Email sent: ' + info.response);
+                }
+            });
+        }
+    }
+    res.send({
+        opCode: '200'
+    });
+    res.end("yes");
+})
+
 function addListObjectDB(listObj, onlyQueue) {
     listObjUID = listObj.uniqueID
 
@@ -283,7 +317,7 @@ function addListObjectDB(listObj, onlyQueue) {
         fullString = 'full_list';
     }
 
-    queueType = OBJECT_TYPE_TO_QUERY_STRING[listObj.machine.toLowerCase()][queryString]
+    queueType = OBJECT_TYPE_TO_QUERY_STRING[listObj.machine][queryString]
     
     db.get(fullString)  // adds object to the full list of queued objects
         .push({ listObj })
@@ -307,7 +341,7 @@ function removeListObjectDB(listObj, onlyQueue) {
         fullString = 'full_list';
     }
 
-    queueType = OBJECT_TYPE_TO_QUERY_STRING[listObj.machine.toLowerCase()][queryString]
+    queueType = OBJECT_TYPE_TO_QUERY_STRING[listObj.machine][queryString]
 
     db.get(fullString)
         .remove(function (parent) {
@@ -336,7 +370,7 @@ function checkList() {
                 const shouldRemove = listObj.endTime < Math.floor(new Date() / 1000);
 
                 // does actions when the listObj is to be removed from the full list ONLY
-                if (shouldRemove && dbsToCheck === primaryList) {
+                if (shouldRemove && dbsToCheck[i] === primaryList) {
                     onRemoveFromList(listObj)
                 }
 
@@ -354,7 +388,7 @@ function onRemoveFromList(listObj) {
     // adds item to the log 
     const fullString = 'full_log';
     const queryString = 'log_query_string';
-    const queueType = OBJECT_TYPE_TO_QUERY_STRING[listObj.machine.toLowerCase()][queryString]
+    const queueType = OBJECT_TYPE_TO_QUERY_STRING[listObj.machine][queryString]
 
     db.get(fullString)  // adds object to the full log of objects
         .push({ listObj })
@@ -365,7 +399,6 @@ function onRemoveFromList(listObj) {
 
     // sends email if necessary
     if (useCustomUsersList && alertService == 'email') {
-        // DEBUG: console.log("sending email");
         const user = users.find(function(element) {
             return element.name === listObj['name'];
           });
@@ -379,7 +412,7 @@ function onRemoveFromList(listObj) {
                 from: emailUser,
                 to: email,
                 subject: emailParser(templates[machine]['subject'], listObj['name'], parseInt(listObj['endTime'])),
-                text: emailParser(templates[machine]['text'],listObj['name'], parseInt(listObj['endTime']))
+                text: emailParser(templates[machine]['text'], listObj['name'], parseInt(listObj['endTime']))
             };
             
             // DEBUG: console.log("sending mail to " + listObj['name']);

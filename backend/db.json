@@ -1,8 +1,5 @@
 {
   "full_list": [],
   "full_queue": [],
-  "full_log": [],
-  "queue_query_string": "dryer_queue",
-  "list_query_string": "dryer_list",
-  "log_query_string": "dryer_log"
+  "full_log": []
 }
