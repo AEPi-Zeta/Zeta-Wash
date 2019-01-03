@@ -1,9 +1,11 @@
-import { Component, OnInit, Directive, HostListener } from '@angular/core';
+import { Component, OnInit, Directive, HostListener, SimpleChanges, OnChanges } from '@angular/core';
 import { PostsService } from './posts.services';
 import {Observable} from 'rxjs/Rx';
 // import MACHINES_LIST from './utils/consts';
 import { MAT_CHECKBOX_CONTROL_VALUE_ACCESSOR, MatDialogRef, MatDialog, MatSnackBar } from '@angular/material';
 import { PinInputComponent } from './components/pin-input/pin-input.component';
+import { Router, NavigationEnd } from '@angular/router';
+import { PlatformLocation } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -12,14 +14,29 @@ import { PinInputComponent } from './components/pin-input/pin-input.component';
   providers: [PostsService]
 })
 
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'app';
   name: string;
   list: any[];
   queue: any[];
   machine: string;
   machineAvailability: object = null;
-  selectedIndex: any;
+  _selectedIndex: any;
+  get selectedIndex(): any {
+    return this._selectedIndex;
+  }
+  set selectedIndex(theSelectedIndex: any) {
+      if (this._selectedIndex !== theSelectedIndex) {
+        console.log(this._selectedIndex + ' <- old, new -> ' + theSelectedIndex);
+        if (!this.blockHistoryChanges) {
+          window.history.pushState({}, '', '/' + this.INDEX_TO_ROUTE_CONVERTER[theSelectedIndex]);
+        } else {
+          this.blockHistoryChanges = false;
+        }
+      }
+      this._selectedIndex = theSelectedIndex;
+  }
+  blockHistoryChanges = false;
   topBarTitle: string;
   hasList = false;
   useQueue = true;
@@ -30,16 +47,33 @@ export class AppComponent {
 
   pinSet: boolean;
   requirePinForSettings: boolean;
+  forceCustomUsersList: boolean;
   isAuthenticated = false;
   authReached = false;
+  canRemoveFromUsageList: boolean;
 
   config = null;
   MACHINES_LIST: any;
   auth = null;
   users: any[] = [];
 
+  pathChecked = false;
+
+  ROUTES_CONFIG = {
+    signup: {
+      indexValue: 0
+    },
+    status: {
+      indexValue: 1
+    }
+  };
+
+  INDEX_TO_ROUTE_CONVERTER = {
+
+  };
+
   constructor(public postsService: PostsService, private dialog: MatDialog,
-    public snackBar: MatSnackBar) { // init for the beginning of the app
+    public snackBar: MatSnackBar, private router: Router, location: PlatformLocation) { // init for the beginning of the app
     const queueType = 'both';
     this.postsService.getConfig(this.isDev).subscribe(result => { // loads settings
       this.config = result.ZetaWash;
@@ -48,6 +82,9 @@ export class AppComponent {
       this.postsService.path = result.ZetaWash.Host.backendURL;
 
       this.MACHINES_LIST = result.ZetaWash.Machines.List;
+
+      this.canRemoveFromUsageList = !result.ZetaWash.removeMachineAdminOnly;
+      this.forceCustomUsersList = result.ZetaWash.Users.forceCustomUsersList;
 
       this.postsService.getList(queueType).subscribe(res => {
         this.list = this.queueResponseToQueue(res.fullList.list);
@@ -85,16 +122,38 @@ export class AppComponent {
       make sure the config file is web-accessable.', 'Close', {});
       console.error('Server Error:\n\n' + error);
     });
+
+    router.events.subscribe((_: NavigationEnd) => {
+      if (!this.pathChecked) { this.onNavigation(_.url); }
+    });
+
+    location.onPopState(() => {
+      this.blockHistoryChanges = true; // blocks history changes so that an index change won't be submitted to history if going back
+      this.onNavigation(location.pathname);
+    });
+
+    for (const route in this.ROUTES_CONFIG) {
+      if (this.ROUTES_CONFIG[route]) {
+        this.INDEX_TO_ROUTE_CONVERTER[this.ROUTES_CONFIG[route].indexValue.toString()] = route;
+      }
+    }
   }
 
   ngOnInit() {
     // creates timer for checking times
-    const timer = Observable.timer(0, 1000);
+    const timer = Observable.timer(0, 2000);
     timer.subscribe(t => {
       const queueType = 'both';
       this.postsService.getList(queueType).subscribe(res => {
-        this.list = this.queueResponseToQueue(res.fullList.list);
-        this.queue = this.queueResponseToQueue(res.fullList.queue);
+        const newList = this.queueResponseToQueue(res.fullList.list);
+        const newQueue = this.queueResponseToQueue(res.fullList.queue);
+
+        if (JSON.stringify(this.list) !== JSON.stringify(newList)) {
+          this.list = newList;
+        }
+        if (JSON.stringify(this.queue) !== JSON.stringify(newQueue)) {
+          this.queue = this.queueResponseToQueue(res.fullList.queue);
+        }
 
         // sorts queue
         this.queue.sort(function(a, b) {return (a.startTime > b.startTime) ? 1 : ((b.startTime > a.startTime) ? -1 : 0); });
@@ -104,6 +163,17 @@ export class AppComponent {
         this.listReached();
       }
     });
+  }
+
+  onNavigation(url: string) {
+    if (url) {
+      if (url === '/signup') {
+        this.selectedIndex = this.ROUTES_CONFIG.signup.indexValue;
+      } else if (url === '/status') {
+        this.selectedIndex = this.ROUTES_CONFIG.status.indexValue;
+      }
+      this.pathChecked = true;
+    }
   }
 
   listReached() {
@@ -153,6 +223,10 @@ export class AppComponent {
   checkAuth(pincode: string) {
     this.postsService.checkAuth(pincode).subscribe(res => {
       if (res.authenticated) {
+        // get extra permissions
+        this.canRemoveFromUsageList = true;
+
+        // get authentication JSON from server
         this.getAuth();
       } else {
         const snackBarRef = this.snackBar.open('Authentication failed.', 'Close', {
@@ -166,9 +240,9 @@ export class AppComponent {
     this.postsService.getAuth().subscribe(res => {
       this.auth = res.auth;
       this.auth['App']['pinCode'] = pincode;
-      this.postsService.setAuth(this.auth).subscribe(res => {
+      this.postsService.setAuth(this.auth).subscribe(() => {
         this.config['Users']['pinSet'] = true;
-        this.postsService.setConfig(this.config).subscribe (res => {
+        this.postsService.setConfig(this.config).subscribe (() => {
           const snackBarRef = this.snackBar.open('Successfully set pin! Reloading page...', 'Close', {
             duration: 2000
           });
@@ -211,6 +285,7 @@ export class AppComponent {
     this.postsService.getAuth().subscribe(res => {
       this.auth = res.auth;
       this.isAuthenticated = true;
+      this.canRemoveFromUsageList = true;
       const snackBarRef = this.snackBar.open('Logged in!', 'Close', {
         duration: 2000
       });
@@ -246,10 +321,14 @@ export class AppComponent {
     this.machine = machine;
   }
 
+  onSelectedIndexChange(selectedIndex: number) {
+    this.selectedIndex = selectedIndex;
+  }
+
   toggleFullScreen() {
     const elem = document.documentElement;
-    if (!document.fullscreenElement && !document['mozFullScreenElement'] &&
-      !document.webkitFullscreenElement && !document['msFullscreenElement']) {
+    if (!document['fullscreenElement'] && !document['mozFullScreenElement'] &&
+      !document['webkitFullscreenElement'] && !document['msFullscreenElement']) {
       this.isFullScreen = true;
       if (elem.requestFullscreen) {
         elem.requestFullscreen();
@@ -257,7 +336,7 @@ export class AppComponent {
         elem['msRequestFullscreen']();
       } else if (elem['mozRequestFullScreen']) {
         elem['mozRequestFullScreen']();
-      } else if (elem.webkitRequestFullscreen) {
+      } else if (elem['webkitRequestFullscreen']) {
         elem['webkitRequestFullscreen']();
       }
     } else {
@@ -268,7 +347,7 @@ export class AppComponent {
         document['msExitFullscreen']();
       } else if (document['mozCancelFullScreen']) {
         document['mozCancelFullScreen']();
-      } else if (document.webkitExitFullscreen) {
+      } else if (document['webkitExitFullscreen']) {
         document['webkitExitFullscreen']();
       }
     }

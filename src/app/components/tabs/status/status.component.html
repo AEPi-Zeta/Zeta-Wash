@@ -1,0 +1,20 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-4 col-sm-12" style="padding: 10px;">
+      <mat-card id="card" class="big demo-basic">
+        <div style="padding-top: 10px; padding-left: 30px; padding-right: 30px; padding-bottom: 30px">
+            <h4>List</h4>
+            <br/>
+            <app-usage [(config)]="config" [MACHINES_LIST]="MACHINES_LIST" [canRemoveFromUsageList]="canRemoveFromUsageList" [usingListOnly]="true" [list]="list" [machineAvailability]="machineAvailability" [queue]="queue"></app-usage>
+        </div>   
+      </mat-card>
+    </div>
+    <div class="col-md-8 col-sm-12" style="padding: 10px;">
+      <mat-card id="card" class="big demo-basic">
+        <div *ngIf="machineAvailability !== null" style="padding-top: 10px; padding-left: 30px; padding-right: 30px; padding-bottom: 30px">
+            <app-machine-status [selectedIndex]="selectedIndex" (selectedIndexChange)="onSelectedIndexChange($event)" [machineAvailability]="machineAvailability" [MACHINES_LIST]="MACHINES_LIST" (notify)="onNotifyMachine($event)"></app-machine-status>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+</div>

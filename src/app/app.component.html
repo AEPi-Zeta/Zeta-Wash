@@ -1,29 +1,10 @@
 <app-header [isAuthenticated]="isAuthenticated" [(config)]="config" [auth]="auth" [requirePinForSettings]="requirePinForSettings" [pinSet]="pinSet" [topBarTitle]="topBarTitle" [postsService]="postsService"></app-header>
 <mat-tab-group [(selectedIndex)]="selectedIndex" style="height: 100%">
   <mat-tab label="Sign Up">
-    <app-signin-component [machineAvailability]="machineAvailability" [MACHINES_LIST]="MACHINES_LIST" [useQueue]="useQueue" [(machine)]="machine" [list]="list" [queue]="queue" [users]="users"></app-signin-component>
+    <app-signup [(config)]="config" [machineAvailability]="machineAvailability" [canRemoveFromUsageList]="canRemoveFromUsageList" [MACHINES_LIST]="MACHINES_LIST" [useQueue]="useQueue" [(machine)]="machine" [list]="list" [queue]="queue" [users]="users" [forceCustomUsersList]="forceCustomUsersList"></app-signup>
   </mat-tab>
   <mat-tab label="Status">
-    <div class="container-fluid">
-    <div class="row">
-        <div class="col-md-4 col-sm-12" style="padding: 10px;">
-          <mat-card id="card" class="big demo-basic">
-            <div style="padding-top: 10px; padding-left: 30px; padding-right: 30px; padding-bottom: 30px">
-                <h4>List</h4>
-                <br/>
-                <app-usage [usingListOnly]="true" [list]="list" [machineAvailability]="machineAvailability" [queue]="queue"></app-usage>
-            </div>   
-          </mat-card>
-        </div>
-        <div class="col-md-8 col-sm-12" style="padding: 10px;">
-          <mat-card id="card" class="big demo-basic">
-            <div *ngIf="machineAvailability !== null" style="padding-top: 10px; padding-left: 30px; padding-right: 30px; padding-bottom: 30px">
-                <app-machine-status [(selectedIndex)]="selectedIndex" [machineAvailability]="machineAvailability" [MACHINES_LIST]="MACHINES_LIST" (notify)="onNotifyMachine($event)"></app-machine-status>
-            </div>
-          </mat-card>
-        </div>
-      </div>
-    </div>
+    <app-status [(config)]="config" [selectedIndex]="selectedIndex" (selectedIndexChange)="onSelectedIndexChange($event)" [MACHINES_LIST]="MACHINES_LIST" [canRemoveFromUsageList]="canRemoveFromUsageList" [usingListOnly]="true" [list]="list" [machineAvailability]="machineAvailability" [queue]="queue" (notify)="onNotifyMachine($event)"></app-status>
   </mat-tab>
 </mat-tab-group>
 
