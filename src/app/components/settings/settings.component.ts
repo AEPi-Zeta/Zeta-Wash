@@ -44,6 +44,7 @@ export class SettingsComponent implements OnInit {
   titleInput: string;
   requirePinForSettingsInput: boolean;
   logAdminOnlyInput: boolean;
+  removeMachineAdminOnlyInput: boolean;
   customUsersListInput: boolean;
   forceCustomUsersListInput: boolean;
   alertServiceInput: string;
@@ -73,6 +74,7 @@ export class SettingsComponent implements OnInit {
     this.titleInput = newConfig.Extra.titleTop;
     this.requirePinForSettingsInput = newConfig.Users.requirePinForSettings;
     this.logAdminOnlyInput = newConfig.Users.logAdminOnly;
+    this.removeMachineAdminOnlyInput = newConfig.Users.removeMachineAdminOnly;
     this.customUsersListInput = newConfig.Users.customUsersList;
     this.forceCustomUsersListInput = newConfig.Users.forceCustomUsersList;
     this.alertServiceInput = newConfig.Users.alertService;
@@ -95,6 +97,7 @@ export class SettingsComponent implements OnInit {
     this.titleInput = newConfig.Extra.titleTop;
     this.requirePinForSettingsInput = newConfig.Users.requirePinForSettings;
     this.logAdminOnlyInput = newConfig.Users.logAdminOnly;
+    this.removeMachineAdminOnlyInput = newConfig.Users.removeMachineAdminOnly;
     this.customUsersListInput = newConfig.Users.customUsersList;
     this.forceCustomUsersListInput = newConfig.Users.forceCustomUsersList;
     this.alertServiceInput = newConfig.Users.alertService;
@@ -124,6 +127,7 @@ export class SettingsComponent implements OnInit {
     newConfig.Extra.titleTop = this.titleInput;
     newConfig.Users.requirePinForSettings = this.requirePinForSettingsInput;
     newConfig.Users.logAdminOnly = this.logAdminOnlyInput;
+    newConfig.Users.removeMachineAdminOnly = this.removeMachineAdminOnlyInput;
     newConfig.Users.customUsersList = this.customUsersListInput;
     newConfig.Users.forceCustomUsersList = this.forceCustomUsersListInput;
     newConfig.Users.alertService = this.alertServiceInput;

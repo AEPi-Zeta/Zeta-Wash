@@ -32,10 +32,10 @@
             </div>
             <div class="col col-md-3 ml-md-4">
                 <div class="centered">
-                    <div *ngIf="machine && MACHINES_LIST && MACHINES_LIST[machine.toLowerCase().substring(0, machine.length - 1)]['useOptions'];">
+                    <div *ngIf="machine && MACHINES_LIST && MACHINES_LIST[machine.substring(0, machine.length - 1)]['useOptions'];">
                         <mat-form-field>
                             <mat-select [ngModelOptions]="{standalone: true}" [(ngModel)]="minutes" placeholder="Minutes" required>
-                                <mat-option (click)="triggerForceCustom(false)" *ngFor="let option of MACHINES_LIST[machine.toLowerCase().substring(0, machine.length - 1)]['minuteOptions']" [value]="option.amount">
+                                <mat-option (click)="triggerForceCustom(false)" *ngFor="let option of MACHINES_LIST[machine.substring(0, machine.length - 1)]['minuteOptions']" [value]="option.amount">
                                     {{option.label}}
                                 </mat-option>
                                 <mat-option [value]="0" (click)="triggerForceCustom(true)">
@@ -44,7 +44,7 @@
                             </mat-select>
                         </mat-form-field>
                     </div>
-                    <div *ngIf="!(machine && MACHINES_LIST && MACHINES_LIST[machine.toLowerCase().substring(0, machine.length - 1)]['useOptions']) || forceCustom">
+                    <div *ngIf="!(machine && MACHINES_LIST && MACHINES_LIST[machine.substring(0, machine.length - 1)]['useOptions']) || forceCustom">
                         <mat-form-field class="example-full-width">
                             <input matInput [(ngModel)]="minutes" (ngModelChange)="onMinutesChange()" [formControl]="minutesControl" name="minutesControl" placeholder="Minutes" type="number" required>
                             <mat-error>Please enter a valid time.</mat-error>
@@ -78,13 +78,13 @@
 
         -->
     <div *ngIf="!mobile; else isMobile">
-        <button mat-raised-button [disabled]="!signinForm.form.valid || myControl.invalid || buttonDisable || (machineAvailability && machineAvailability[machineToPlural(machine)][machineToIndex(machine)]['inUse'] && !isOnlyQueue) || minutesWrong" (click)="onSubmitSignin()" type="button" color="primary" style="width: 250px; height: 50px; font-size: 20px">
+        <button mat-raised-button [disabled]="!signinForm.form.valid || myControl.invalid || buttonDisable || (machineAvailability && machineAvailability[machineToPlural(machine)][machineToIndex(machine)]['inUse'] && !isOnlyQueue) || minutesWrong || (forceCustomUsersList && users.indexOf(name) == -1)" (click)="onSubmitSignin()" type="button" color="primary" style="width: 250px; height: 50px; font-size: 20px">
             Reserve
         </button>
     </div>
     <ng-template #isMobile>
         <div class="centered">
-            <button mat-raised-button [disabled]="!signinForm.form.valid || myControl.invalid || buttonDisable || (machineAvailability && machineAvailability[machineToPlural(machine)][machineToIndex(machine)]['inUse'] && !isOnlyQueue) || minutesWrong" (click)="onSubmitSignin()" type="button" color="primary" style="width: 100%; height: 50px; font-size: 20px">
+            <button mat-raised-button [disabled]="!signinForm.form.valid || myControl.invalid || buttonDisable || (machineAvailability && machineAvailability[machineToPlural(machine)][machineToIndex(machine)]['inUse'] && !isOnlyQueue) || minutesWrong || (forceCustomUsersList && users.indexOf(name) == -1)" (click)="onSubmitSignin()" type="button" color="primary" style="width: 100%; height: 50px; font-size: 20px">
                 Reserve
             </button>
         </div>
@@ -98,7 +98,7 @@
 
     <table style="width: 100%">
         <td>
-            <app-usage [usingListOnly]="!useQueue" [machineAvailability]="machineAvailability" [list]="list" [queue]="queue"></app-usage>
+            <app-usage [(config)]="config" [MACHINES_LIST]="MACHINES_LIST" [canRemoveFromUsageList]="canRemoveFromUsageList" [usingListOnly]="!useQueue" [machineAvailability]="machineAvailability" [list]="list" [queue]="queue"></app-usage>
         </td>
     </table>
 

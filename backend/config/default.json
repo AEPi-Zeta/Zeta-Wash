@@ -15,10 +15,11 @@
                 "washer": {
                     "key": "washer",
                     "count": 2,
-                    "default_minutes": 59,
-                    "min_minutes": 0,
+                    "default_minutes": 60,
+                    "min_minutes": 1,
                     "max_minutes": 240,
                     "useOptions": true,
+                    "useAlerts": true,
                     "minuteOptions": [
                         {
                             "key": "30",
@@ -36,11 +37,34 @@
                             "label": "80 - Long"
                         }
                     ],
+                    "customAlerts": [
+                        {
+                            "key": "Stuff is Ready!",
+                            "email": {
+                                "subject": "[Zeta Wash - Notification] You've been buzzed! Your stuff is ready.",
+                                "text": "Your stuff is ready!"
+                            }
+                        }
+                    ],
                     "icon": "washer.png",
                     "email": {
                         "subject": "[Zeta Wash - Washer] Your clothes are washed!",
                         "text": "Your clothes finished washing at ${date}."
                     }
+                },
+                "Dryer": {
+                    "key": "Dryer",
+                    "email": {
+                        "subject": "[Zeta Wash - Dryer] Your clothes are dry!",
+                        "text": "Your clothes finished drying at ${date}."
+                    },
+                    "count": 2,
+                    "default_minutes": 15,
+                    "min_minutes": 0,
+                    "max_minutes": 50,
+                    "useOptions": false,
+                    "useAlerts": false,
+                    "icon": "dryer.png"
                 }
             }
         },
@@ -49,12 +73,13 @@
             "enableFullScreenButton": true
         },
         "Users": {
-            "customUsersList": false,
-            "forceCustomUsersList": false,
-            "requirePinForSettings": true,
+            "customUsersList": true,
+            "forceCustomUsersList": true,
+            "requirePinForSettings": false,
             "logAdminOnly": false,
+            "removeMachineAdminOnly": true,
             "pinSet": true,
-            "alertService": "None",
+            "alertService": "email",
             "Email": {
                 "service": "Gmail"
             }

@@ -48,10 +48,14 @@
       </div>
 
       <div class="row pt-2 pb-3">
+        <mat-checkbox [(ngModel)]="removeMachineAdminOnlyInput" color="primary">Require pin to remove reservation</mat-checkbox>
+      </div>
+
+      <div class="row pt-2 pb-3">
         <mat-checkbox [(ngModel)]="customUsersListInput" color="primary">Custom users list</mat-checkbox>
       </div>
       <div class="row pt-2 pb-3">
-        <mat-checkbox [disabled]="true || !customUsersListInput" [(ngModel)]="forceCustomUsersListInput" color="primary">Force custom users list (Coming soon!)</mat-checkbox>
+        <mat-checkbox [disabled]="!customUsersListInput" [(ngModel)]="forceCustomUsersListInput" color="primary">Force custom users list</mat-checkbox>
       </div>
       <div class="row">
         <mat-form-field>
