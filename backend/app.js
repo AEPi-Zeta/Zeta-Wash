@@ -10,7 +10,6 @@ const low = require('lowdb')
 const FileSync = require('lowdb/adapters/FileSync')
 const bodyParser = require("body-parser");
 const db_file = new FileSync('db.json');
-const db = low(db_file);
 var https = require('https');
 
 
@@ -91,11 +90,16 @@ if (useCustomUsersList) {
     }
 }
 
+// db stuff (deals with file 'db.json')
+
+checkDB();
+const db = low(db_file);
+
 // Set some defaults (required if your JSON file is empty)
 db.defaults(dbConfig)
   .write()
 
-console.log(`origin: ${frontendURL}`)
+console.log(`Front-end URL: ${frontendURL}`)
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -293,7 +297,7 @@ app.post('/sendEmailAlert', (req, res) => {
                 if (error) {
                     console.log(error);
                 } else {
-                    // DEBUG: console.log('Email sent: ' + info.response);
+                    console.log('Email sent: ' + info.response);
                 }
             });
         }
@@ -325,6 +329,8 @@ function addListObjectDB(listObj, onlyQueue) {
     db.get(queueType)
         .push({ listObj })
         .write()
+    
+    checkDB();
 }
 
 function removeListObjectDB(listObj, onlyQueue) {
@@ -355,6 +361,47 @@ function removeListObjectDB(listObj, onlyQueue) {
             return listObj.uniqueID == listObjSelected.uniqueID;
         })
         .write()
+
+    checkDB();
+}
+
+// function to check if a json is valid https://codeblogmoney.com/validate-json-string-using-javascript/
+function IsValidJSONString(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}
+
+// checks db.json, and backs it up to _db.json
+function checkDB() {
+    if (fs.existsSync('./db.json')) {
+        temp_db_file = fs.readFileSync('./db.json', 'utf8');
+        if (IsValidJSONString(temp_db_file)) {
+
+            // writes backup
+            fs.writeFileSync('./_db.json', temp_db_file, { flag: 'w' });
+        } else { // if file is corrupted, likely from a crash
+            console.log('Corrupt DB file found! Reverting from backup.')
+
+            // reverts db from backup '_db.json'
+            if (fs.existsSync('./_db.json')) { // if the backup exists
+                backup_db_file = fs.readFileSync('./_db.json', 'utf8');
+                if (IsValidJSONString(backup_db_file)) {
+                    fs.writeFileSync('./db.json', backup_db_file, { flag: 'w' });
+                }
+            } else { // backup does not exist =( must rename db file so a new one gets generated
+                console.log('No backup db file found. Renaming to \'corrupted_db.json\', and a new one will be generated.');
+                fs.rename('./db.json', './corrupted_db.json', function(err) {
+                    if ( err ) console.log('ERROR: ' + err);
+                });
+            }
+        }
+    } else { // if the file cannot be found
+        console.log('No db file found. Generating new one.');
+    }
 }
 
 // check the queue for finished items every 500 milliseconds
@@ -450,9 +497,9 @@ if (useEncryption) {
     };
 
     https.createServer(options, app).listen(port);
-    console.log(`Zeta Wash server listening on port ${port}\nSSL: Enabled`)
+    console.log(`Zeta Wash server with SSL successfully started, listening on port ${port}`)
 } else {
-    app.listen(port, () => console.log(`Zeta Wash server listening on port ${port}\nSSL: Disabled`))
+    app.listen(port, () => console.log(`Zeta Wash server successfully started, listening on port ${port}`))
 }
 
 function emailParser(inputString, name, endTime) {
@@ -475,8 +522,4 @@ function timeConverter(UNIX_timestamp){
     if (min < 10) min = "0" + min;
     var time = hour + ':' + min + ':' + sec + ' ' + date + ' ' + month + ' ' + year ;
     return time;
-}
-
-function checkDBs() {
-
 }
