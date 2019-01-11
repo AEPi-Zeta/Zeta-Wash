@@ -70,21 +70,23 @@
     <br/>
     <br/>
 
-    <div class="row">
-      <mat-form-field class="example-full-width">
-        <input matInput name="Subject" [(ngModel)]="emailSubjectInput" placeholder="Subject" type="text">
-        <mat-error>Please input a valid entry.</mat-error>
-      </mat-form-field>
-    </div>
+    <span *ngIf="alertServiceInput == 'email' && customUsersListInput">
+      <div class="row">
+        <mat-form-field class="example-full-width">
+          <input matInput name="Subject" [(ngModel)]="emailSubjectInput" placeholder="Subject" type="text">
+          <mat-error>Please input a valid entry.</mat-error>
+        </mat-form-field>
+      </div>
 
-    <br/>
+      <br/>
 
-    <div class="row">
-      <mat-form-field class="example-full-width">
-        <textarea matInput name="Text" [(ngModel)]="emailTextInput" placeholder="Text" type="text"></textarea>
-        <mat-error>Please input a valid entry.</mat-error>
-      </mat-form-field>
-    </div>
+      <div class="row">
+        <mat-form-field class="example-full-width">
+          <textarea matInput name="Text" [(ngModel)]="emailTextInput" placeholder="Text" type="text"></textarea>
+          <mat-error>Please input a valid entry.</mat-error>
+        </mat-form-field>
+      </div>
+    </span>
   </div>
 
   <div class="col">

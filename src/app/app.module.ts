@@ -12,6 +12,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+
 import {MatTableModule} from '@angular/material/table';
 
 import { MatFormFieldModule, MatInputModule, MatListModule, MatIconModule } from '@angular/material';
@@ -33,6 +35,7 @@ import { SignupComponent } from './components/tabs/signup/signup.component';
 import { StatusComponent } from './components/tabs/status/status.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { EmptyComponent } from './components/empty/empty.component';
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +52,8 @@ import { EmptyComponent } from './components/empty/empty.component';
     SignupComponent,
     StatusComponent,
     PageNotFoundComponent,
-    EmptyComponent
+    EmptyComponent,
+    ConfirmDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -88,9 +92,13 @@ import { EmptyComponent } from './components/empty/empty.component';
     ModifyMachineComponent,
     ModifyMachinesComponent,
     SettingsComponent,
-    PinInputComponent
+    PinInputComponent,
+    ConfirmDialogComponent
   ],
-  providers: [PostsService],
+  providers: [
+    PostsService,
+    {provide: LocationStrategy, useClass: HashLocationStrategy}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

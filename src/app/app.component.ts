@@ -1,11 +1,17 @@
 import { Component, OnInit, Directive, HostListener, SimpleChanges, OnChanges } from '@angular/core';
 import { PostsService } from './posts.services';
 import {Observable} from 'rxjs/Rx';
-// import MACHINES_LIST from './utils/consts';
-import { MAT_CHECKBOX_CONTROL_VALUE_ACCESSOR, MatDialogRef, MatDialog, MatSnackBar } from '@angular/material';
+import { of } from 'rxjs';
+import consts from './utils/consts';
+import { MatDialog, MatSnackBar } from '@angular/material';
 import { PinInputComponent } from './components/pin-input/pin-input.component';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { PlatformLocation } from '@angular/common';
+import { LogComponent } from './components/log/log.component';
+import { ModifyMachinesComponent } from './components/modify-machines/modify-machines.component';
+import { SettingsComponent } from './components/settings/settings.component';
+import { ModifyMachineComponent } from './components/modify-machine/modify-machine.component';
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-root',
@@ -21,22 +27,39 @@ export class AppComponent implements OnInit {
   queue: any[];
   machine: string;
   machineAvailability: object = null;
+  defaultTab = 0;
+  tempBlockNavigation = false;
   _selectedIndex: any;
+  openLogDialog: any;
+  openModifyMachinesDialog: any;
+  openAddMachineDialog: any;
+  logoutDialogContent = 'Are you sure you want to log out? You will need to sign in manually next time.';
   get selectedIndex(): any {
     return this._selectedIndex;
   }
   set selectedIndex(theSelectedIndex: any) {
       if (this._selectedIndex !== theSelectedIndex) {
-        console.log(this._selectedIndex + ' <- old, new -> ' + theSelectedIndex);
-        if (!this.blockHistoryChanges) {
-          window.history.pushState({}, '', '/' + this.INDEX_TO_ROUTE_CONVERTER[theSelectedIndex]);
-        } else {
-          this.blockHistoryChanges = false;
+        if (!this.tempBlockNavigation) {
+          if (theSelectedIndex === undefined) {
+            theSelectedIndex = this.defaultTab;
+            this._selectedIndex = this.defaultTab;
+          }
+          if (this.router.url !== '/') {
+            // the first navigation is complete and the URL is set
+            this.router.navigate([consts.setURLElement
+              (this.router.url, 1, this.INDEX_TO_ROUTE_CONVERTER[theSelectedIndex])]); // sets url back to what it was before
+          } else {
+            this.router.events.filter(e => e instanceof NavigationEnd).first().subscribe(() => {
+              // the first navigation is complete and the URL is set
+              this.router.navigate([consts.setURLElement
+                (this.router.url, 1, this.INDEX_TO_ROUTE_CONVERTER[theSelectedIndex])]); // sets url back to what it was before
+
+            });
+          }
         }
       }
-      this._selectedIndex = theSelectedIndex;
+      if (theSelectedIndex !== undefined) { this._selectedIndex = theSelectedIndex; }
   }
-  blockHistoryChanges = false;
   topBarTitle: string;
   hasList = false;
   useQueue = true;
@@ -50,6 +73,7 @@ export class AppComponent implements OnInit {
   forceCustomUsersList: boolean;
   isAuthenticated = false;
   authReached = false;
+  afterAuthFinished = false;
   canRemoveFromUsageList: boolean;
 
   config = null;
@@ -72,14 +96,20 @@ export class AppComponent implements OnInit {
 
   };
 
+  openSettingsDialog = false;
+
+  oldURL: string;
+  currentURL: string;
+
   constructor(public postsService: PostsService, private dialog: MatDialog,
-    public snackBar: MatSnackBar, private router: Router, location: PlatformLocation) { // init for the beginning of the app
+    public snackBar: MatSnackBar, private router: Router, private route: ActivatedRoute,
+    location: PlatformLocation) { // init for the beginning of the app
     const queueType = 'both';
     this.postsService.getConfig(this.isDev).subscribe(result => { // loads settings
       this.config = result.ZetaWash;
       this.topBarTitle = result.ZetaWash.Extra.titleTop;
       this.useQueue = result.ZetaWash.Machines.useQueue;
-      this.postsService.path = result.ZetaWash.Host.backendURL;
+      this.postsService.backendPath = result.ZetaWash.Host.backendURL;
 
       this.MACHINES_LIST = result.ZetaWash.Machines.List;
 
@@ -93,7 +123,7 @@ export class AppComponent implements OnInit {
         // sorts queue
         this.queue.sort(function(a, b) {return (a.startTime > b.startTime) ? 1 : ((b.startTime > a.startTime) ? -1 : 0); });
         this.listReached();
-      }, error => {
+      }, error => { // if users.json cannot be reached
         const snackBarRef = this.snackBar.open('ERROR: Failed to get list of current users from server.', 'Close', {
           duration: 2000
         });
@@ -103,6 +133,10 @@ export class AppComponent implements OnInit {
         this.authReached = true;
         this.pinSet = result.ZetaWash.Users.pinSet;
         this.requirePinForSettings = result.ZetaWash.Users.requirePinForSettings;
+
+        if (localStorage.getItem('pin')) {
+          this.getAuth();
+        }
       } else {
         this.getAuth();
       }
@@ -110,6 +144,11 @@ export class AppComponent implements OnInit {
       if (result.ZetaWash.Users.customUsersList) {
         this.postsService.getUsers().subscribe(res => {
           this.users = res.users;
+          this.users.sort(function(a, b) { // properly sorts emails in alphabetical order
+            const textA = a.toUpperCase();
+            const textB = b.toUpperCase();
+            return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+          });
         }, error => {
           const snackBarRef = this.snackBar.open('ERROR: Failed to get list of users from server.', 'Close', {
             duration: 2000
@@ -123,18 +162,24 @@ export class AppComponent implements OnInit {
       console.error('Server Error:\n\n' + error);
     });
 
-    router.events.subscribe((_: NavigationEnd) => {
-      if (!this.pathChecked) { this.onNavigation(_.url); }
+    router.events.subscribe((_: NavigationEnd) => { // sets the relative url for routing info, and calls onNavigation function
+      if (this.currentURL === undefined && _.url !== undefined) {
+        this.currentURL = _.url;
+      }
+
+      if (_.url && _.url !== undefined) {
+        this.currentURL = _.url;
+      }
+
+      if (this.currentURL !== this.oldURL) {
+        this.oldURL = this.currentURL;
+        this.onNavigation('/#' + _.url);
+      }
     });
 
-    location.onPopState(() => {
-      this.blockHistoryChanges = true; // blocks history changes so that an index change won't be submitted to history if going back
-      this.onNavigation(location.pathname);
-    });
-
-    for (const route in this.ROUTES_CONFIG) {
-      if (this.ROUTES_CONFIG[route]) {
-        this.INDEX_TO_ROUTE_CONVERTER[this.ROUTES_CONFIG[route].indexValue.toString()] = route;
+    for (const routeConfig in this.ROUTES_CONFIG) {
+      if (this.ROUTES_CONFIG[routeConfig]) {
+        this.INDEX_TO_ROUTE_CONVERTER[this.ROUTES_CONFIG[routeConfig].indexValue.toString()] = routeConfig;
       }
     }
   }
@@ -167,12 +212,44 @@ export class AppComponent implements OnInit {
 
   onNavigation(url: string) {
     if (url) {
-      if (url === '/signup') {
-        this.selectedIndex = this.ROUTES_CONFIG.signup.indexValue;
-      } else if (url === '/status') {
-        this.selectedIndex = this.ROUTES_CONFIG.status.indexValue;
+      // gets component parts of URL, first one (index 0) is empty since the string begins with a '/', second one is #
+      const urlComponents = url.split('/');
+
+      const firstElement = urlComponents[2];
+
+      if (firstElement) {
+        this.tempBlockNavigation = true;
+        if (firstElement === 'signup') {
+          this.selectedIndex = this.ROUTES_CONFIG.signup.indexValue;
+        } else if (firstElement === 'status') {
+          this.selectedIndex = this.ROUTES_CONFIG.status.indexValue;
+        }
+        this.tempBlockNavigation = false;
       }
-      this.pathChecked = true;
+
+      const secondElement = urlComponents[3];
+
+      if (secondElement) {
+        if (secondElement === 'auth') {
+          this.authDialog();
+        } else if (secondElement === 'log') {
+          this.rootOpenLog();
+        } else if (secondElement === 'settings') {
+          if (this.isAuthenticated) { this.rootOpenModifySettings(); } else { this.openSettingsDialog = true; }
+        } else if (secondElement === 'machines') {
+          if (this.isAuthenticated) { this.rootOpenModifyMachines(); } else { this.openModifyMachinesDialog = true; }
+        }
+      }
+
+      const thirdElement = urlComponents[4];
+
+      if (thirdElement) {
+        if (thirdElement === 'add-machine') {
+          if (this.isAuthenticated) { this.rootOpenAddMachine(); } else { this.openAddMachineDialog = true; }
+        }
+      }
+
+      this.pathChecked = true; // indicates the URL has been parsed and requires no further parsing
     }
   }
 
@@ -223,8 +300,8 @@ export class AppComponent implements OnInit {
   checkAuth(pincode: string) {
     this.postsService.checkAuth(pincode).subscribe(res => {
       if (res.authenticated) {
-        // get extra permissions
-        this.canRemoveFromUsageList = true;
+
+        localStorage.setItem('pin', pincode); // sets password in local storage
 
         // get authentication JSON from server
         this.getAuth();
@@ -236,7 +313,7 @@ export class AppComponent implements OnInit {
     });
   }
 
-  setPin(pincode: string) {
+  setPin(pincode: string) { // sets specified pin as the pin
     this.postsService.getAuth().subscribe(res => {
       this.auth = res.auth;
       this.auth['App']['pinCode'] = pincode;
@@ -260,11 +337,24 @@ export class AppComponent implements OnInit {
     });
   }
 
-  authDialog() {
-    const dialogRef = this.dialog.open(PinInputComponent, {
-      height: '400px',
-      width: '600px',
+  logoutDialog() {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent);
+
+    const instance = dialogRef.componentInstance;
+    instance.dialogContent = this.logoutDialogContent;
+
+    dialogRef.afterClosed().subscribe(result => {
+      const isConfirmed = instance.isConfirmed;
+      if (isConfirmed) {
+        this.isAuthenticated = false;
+        this.logoutUser();
+      }
     });
+  }
+
+  authDialog() {
+    const oldURL = this.router.url;
+    const dialogRef = this.dialog.open(PinInputComponent, consts.DIALOG_CONFIGS.PinInputDialog);
 
     const instance = dialogRef.componentInstance;
     instance.pinSet = this.pinSet;
@@ -278,6 +368,7 @@ export class AppComponent implements OnInit {
           this.setPin(String(instance.pinInput));
         }
       }
+      this.router.navigate([consts.setURLElement(oldURL, 2, null)]); // sets url back to what it was before
     });
   }
 
@@ -289,10 +380,52 @@ export class AppComponent implements OnInit {
       const snackBarRef = this.snackBar.open('Logged in!', 'Close', {
         duration: 2000
       });
+      this.afterAuthFinished = true;
+      if (this.openSettingsDialog) { // checks to see if dialogs are waiting to open after auth is loaded
+        this.rootOpenModifySettings();
+      } else if (this.openLogDialog) {
+        this.rootOpenLog();
+      } else if (this.openModifyMachinesDialog) {
+        this.rootOpenModifyMachines();
+        if (this.openAddMachineDialog) {
+          this.rootOpenAddMachine();
+        }
+      }
     }, error => {
       const snackBarRef = this.snackBar.open('ERRROR: Failed to authenticate.', 'Close', {
         duration: 2000
       });
+      this.afterAuthFinished = true;
+    });
+  }
+
+  /**
+   * Log out functions
+   */
+
+  should_logout() { // if the user should be offered to log out of the service
+    if (this.isAuthenticated || !this.config.Users.requirePinForSettings) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  openAuthOrLogout() {
+    if (this.should_logout()) { // if should_logout
+      this.logoutDialog();
+    } else {
+      this.router.navigate([this.INDEX_TO_ROUTE_CONVERTER[this.selectedIndex] + '/auth']);
+    }
+  }
+
+  logoutUser() {
+    localStorage.removeItem('pin');
+    const snackBarRef = this.snackBar.open('Successfully logged out! Reloading page...', 'Close', {
+      duration: 2000
+    });
+    snackBarRef.afterDismissed().subscribe(snack => {
+      location.reload();
     });
   }
 
@@ -351,6 +484,66 @@ export class AppComponent implements OnInit {
         document['webkitExitFullscreen']();
       }
     }
+  }
+
+  /**
+   * Open dialog functions
+   */
+
+  rootOpenLog() {
+    const oldURL = this.router.url;
+    const dialogRef = this.dialog.open(LogComponent, consts.DIALOG_CONFIGS.LogDialog);
+
+    const instance = dialogRef.componentInstance;
+    instance.postsService = this.postsService;
+    instance.MACHINES_LIST = this.MACHINES_LIST;
+    instance.config = this.config;
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.router.navigate([consts.setURLElement(oldURL, 2, null)]);
+    });
+  }
+
+  rootOpenModifyMachines() {
+    const oldURL = this.router.url;
+    const dialogRef = this.dialog.open(ModifyMachinesComponent, consts.DIALOG_CONFIGS.ModifyMachinesDialog);
+
+    const instance = dialogRef.componentInstance;
+    instance.postsService = this.postsService;
+    instance.config = this.config;
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.router.navigate([consts.setURLElement(oldURL, 2, null)]);
+    });
+  }
+
+  rootOpenModifySettings() {
+    const oldURL = this.router.url;
+    const dialogRef = this.dialog.open(SettingsComponent, consts.DIALOG_CONFIGS.SettingsDialog);
+
+    const instance = dialogRef.componentInstance;
+    instance.postsService = this.postsService;
+    instance.config = this.config;
+    instance.auth = this.auth;
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.router.navigate([consts.setURLElement(oldURL, 2, null)]);
+    });
+  }
+
+  rootOpenAddMachine() {
+    const oldURL = this.router.url;
+    const dialogRef = this.dialog.open(ModifyMachineComponent, consts.DIALOG_CONFIGS.ModifyMachineDialog);
+
+    const instance = dialogRef.componentInstance;
+    instance.postsService = this.postsService;
+    instance.config = this.config;
+    instance.isNewMachine = true;
+    instance.machineName = 'New Machine';
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.router.navigate([consts.setURLElement(oldURL, 3, null)]);
+    });
   }
 
 }

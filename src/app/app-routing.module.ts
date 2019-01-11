@@ -5,8 +5,20 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
 import { EmptyComponent } from './components/empty/empty.component';
 
 const appRoutes: Routes = [
-  { path: 'signup', component: EmptyComponent },
-  { path: 'status',        component: EmptyComponent },
+  { path: 'signup',
+    component: EmptyComponent,
+    children: [
+      { path: 'log', component: EmptyComponent },
+      { path: 'auth', component: EmptyComponent }
+    ]
+  },
+  { path: 'status',
+    component: EmptyComponent,
+    children: [
+      { path: 'log', component: EmptyComponent },
+      { path: 'auth', component: EmptyComponent }
+    ]
+  },
   { path: '',   redirectTo: '/signup', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent }
 ];

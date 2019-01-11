@@ -1,16 +1,18 @@
-import { Component, OnInit, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, Output, EventEmitter, OnChanges } from '@angular/core';
 import { MatToolbarModule, MatDialog, MatDialogRef, MatDialogConfig } from '@angular/material';
 import { LogComponent } from '../log/log.component';
 import { PostsService } from '../../posts.services';
 import { ModifyMachinesComponent } from '../modify-machines/modify-machines.component';
 import { SettingsComponent } from '../settings/settings.component';
+import consts from '../../utils/consts';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnChanges {
 
   @Input() topBarTitle: any;
   @Input() postsService: PostsService;
@@ -24,7 +26,7 @@ export class HeaderComponent implements OnInit {
 
   logAdminOnly = true;
 
-  constructor(public dialog: MatDialog) {
+  constructor(public dialog: MatDialog, private router: Router, private route: ActivatedRoute) {
 
   }
 
@@ -46,6 +48,7 @@ export class HeaderComponent implements OnInit {
   configValue: any;
 
   ngOnInit() {
+
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -55,43 +58,15 @@ export class HeaderComponent implements OnInit {
   }
 
   openLog() {
-    let dialogRef = this.dialog.open(LogComponent, {
-      height: '400px',
-      width: '600px',
-    });
-
-    let instance = dialogRef.componentInstance;
-    instance.postsService = this.postsService;
-
+    this.router.navigate([this.router.url + '/log']);
   }
 
   openModifyMachines() {
-    let dialogConfig = new MatDialogConfig();
-
-    dialogConfig = {
-      width: '1200px'
-    };
-
-    let dialogRef = this.dialog.open(ModifyMachinesComponent, dialogConfig);
-
-    let instance = dialogRef.componentInstance;
-    instance.postsService = this.postsService;
-    instance.config = this.configValue;
+    this.router.navigate([this.router.url + '/machines']);
   }
 
   openModifySettings() {
-    let dialogRef = this.dialog.open(SettingsComponent, {
-      width: '1200px',
-      data: {
-        id: 21,
-        title: 'Settings'
-      }
-    });
-
-    let instance = dialogRef.componentInstance;
-    instance.postsService = this.postsService;
-    instance.config = this.configValue;
-    instance.auth = this.auth;
+    this.router.navigate([this.router.url + '/settings']);
   }
 
 }

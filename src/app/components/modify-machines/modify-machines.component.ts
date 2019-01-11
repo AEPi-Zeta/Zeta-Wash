@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@
 import { PostsService } from '../../posts.services';
 import { ModifyMachineComponent } from '../modify-machine/modify-machine.component';
 import { MatDialog, MatSnackBar } from '@angular/material';
+import consts from '../../utils/consts'
 
 @Component({
   selector: 'app-modify-machines',
@@ -10,7 +11,7 @@ import { MatDialog, MatSnackBar } from '@angular/material';
 })
 export class ModifyMachinesComponent implements OnInit {
 
-  objectKeys = Object.keys;
+  objectKeys = Object.keys; // for modify-machines.component.html
 
   @Input()
   set config(val) {
@@ -64,10 +65,7 @@ export class ModifyMachinesComponent implements OnInit {
   }
 
   openAddMachine() {
-    const dialogRef = this.dialog.open(ModifyMachineComponent, {
-      height: '400px',
-      width: '600px',
-    });
+    const dialogRef = this.dialog.open(ModifyMachineComponent, consts.DIALOG_CONFIGS.ModifyMachineDialog);
 
     const instance = dialogRef.componentInstance;
     instance.postsService = this.postsService;
