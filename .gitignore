@@ -47,3 +47,5 @@ Thumbs.db
 # Backend
 /backend/config/users.json
 backend/db.json
+backend/package-lock.json
+package-lock.json
