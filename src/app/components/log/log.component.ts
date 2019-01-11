@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewChildren, QueryList, Input, Output, EventEmitter } from '@angular/core';
 import {PageEvent, MatPaginator, MatTableDataSource, MatSort} from '@angular/material';
 import { PostsService } from '../../posts.services';
 
@@ -10,17 +10,29 @@ import { PostsService } from '../../posts.services';
 
 export class LogComponent implements OnInit {
 
-  displayedColumns = ['name', 'machine', 'endDate'];
+  displayedColumns = ['name', 'machine', 'endDate', 'actions'];
   dataSource: MatTableDataSource<Element>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+
+  @Input() MACHINES_LIST;
+
+  configValue: any;
+
+  @Input() config;
 
 
   constructor(public postsService: PostsService) { }
 
   ngOnInit() {
     this.getArray();
+  }
+
+  sendEmailAlert(user, alertObject) {
+    this.postsService.sendEmailAlert(user, alertObject).subscribe(res => {
+      console.log('alert sent!');
+    });
   }
 
   /**

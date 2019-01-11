@@ -25,7 +25,7 @@ export class UsageComponent {
   @Input()
   set config(val) {
     this.configValue = val;
-    this.configChange.emit(this.config);
+    this.configChange.emit(val);
   }
 
   get config() {

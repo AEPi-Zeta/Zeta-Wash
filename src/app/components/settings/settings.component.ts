@@ -66,7 +66,9 @@ export class SettingsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.setValuesFromConfigAndAuth();
+    if (this.config && this.auth) {
+      this.setValuesFromConfigAndAuth();
+    }
   }
 
   setValuesFromConfigAndAuth() {

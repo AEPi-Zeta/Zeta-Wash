@@ -5,7 +5,7 @@ import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@
   templateUrl: './status.component.html',
   styleUrls: ['./status.component.scss']
 })
-export class StatusComponent implements OnInit {
+export class StatusComponent implements OnInit { // parent component solely for the 'Status' tab
 
   configValue: any;
 
