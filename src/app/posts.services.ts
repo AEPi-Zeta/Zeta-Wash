@@ -66,7 +66,9 @@ export class PostsService {
     }
 
     getConfig(getDev = false) {
-        let url = this.location.prepareExternalUrl('backend/config/default.json');
+        let url = window.location.origin + '/';
+        const extra_url = 'backend/config/default.json';
+        url += extra_url;
         if (getDev) {
             url = 'http://localhost:4200/assets/dev_config.json';
         }
