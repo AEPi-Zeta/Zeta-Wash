@@ -12,6 +12,7 @@ import { ModifyMachinesComponent } from './components/modify-machines/modify-mac
 import { SettingsComponent } from './components/settings/settings.component';
 import { ModifyMachineComponent } from './components/modify-machine/modify-machine.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
+import { isDevMode } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -63,7 +64,6 @@ export class AppComponent implements OnInit {
   topBarTitle: string;
   hasList = false;
   useQueue = true;
-  isDev = false;
   devPath = 'http://localhost:8088/';
   mobile: boolean;
   isFullScreen = false;
@@ -105,7 +105,7 @@ export class AppComponent implements OnInit {
     public snackBar: MatSnackBar, private router: Router, private route: ActivatedRoute,
     location: PlatformLocation) { // init for the beginning of the app
     const queueType = 'both';
-    this.postsService.getConfig(this.isDev).subscribe(result => { // loads settings
+    this.postsService.getConfig(isDevMode()).subscribe(result => { // loads settings
       this.config = result.ZetaWash;
       this.topBarTitle = result.ZetaWash.Extra.titleTop;
       this.useQueue = result.ZetaWash.Machines.useQueue;
