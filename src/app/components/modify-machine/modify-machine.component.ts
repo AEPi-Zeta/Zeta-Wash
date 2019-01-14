@@ -65,9 +65,13 @@ export class ModifyMachineComponent implements OnInit {
       if (machine) {
        if (machine.minuteOptions) {
          this.optionsCount = machine.minuteOptions.length;
+       } else {
+         this.optionsCount = 0;
        }
        if (machine.customAlerts) {
          this.alertsCount = machine.customAlerts.length;
+       } else {
+         this.alertsCount = 0;
        }
       }
     }
@@ -108,9 +112,23 @@ export class ModifyMachineComponent implements OnInit {
         this.minuteOptionsInput = newMachine.minuteOptions.slice();
       }
 
-      if (newMachine.alertOptions) {
-        this.alertOptionsInput = newMachine.alertOptions.slice();
+      if (newMachine.customAlerts) {
+        this.alertOptionsInput = newMachine.customAlerts.slice();
       }
+    }
+  }
+
+  checkOptionsCount() {
+    const machine = this.config.Machines.List[this.machineName];
+    if (this.useOptionsInput && (!machine.options || machine.options.length === 0)) {
+      this.optionsCount = 0;
+    }
+  }
+
+  checkAlertsCount() {
+    const machine = this.config.Machines.List[this.machineName];
+    if (this.useAlertsInput && (!machine.customAlerts || machine.customAlerts.length === 0)) {
+      this.alertsCount = 0;
     }
   }
 
@@ -142,6 +160,7 @@ export class ModifyMachineComponent implements OnInit {
       this.maxMinutesInput = machine.max_minutes;
       this.useOptionsInput = machine.useOptions;
       this.useAlertsInput = machine.useAlerts;
+      if (!machine.hasOwnProperty('useAlerts')) { this.useAlertsInput = false; }
 
       this.iconInput = machine.icon;
       this.emailSubjectInput = machine.email.subject;
@@ -218,7 +237,7 @@ export class ModifyMachineComponent implements OnInit {
 
   inputsInvalid(): any {
     const machineAlreadyExists = this.isNewMachine && this.configValue.Machines.List[this.machineName];
-    let requiredsEmpty = !this.countInput || !this.defaultMinutesInput || !this.minMinutesInput;
+    let requiredsEmpty = !this.countInput || !this.defaultMinutesInput || !(this.minMinutesInput !== undefined);
     if (this.useOptionsInput) {
       for (let i = 0; i < this.optionsCount; i++) {
         const minuteOption = this.minuteOptionsInput[i];
@@ -256,7 +275,11 @@ export class ModifyMachineComponent implements OnInit {
 
   checkSettingsSame(): boolean {
     const newConfig = this.createConfig();
-    return JSON.stringify(newConfig) === JSON.stringify(this.configValue);
+    if (JSON.stringify(newConfig) !== JSON.stringify(this.configValue)) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   incrementAlertsCount() {
