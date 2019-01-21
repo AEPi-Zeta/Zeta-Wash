@@ -1,24 +1,3 @@
-
-<!--<div *ngFor="let category of categories">
-  <h5>{{category.title}}</h5>
-  <div *ngFor="let setting of category.settings">
-    <div *ngIf="setting.type === 'text'">
-      <mat-form-field class="example-full-width">
-        <div class="row">
-          <div class="col">
-            <input matInput name="setting.key" (change)="settingChanged($event)" placeholder="{{setting.fullName}}" type="text">
-          </div>
-        </div>
-        <mat-error>Please input a valid entry.</mat-error>
-      </mat-form-field>
-    </div>
-    <div *ngIf="setting.type === 'checkbox'">
-      <mat-checkbox color="primary" (change)="settingChanged($event, category.key, setting.key)">{{setting.fullName}}</mat-checkbox>
-    </div>
-  </div>
-</div>
-<br/>-->
-
 <div *ngIf="config" class="table table-responsive p-5">
   <h2 mat-dialog-title>Settings</h2>
   <mat-dialog-content>
@@ -116,6 +95,15 @@
       </div>
       <div class="row py-2">
         <mat-checkbox [(ngModel)]="useQueueInput" color="primary">Use queue</mat-checkbox> 
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="row">
+        <h5>Compact Mode<sup><button mat-icon-button matTooltip="Compact Mode at the moment simply makes the log another tab, eliminating the need to use the menu in the top-right"><mat-icon>info</mat-icon></button></sup></h5>
+      </div>
+      <div class="row py-2">
+        <mat-checkbox [(ngModel)]="compactMode" color="primary">Use compact mode</mat-checkbox> 
       </div>
     </div>
 

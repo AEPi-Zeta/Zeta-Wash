@@ -1,4 +1,4 @@
-<app-header [isAuthenticated]="isAuthenticated" [(config)]="config" [auth]="auth" [requirePinForSettings]="requirePinForSettings" [pinSet]="pinSet" [topBarTitle]="topBarTitle" [postsService]="postsService"></app-header>
+<app-header [isAuthenticated]="isAuthenticated" [(config)]="config" [auth]="auth" [requirePinForSettings]="requirePinForSettings" [pinSet]="pinSet" [topBarTitle]="topBarTitle" [compactMode]="compactMode" [postsService]="postsService"></app-header>
 <mat-tab-group [(selectedIndex)]="selectedIndex" style="height: 100%">
   <mat-tab label="Sign Up">
     <app-signup [(config)]="config" [machineAvailability]="machineAvailability" [canRemoveFromUsageList]="canRemoveFromUsageList" [MACHINES_LIST]="MACHINES_LIST" [useQueue]="useQueue" [(machine)]="machine" [list]="list" [queue]="queue" [users]="users" [forceCustomUsersList]="forceCustomUsersList"></app-signup>
@@ -6,6 +6,11 @@
   <mat-tab label="Status">
     <app-status [(config)]="config" [selectedIndex]="selectedIndex" (selectedIndexChange)="onSelectedIndexChange($event)" [MACHINES_LIST]="MACHINES_LIST" [canRemoveFromUsageList]="canRemoveFromUsageList" [usingListOnly]="true" [list]="list" [machineAvailability]="machineAvailability" [queue]="queue" (notify)="onNotifyMachine($event)"></app-status>
   </mat-tab>
+  <span *ngIf="!authReached || compactMode">
+    <mat-tab label="Log">
+      <app-log [MACHINES_LIST]="MACHINES_LIST" [config]="config"></app-log>
+    </mat-tab>
+  </span>
 </mat-tab-group>
 
 <span *ngIf="config && config.Extra.enableFullScreenButton">

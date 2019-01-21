@@ -54,7 +54,6 @@ export class AppComponent implements OnInit {
               // the first navigation is complete and the URL is set
               this.router.navigate([consts.setURLElement
                 (this.router.url, 1, this.INDEX_TO_ROUTE_CONVERTER[theSelectedIndex])]); // sets url back to what it was before
-
             });
           }
         }
@@ -75,6 +74,7 @@ export class AppComponent implements OnInit {
   authReached = false;
   afterAuthFinished = false;
   canRemoveFromUsageList: boolean;
+  compactMode: boolean;
 
   config = null;
   MACHINES_LIST: any;
@@ -89,12 +89,13 @@ export class AppComponent implements OnInit {
     },
     status: {
       indexValue: 1
+    },
+    log: {
+      indexValue: 2
     }
   };
 
-  INDEX_TO_ROUTE_CONVERTER = {
-
-  };
+  INDEX_TO_ROUTE_CONVERTER = {};
 
   openSettingsDialog = false;
 
@@ -107,14 +108,16 @@ export class AppComponent implements OnInit {
     const queueType = 'both';
     this.postsService.getConfig(isDevMode()).subscribe(result => { // loads settings
       this.config = result.ZetaWash;
-      this.topBarTitle = result.ZetaWash.Extra.titleTop;
-      this.useQueue = result.ZetaWash.Machines.useQueue;
-      this.postsService.backendPath = result.ZetaWash.Host.backendURL;
+      this.topBarTitle = this.config.Extra.titleTop;
+      this.useQueue = this.config.Machines.useQueue;
+      this.postsService.backendPath = this.config.Host.backendURL;
 
-      this.MACHINES_LIST = result.ZetaWash.Machines.List;
+      this.MACHINES_LIST = this.config.Machines.List;
 
-      this.canRemoveFromUsageList = !result.ZetaWash.removeMachineAdminOnly;
-      this.forceCustomUsersList = result.ZetaWash.Users.forceCustomUsersList;
+      this.canRemoveFromUsageList = !this.config.removeMachineAdminOnly;
+      this.forceCustomUsersList = this.config.Users.forceCustomUsersList;
+
+      this.compactMode = this.config.Extra.compactMode;
 
       this.postsService.getList(queueType).subscribe(res => {
         this.list = this.queueResponseToQueue(res.fullList.list);
@@ -223,6 +226,8 @@ export class AppComponent implements OnInit {
           this.selectedIndex = this.ROUTES_CONFIG.signup.indexValue;
         } else if (firstElement === 'status') {
           this.selectedIndex = this.ROUTES_CONFIG.status.indexValue;
+        } else if (firstElement === 'log') {
+          this.selectedIndex = this.ROUTES_CONFIG.log.indexValue;
         }
         this.tempBlockNavigation = false;
       }
@@ -232,7 +237,7 @@ export class AppComponent implements OnInit {
       if (secondElement) {
         if (secondElement === 'auth') {
           this.authDialog();
-        } else if (secondElement === 'log') {
+        } else if (secondElement === 'log' && !this.compactMode) { // checks if compact mode is enabled before opening log
           this.rootOpenLog();
         } else if (secondElement === 'settings') {
           if (this.isAuthenticated) { this.rootOpenModifySettings(); } else { this.openSettingsDialog = true; }
@@ -383,7 +388,7 @@ export class AppComponent implements OnInit {
       this.afterAuthFinished = true;
       if (this.openSettingsDialog) { // checks to see if dialogs are waiting to open after auth is loaded
         this.rootOpenModifySettings();
-      } else if (this.openLogDialog) {
+      } else if (this.openLogDialog && !this.compactMode) {
         this.rootOpenLog();
       } else if (this.openModifyMachinesDialog) {
         this.rootOpenModifyMachines();

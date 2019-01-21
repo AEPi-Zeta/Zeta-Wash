@@ -24,6 +24,8 @@ export class HeaderComponent implements OnInit, OnChanges {
 
   @Input() isAuthenticated: boolean;
 
+  @Input() compactMode: boolean;
+
   logAdminOnly = true;
 
   constructor(public dialog: MatDialog, private router: Router, private route: ActivatedRoute) {

@@ -19,6 +19,12 @@ const appRoutes: Routes = [
       { path: 'auth', component: EmptyComponent }
     ]
   },
+  { path: 'log',
+    component: EmptyComponent,
+    children: [
+      { path: 'auth', component: EmptyComponent }
+    ]
+  },
   { path: '',   redirectTo: '/signup', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent }
 ];

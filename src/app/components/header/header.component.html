@@ -24,18 +24,20 @@
     </div>
     <div class="col col-md-4 col-sm-4">
       <div style="float: right; font-weight: normal;">
-        <button mat-icon-button [matMenuTriggerFor]="menu"><mat-icon class="mat-24">more_vert</mat-icon></button>
-        <mat-menu #menu="matMenu">
-          <span *ngIf="!logAdminOnly || isAuthenticated">
-            <button (click)="this.openLog()" mat-menu-item>Log</button>
-          </span>
-          <span *ngIf="!requirePinForSettings || isAuthenticated">
-            <button (click)="this.openModifySettings()" mat-menu-item>Settings</button>
-          </span>
-          <span *ngIf="!requirePinForSettings || isAuthenticated">
-            <button (click)="this.openModifyMachines()" mat-menu-item>Modify Machines</button>
-          </span>
-        </mat-menu>
+        <span *ngIf="!logAdminOnly || isAuthenticated || !compactMode">
+          <button mat-icon-button [matMenuTriggerFor]="menu"><mat-icon class="mat-24">more_vert</mat-icon></button>
+          <mat-menu #menu="matMenu">
+            <span *ngIf="(!logAdminOnly || isAuthenticated) && !compactMode">
+              <button (click)="this.openLog()" mat-menu-item>Log</button>
+            </span>
+            <span *ngIf="!requirePinForSettings || isAuthenticated">
+              <button (click)="this.openModifySettings()" mat-menu-item>Settings</button>
+            </span>
+            <span *ngIf="!requirePinForSettings || isAuthenticated">
+              <button (click)="this.openModifyMachines()" mat-menu-item>Modify Machines</button>
+            </span>
+          </mat-menu>
+        </span>
       </div>
     </div>
   </div>
