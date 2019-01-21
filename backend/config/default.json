@@ -19,38 +19,22 @@
                     "min_minutes": 1,
                     "max_minutes": 240,
                     "useOptions": true,
-                    "useAlerts": true,
-                    "minuteOptions": [
-                        {
-                            "key": "30",
-                            "amount": 30,
-                            "label": "30 - Quick"
-                        },
-                        {
-                            "key": "60",
-                            "amount": 60,
-                            "label": "60 - Normal"
-                        },
-                        {
-                            "key": "80",
-                            "amount": 80,
-                            "label": "80 - Long"
-                        }
-                    ],
-                    "customAlerts": [
-                        {
-                            "key": "Stuff is Ready!",
-                            "email": {
-                                "subject": "[Zeta Wash - Notification] You've been buzzed! Your stuff is ready.",
-                                "text": "Your stuff is ready!"
-                            }
-                        }
-                    ],
-                    "icon": "washer.png",
+                    "minuteOptions": [],
                     "email": {
                         "subject": "[Zeta Wash - Washer] Your clothes are washed!",
                         "text": "Your clothes finished washing at ${date}."
-                    }
+                    },
+                    "useAlerts": true,
+                    "icon": "washer.png",
+                    "customAlerts": [
+                        {
+                            "email": {
+                                "subject": "GI",
+                                "text": "F"
+                            },
+                            "key": "gi"
+                        }
+                    ]
                 },
                 "Dryer": {
                     "key": "Dryer",
@@ -70,16 +54,17 @@
         },
         "Extra": {
             "titleTop": "Zeta Wash",
-            "enableFullScreenButton": true
+            "enableFullScreenButton": true,
+            "compactMode": false
         },
         "Users": {
-            "customUsersList": false,
+            "customUsersList": true,
             "forceCustomUsersList": false,
             "requirePinForSettings": true,
             "logAdminOnly": false,
             "removeMachineAdminOnly": false,
             "pinSet": true,
-            "alertService": "None",
+            "alertService": "email",
             "Email": {
                 "service": "Gmail"
             }

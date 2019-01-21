@@ -1,5 +1,17 @@
 {
-  "full_list": [],
+  "full_list": [
+    {
+      "listObj": {
+        "name": "Isaac",
+        "machine": "washer",
+        "machineNumber": "1",
+        "startTime": 1548040840,
+        "endTime": 1548040900,
+        "minutes": 1,
+        "uniqueID": "872ddb93-ae78-4775-a914-d4a0d2c6b7fe"
+      }
+    }
+  ],
   "full_queue": [],
   "full_log": [
     {
@@ -33,17 +45,6 @@
         "endTime": 1547240656,
         "minutes": 60,
         "uniqueID": "1550170e-977b-44df-bbfe-d4944692a176"
-      }
-    },
-    {
-      "listObj": {
-        "name": "Isaac",
-        "machine": "washer",
-        "machineNumber": "1",
-        "startTime": 1548040840,
-        "endTime": 1548040900,
-        "minutes": 1,
-        "uniqueID": "872ddb93-ae78-4775-a914-d4a0d2c6b7fe"
       }
     },
     {

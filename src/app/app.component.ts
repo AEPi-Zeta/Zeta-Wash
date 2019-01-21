@@ -238,7 +238,7 @@ export class AppComponent implements OnInit {
         if (secondElement === 'auth') {
           this.authDialog();
         } else if (secondElement === 'log' && !this.compactMode) { // checks if compact mode is enabled before opening log
-          this.rootOpenLog();
+          if (this.isAuthenticated) { this.rootOpenLog(); } else { this.openLogDialog = true; }
         } else if (secondElement === 'settings') {
           if (this.isAuthenticated) { this.rootOpenModifySettings(); } else { this.openSettingsDialog = true; }
         } else if (secondElement === 'machines') {
