@@ -8,7 +8,9 @@
   </mat-tab>
   <span *ngIf="!authReached || compactMode">
     <mat-tab label="Log">
-      <app-log [MACHINES_LIST]="MACHINES_LIST" [config]="config"></app-log>
+      <ng-template matTabContent>
+        <app-log [MACHINES_LIST]="MACHINES_LIST" [config]="config"></app-log>
+      </ng-template>
     </mat-tab>
   </span>
 </mat-tab-group>
