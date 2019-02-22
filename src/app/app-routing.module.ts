@@ -5,7 +5,7 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
 import { EmptyComponent } from './components/empty/empty.component';
 
 const appRoutes: Routes = [
-  { path: 'signup',
+  { path: 'reserve',
     component: EmptyComponent,
     children: [
       { path: 'log', component: EmptyComponent },
@@ -25,7 +25,7 @@ const appRoutes: Routes = [
       { path: 'auth', component: EmptyComponent }
     ]
   },
-  { path: '',   redirectTo: '/signup', pathMatch: 'full' },
+  { path: '',   redirectTo: '/reserve', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent }
 ];
 

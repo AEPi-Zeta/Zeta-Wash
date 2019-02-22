@@ -84,7 +84,7 @@ export class AppComponent implements OnInit {
   pathChecked = false;
 
   ROUTES_CONFIG = {
-    signup: {
+    reserve: {
       indexValue: 0
     },
     status: {
@@ -222,8 +222,8 @@ export class AppComponent implements OnInit {
 
       if (firstElement) {
         this.tempBlockNavigation = true;
-        if (firstElement === 'signup') {
-          this.selectedIndex = this.ROUTES_CONFIG.signup.indexValue;
+        if (firstElement === 'reserve') {
+          this.selectedIndex = this.ROUTES_CONFIG.reserve.indexValue;
         } else if (firstElement === 'status') {
           this.selectedIndex = this.ROUTES_CONFIG.status.indexValue;
         } else if (firstElement === 'log') {

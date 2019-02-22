@@ -1,6 +1,6 @@
 <app-header [isAuthenticated]="isAuthenticated" [(config)]="config" [auth]="auth" [requirePinForSettings]="requirePinForSettings" [pinSet]="pinSet" [topBarTitle]="topBarTitle" [compactMode]="compactMode" [postsService]="postsService"></app-header>
 <mat-tab-group [(selectedIndex)]="selectedIndex" style="height: 100%">
-  <mat-tab label="Sign Up">
+  <mat-tab label="Reserve">
     <app-signup [(config)]="config" [machineAvailability]="machineAvailability" [canRemoveFromUsageList]="canRemoveFromUsageList" [MACHINES_LIST]="MACHINES_LIST" [useQueue]="useQueue" [(machine)]="machine" [list]="list" [queue]="queue" [users]="users" [forceCustomUsersList]="forceCustomUsersList"></app-signup>
   </mat-tab>
   <mat-tab label="Status">
@@ -22,7 +22,7 @@
 </span>
 
 <span *ngIf="requirePinForSettings">
-  <button class="bottom-left lock-button" (click)="openAuthOrLogout()" mat-icon-button>
+  <button class="bottom-left lock-button" (click)="openAuthOrLogout()" mat-icon-button color="primary">
     <mat-icon>{{isAuthenticated ? 'lock_open' : 'lock'}}</mat-icon>
   </button>
 </span>
