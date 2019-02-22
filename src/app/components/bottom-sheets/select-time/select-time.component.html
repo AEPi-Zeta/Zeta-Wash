@@ -1,0 +1,5 @@
+<mat-action-list>
+  <button *ngFor="let option of MACHINES_LIST[specificMachine.singularName]['minuteOptions']" (click)="moveReservationToMachine(user, specificMachine.key, option.amount)" mat-list-item>
+    <h4 mat-line>{{option.label}}</h4>
+  </button>    
+</mat-action-list>

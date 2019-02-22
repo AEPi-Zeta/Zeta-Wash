@@ -91,6 +91,32 @@
 
   <div class="col">
     <div class="row">
+      <h5>Transfer Options<sup><button mat-icon-button matTooltip="This allows you to predefine time options for each machine."><mat-icon>info</mat-icon></button></sup></h5>
+    </div>
+    <div class="row py-2">
+      <span *ngIf="machinesToSelectFrom && machinesToSelectFrom.length > 0">
+        <mat-form-field>
+          <mat-select placeholder="Machine" (selectionChange)="addMachineToTransfer($event.value)">
+            <mat-option *ngFor="let machineToSelect of machinesToSelectFrom" [value]="machineToSelect">
+              {{machineToSelect}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </span>
+    </div>
+    <div class="row py-2">
+      <mat-chip-list>
+        <mat-chip *ngFor="let machineToTransfer of allowedMachinesTransferInput; let i = index" [selectable]="true"
+              [removable]="true" (removed)="removeMachineFromTransfer(i)">
+          {{machineToTransfer}}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+      </mat-chip-list>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="row">
       <h5>Time Options<sup><button mat-icon-button matTooltip="This allows you to predefine time options for each machine."><mat-icon>info</mat-icon></button></sup></h5>
     </div>
     <div class="row py-2">
@@ -181,8 +207,8 @@
 
   <div class="col">
     <div class="row">
-      <button mat-raised-button [mat-dialog-close]="true" [disabled]="checkSettingsSame() || inputsInvalid()" (click)="onSaveMachine()" type="button" color="primary" style="width: 250px; height: 50px; font-size: 20px; float: right;">
-          {{isNewMachine ? 'Add' : 'Save'}}
+      <button mat-raised-button [mat-dialog-close]="true" [disabled]="checkSettingsSame() || inputsInvalid()" (click)="onSaveMachine()" type="button" color="primary" style="width: 275px; height: 50px; font-size: 20px; float: right;">
+          {{isNewMachine ? 'Add' : 'Save'}} <mat-icon>update</mat-icon>
       </button>
     </div>
   </div>

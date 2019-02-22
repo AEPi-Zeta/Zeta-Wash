@@ -11,25 +11,91 @@
         </div>
       <mat-list>
         <mat-list-item *ngFor="let user of list"> 
+          <mat-menu #alertmenu="matMenu">
+            <ng-template matMenuContent>
+              <span *ngFor="let alert of MACHINES_LIST[user.machine]['customAlerts']">
+                <button (click)="this.sendEmailAlert(user.name, alert)" mat-menu-item>{{alert.key}}</button>
+              </span>
+            </ng-template>
+          </mat-menu>
+          <mat-menu #movetomenu="matMenu">
+            <ng-template matMenuContent>
+              <span *ngFor="let machine of MACHINES_LIST[user.machine]['allowedMachinesTransfer']">
+                <span *ngFor="let specificMachine of possibleMachineTransfers(machine)">
+                  <span *ngIf="(true || useOptionsToMove)">
+                    <mat-menu #optionsmenu="matMenu">
+                      <ng-template matMenuContent>
+                        <span *ngFor="let option of MACHINES_LIST[specificMachine.singularName]['minuteOptions']">
+                          <button (click)="moveReservationToMachine(user, specificMachine.key, option.amount)" mat-menu-item>{{option.label}}</button>
+                        </span>
+                      </ng-template>
+                    </mat-menu>
+                    <span *ngIf="MACHINES_LIST[machine]['useOptions'] || useOptionsToMove; else nooptions"> <!--Change to &&-->
+                      <button [disabled]="specificMachine['inUse']" [matMenuTriggerFor]="optionsmenu" mat-menu-item>{{specificMachine.longName}}</button>
+                    </span>
+                    <ng-template #nooptions>
+                        <span *ngFor="let specificMachine of possibleMachineTransfers(machine)">
+                          <button [disabled]="specificMachine['inUse']" (click)="moveReservationToMachine(user, specificMachine.key, MACHINES_LIST[specificMachine.singularName]['default_minutes'])" mat-menu-item>{{specificMachine.longName}}</button>    
+                        </span>                
+                    </ng-template>
+                  </span>
+                </span>
+              </span>
+            </ng-template>
+          </mat-menu>
           <h5 matLine>
             {{user.name}} - {{user.machine.charAt(0).toUpperCase() + user.machine.slice(1) + ' ' + user.machineNumber}}
           </h5>
           <span matLine>
             Time remaining: {{SecondsTohhmmss(user.endTime - now)}}
           </span>
-          <span *ngIf="MACHINES_LIST[user.machine]['useAlerts']">
+          <!--<span *ngIf="MACHINES_LIST[user.machine]['useAlerts']">
             <button mat-icon-button [disabled]="config && config.Users.alertService !== 'email'" [matMenuTriggerFor]="alertmenu"><mat-icon class="mat-24">notifications</mat-icon></button>
-            <mat-menu #alertmenu="matMenu">
-              <ng-template matMenuContent>
-                <span *ngFor="let alert of MACHINES_LIST[user.machine]['customAlerts']">
-                  <button (click)="this.sendEmailAlert(user.name, alert)" mat-menu-item>{{alert.key}}</button>
+          </span>-->
+          <span>
+            <button mat-icon-button [disabled]="!config" [matMenuTriggerFor]="actionsmenu"><mat-icon class="mat-24">build</mat-icon></button>
+            <mat-menu #actionsmenu="matMenu">
+              <button [matMenuTriggerFor]="alertmenu" [disabled]="!MACHINES_LIST[user.machine]['useAlerts']" mat-menu-item>
+                <mat-icon>notifications</mat-icon>
+                <span>
+                  Notify
                 </span>
-              </ng-template>
+              </button>
+              <button (click)="finishReservation(user)" mat-menu-item>
+                <mat-icon>done</mat-icon>
+                <span>
+                  Finish
+                </span>
+              </button>
+              <span *ngIf="this.MACHINES_LIST[user.machine]['allowedMachinesTransfer'] && this.MACHINES_LIST[user.machine]['allowedMachinesTransfer'].length > 0">
+                <span *ngIf="!mobile; else machinebottomsheet">
+                  <button [matMenuTriggerFor]="movetomenu" mat-menu-item>
+                    <mat-icon>arrow_right_alt</mat-icon>
+                    <span>
+                      Move To
+                    </span>
+                  </button>
+                </span>
+                <ng-template #machinebottomsheet>
+                  <button (click)="openMachineSelectBottomSheet(user)" mat-menu-item>
+                    <mat-icon>arrow_right_alt</mat-icon>
+                    <span>
+                      Move To
+                    </span>
+                  </button>
+                </ng-template>
+              </span>
+              <button *ngIf="canRemoveFromUsageList" (click)="this.removeFromList(user)" mat-menu-item>
+                <mat-icon>cancel</mat-icon>
+                <span>
+                  Cancel
+                </span>
+              </button>
             </mat-menu>
           </span>
-          <span *ngIf="canRemoveFromUsageList">
+          <!--<span *ngIf="canRemoveFromUsageList">
             <button mat-icon-button (click)="this.removeFromList(user)"><mat-icon class="mat-24">clear</mat-icon></button>
-          </span>
+          </span>-->
           <mat-divider></mat-divider>
         </mat-list-item>
       </mat-list>
@@ -57,9 +123,11 @@
             </div>
           </h5>
           <span matLine></span>
-          <button mat-icon-button (click)="this.removeFromQueue(user)">
-              <mat-icon class="mat-24">clear</mat-icon>
-          </button>
+          <span *ngIf="canRemoveFromUsageList">
+            <button mat-icon-button (click)="this.removeFromQueue(user)">
+                <mat-icon class="mat-24">clear</mat-icon>
+            </button>
+          </span>
           <mat-divider></mat-divider>
         </mat-list-item>
     </mat-list>

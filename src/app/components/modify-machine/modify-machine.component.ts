@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { PostsService } from '../../posts.services';
 import { MatDialogRef, MatSnackBar } from '@angular/material';
+import {MatChipsModule, MatChipInputEvent} from '@angular/material/chips';
+
 
 @Component({
   selector: 'app-modify-machine',
@@ -8,6 +10,7 @@ import { MatDialogRef, MatSnackBar } from '@angular/material';
   styleUrls: ['./modify-machine.component.scss']
 })
 export class ModifyMachineComponent implements OnInit {
+  _allowedMachinesTransferInput: any;
 
   @Input()
   set config(val) {
@@ -17,6 +20,15 @@ export class ModifyMachineComponent implements OnInit {
 
   get config() {
     return this.configValue;
+  }
+
+  set allowedMachinesTransferInput(val) {
+    console.log('set');
+    this._allowedMachinesTransferInput = val;
+  }
+
+  get allowedMachinesTransferInput() {
+    return this._allowedMachinesTransferInput;
   }
 
   @Output() configChange = new EventEmitter();
@@ -38,6 +50,11 @@ export class ModifyMachineComponent implements OnInit {
   iconInput: string;
   emailSubjectInput: string;
   emailTextInput: string;
+  alertServiceInput: string;
+  customUsersListInput: boolean;
+
+  // allowedMachinesTransferInput: string[];
+  machinesToSelectFrom: string[];
 
   optionsCount: number;
   alertsCount: number;
@@ -76,6 +93,9 @@ export class ModifyMachineComponent implements OnInit {
       }
     }
 
+    this.alertServiceInput = this.config.Users.alertService;
+    this.customUsersListInput = this.config.Users.customUsersList;
+
     if (this.optionsCount < 10) { // fixes minute options since it's not long enough
       for (let i = 0; i < 10 - this.optionsCount; i++) {
         this.minuteOptionsInput.push({});
@@ -107,6 +127,8 @@ export class ModifyMachineComponent implements OnInit {
       this.iconInput = newMachine.icon;
       this.emailSubjectInput = newMachine.email.subject;
       this.emailTextInput = newMachine.email.text;
+      console.log('ran');
+      //this.allowedMachinesTransferInput = JSON.stringnewMachine.allowedMachinesTransfer;
 
       if (newMachine.minuteOptions) {
         this.minuteOptionsInput = newMachine.minuteOptions.slice();
@@ -166,6 +188,29 @@ export class ModifyMachineComponent implements OnInit {
       this.emailSubjectInput = machine.email.subject;
       this.emailTextInput = machine.email.text;
 
+      this.machinesToSelectFrom = [];
+
+      Object.keys(config.Machines.List).forEach(element => {
+        if (element) {
+          this.machinesToSelectFrom.push(element);
+          // console.log(element);
+        }
+      });
+
+      this.allowedMachinesTransferInput = [];
+
+
+      if (machine['allowedMachinesTransfer']) {
+        machine['allowedMachinesTransfer'].forEach(element => {
+          this.allowedMachinesTransferInput.push(element);
+        });
+        this.machinesToSelectFrom = this.machinesToSelectFrom.filter(testMachine => {
+            return this.allowedMachinesTransferInput.indexOf(testMachine) === -1;
+        });
+      } else {
+        console.log('Created allowedMachinesTransfer in new config.');
+      }
+
       if (machine.minuteOptions) {
         const newMinuteOptions = [];
         for (let i = 0; i < machine.minuteOptions.length; i++) {
@@ -206,6 +251,15 @@ export class ModifyMachineComponent implements OnInit {
     newMachine.email.subject = this.emailSubjectInput;
     newMachine.email.text = this.emailTextInput;
 
+    newMachine.allowedMachinesTransfer = [];
+    if (this.allowedMachinesTransferInput) {
+      this.allowedMachinesTransferInput.forEach(element => {
+        newMachine.allowedMachinesTransfer.push(element);
+      });
+    }
+
+    // console.log(this.allowedMachinesTransferInput);
+
     if (this.useOptionsInput) {
       const newMinuteOptions = [];
       newMachine.minuteOptions = [];
@@ -228,7 +282,7 @@ export class ModifyMachineComponent implements OnInit {
 
   setConfig(): any {
     const newConfig = this.createConfig();
-    this.postsService.setConfig(newConfig).subscribe(res => {
+    this.postsService.setConfig(newConfig, true).subscribe(res => {
       if (newConfig) {
         this.config = newConfig;
       }
@@ -280,6 +334,28 @@ export class ModifyMachineComponent implements OnInit {
     } else {
       return true;
     }
+  }
+
+  addMachineToTransfer(machineKey: string) {
+    if (this.allowedMachinesTransferInput.indexOf(machineKey) === -1) { // if it doesn't exist
+      this.allowedMachinesTransferInput.push(machineKey);
+      const possibleIndex = this.machinesToSelectFrom.indexOf(machineKey);
+      if (possibleIndex !== -1) { // removes from machines to select from
+        this.machinesToSelectFrom.splice(possibleIndex, 1);
+      }
+    } else { // already exists
+      const snackBarRef = this.snackBar.open('Machine already added.', 'Close', {
+        duration: 3000
+      });
+    }
+  }
+
+  removeMachineFromTransfer(i: number) {
+    const machine = this.allowedMachinesTransferInput[i];
+    if (this.machinesToSelectFrom.indexOf(machine) === -1) { // if doesn't exist in possible machines, add
+      this.machinesToSelectFrom.push(machine);
+    }
+    this.allowedMachinesTransferInput.splice(i, 1);
   }
 
   incrementAlertsCount() {

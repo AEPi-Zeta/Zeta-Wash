@@ -15,12 +15,12 @@ var https = require('https');
 
 const OBJECT_TYPE_TO_QUERY_STRING = consts.OBJECT_TYPE_TO_QUERY_STRING
 
-const frontendURL = config.get("ZetaWash.Host.frontendURL");
-const backendURL = config.get("ZetaWash.Host.backendURL");
-const port = backendURL.split(":")[2].substring(0,4);
-const useEncryption = config.get("ZetaWash.Encryption.useEncryption");
-const useCustomUsersList = config.get("ZetaWash.Users.customUsersList");
-const machines = config.get("ZetaWash.Machines.List")
+let frontendURL = config.get("ZetaWash.Host.frontendURL");
+let backendURL = config.get("ZetaWash.Host.backendURL");
+let port = backendURL.split(":")[2].substring(0,4);
+let useEncryption = config.get("ZetaWash.Encryption.useEncryption");
+let useCustomUsersList = config.get("ZetaWash.Users.customUsersList");
+let machines = config.get("ZetaWash.Machines.List")
 
 let dbsToCheck = ['full_list'];
 let primaryList = 'full_list';
@@ -134,6 +134,18 @@ app.post('/removeFromList', (req, res) => {
     });
 
     // DEBUG: console.log(`Successfully removed ${listObj.name} from ${onlyQueue ? 'queue' : 'list'}.`)
+
+    res.end("yes");
+})
+
+app.post('/finishReservation', (req, res) => {
+    let listObj = req.body.listObj
+
+    finishItemInList(listObj.uniqueID);
+
+    res.send({ 
+        opCode: '200'
+    });
 
     res.end("yes");
 })
@@ -258,7 +270,9 @@ app.post('/setAuth', (req, res) => {
 
 app.post('/setConfig', (req, res) => {
     var newConfig = {};
+    config = require('config');
     var config = req.body.config;
+    var shouldReload = req.body.shouldReload;
     newConfig.ZetaWash = config;
     fs.writeFileSync('config/default.json', JSON.stringify(newConfig, null, 4), 'utf8', function (error) {
         if (error) {
@@ -269,6 +283,10 @@ app.post('/setConfig', (req, res) => {
         opCode: '200'
      });
      console.log('config set!');
+     if (shouldReload) {
+         console.log('reloading');
+        reloadConfig();
+     } 
      res.end("yes");
 })
 
@@ -430,7 +448,26 @@ function checkList() {
     
 }
 
-function onRemoveFromList(listObj) {
+function finishItemInList(uniqueID) {
+    for (let i = 0; i < dbsToCheck.length; i++) {
+        let dbToCheck = dbsToCheck[i]
+        db.get(dbToCheck)
+            .remove(function (parent) {
+                listObj = parent.listObj;
+
+                const shouldRemove = listObj.uniqueID == uniqueID;
+
+                // does actions when the listObj is to be removed from the full list ONLY
+                if (shouldRemove && dbsToCheck[i] === primaryList) {
+                    onRemoveFromList(listObj, true)
+                }
+
+                return shouldRemove;
+            }).write();
+    }
+}
+
+function onRemoveFromList(listObj, useCurrentTime) {
 
     // adds item to the log 
     const fullString = 'full_log';
@@ -454,12 +491,19 @@ function onRemoveFromList(listObj) {
             email = user['email'];
     
             const machine = listObj['machine'];
+
+            let endTime;
+            if (useCurrentTime) { // defines endtime based on optional parameter
+                endTime = Date.now()/1000;
+            } else {
+                endTime = parseInt(listObj['endTime']);
+            }
             
             var mailOptions = {
                 from: emailUser,
                 to: email,
-                subject: emailParser(templates[machine]['subject'], listObj['name'], parseInt(listObj['endTime'])),
-                text: emailParser(templates[machine]['text'], listObj['name'], parseInt(listObj['endTime']))
+                subject: emailParser(templates[machine]['subject'], listObj['name'], endTime),
+                text: emailParser(templates[machine]['text'], listObj['name'], endTime)
             };
             
             // DEBUG: console.log("sending mail to " + listObj['name']);
@@ -522,4 +566,67 @@ function timeConverter(UNIX_timestamp){
     if (min < 10) min = "0" + min;
     var time = hour + ':' + min + ':' + sec + ' ' + date + ' ' + month + ' ' + year ;
     return time;
+}
+
+function reloadConfig() {
+    const OBJECT_TYPE_TO_QUERY_STRING = consts.OBJECT_TYPE_TO_QUERY_STRING
+
+    frontendURL = config.get("ZetaWash.Host.frontendURL");
+    backendURL = config.get("ZetaWash.Host.backendURL");
+    port = backendURL.split(":")[2].substring(0,4);
+    useEncryption = config.get("ZetaWash.Encryption.useEncryption");
+    useCustomUsersList = config.get("ZetaWash.Users.customUsersList");
+    machines = config.get("ZetaWash.Machines.List")
+    console.log(config.get("ZetaWash.Machines.List"));
+    dbsToCheck = [];
+    for (const machine in machines) { // creates db template and query string configuration
+        if (machine) {
+            const queueString = machine + '_queue';
+            const listString = machine + '_list';
+            const logString = machine + '_log';
+
+            dbConfig['queue_query_string'] = queueString;
+            dbConfig['list_query_string'] = listString;
+            dbConfig['log_query_string'] = logString;
+
+            OBJECT_TYPE_TO_QUERY_STRING[machine] = {};
+            let machineConfig = OBJECT_TYPE_TO_QUERY_STRING[machine];
+            machineConfig['queue_query_string'] = queueString
+            machineConfig['list_query_string'] = listString;
+            machineConfig['log_query_string'] = logString;
+
+            dbsToCheck.push(listString);
+        }
+    }
+
+    // mailing variables
+
+    if (useCustomUsersList) {
+        var users_json = JSON.parse(fs.readFileSync('./config/users.json', 'utf8'));
+        var auth_json = JSON.parse(fs.readFileSync('./config/auth.json', 'utf8'));
+
+        users = users_json['users'];
+        alertService = config.get("ZetaWash.Users.alertService");
+        
+        if (alertService === 'email') {
+            emailUser = auth_json['Email']['user'];
+            const transportOptions = {
+                service: config.get("ZetaWash.Users.Email.service"),
+                auth: {
+                    user: emailUser,
+                    pass: auth_json['Email']['pass']
+                }
+            }
+
+            for (let machine in machines) {
+                if (machines[machine]['email'] && !(Object.keys(machines[machine]['email']).length === 0 && machines[machine]['email'].constructor === Object)) {
+                    templates[machine] = machines[machine]['email']
+                } else {
+                    console.error('Machine \'' + machine + '\' in default.json is missing an email object! Skipping machine.');
+                }
+            }
+
+            transporter = nodemailer.createTransport(transportOptions);
+        }
+    }
 }

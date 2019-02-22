@@ -1,0 +1,9 @@
+<mat-action-list>
+  <span *ngFor="let machine of machinesToChooseFrom">
+    <span *ngIf="!machine['inUse']">
+      <button (click)="openTimeSelectBottomSheet(machine)" mat-list-item>
+        <h4 mat-line>{{machine.longName}}</h4>
+      </button> 
+    </span>
+  </span>
+</mat-action-list>

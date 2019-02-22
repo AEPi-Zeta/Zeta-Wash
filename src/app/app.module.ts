@@ -6,8 +6,8 @@ import { AppComponent } from './app.component';
 import { MachineStatusComponent } from './components/machine-status/machine-status.component';
 import { HeaderComponent } from './components/header/header.component';
 import { MatToolbarModule, MatCardModule, MatGridListModule, MatTabsModule, MatButtonModule, MatExpansionModule,
-  MatSelectModule, MatCheckboxModule, MatPaginatorModule, MatSortModule, MatProgressSpinnerModule, MatAutocompleteModule, 
-  MatMenuTrigger, MatSnackBarModule, MatMenuModule, MatDialogModule, MatTooltipModule } from '@angular/material';
+  MatSelectModule, MatCheckboxModule, MatPaginatorModule, MatSortModule, MatProgressSpinnerModule, MatAutocompleteModule,
+  MatMenuTrigger, MatSnackBarModule, MatMenuModule, MatDialogModule, MatTooltipModule, MatChipsModule } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -36,6 +36,9 @@ import { StatusComponent } from './components/tabs/status/status.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { EmptyComponent } from './components/empty/empty.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
+import { SelectMachineComponent } from './components/bottom-sheets/select-machine/select-machine.component';
+import { SelectTimeComponent } from './components/bottom-sheets/select-time/select-time.component';
+import { MatBottomSheetModule } from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -53,7 +56,9 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
     StatusComponent,
     PageNotFoundComponent,
     EmptyComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    SelectMachineComponent,
+    SelectTimeComponent
   ],
   imports: [
     BrowserModule,
@@ -85,7 +90,9 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
     MatDialogModule,
     MatTooltipModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
-    AppRoutingModule
+    AppRoutingModule,
+    MatBottomSheetModule,
+    MatChipsModule
   ],
   entryComponents: [
     LogComponent,
@@ -93,7 +100,9 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
     ModifyMachinesComponent,
     SettingsComponent,
     PinInputComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    SelectMachineComponent,
+    SelectTimeComponent
   ],
   providers: [
     PostsService,

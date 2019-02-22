@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ViewChildren, QueryList, Input, Output, EventEmitter } from '@angular/core';
-import {PageEvent, MatPaginator, MatTableDataSource, MatSort} from '@angular/material';
+import {PageEvent, MatPaginator, MatTableDataSource, MatSort, MatSnackBar} from '@angular/material';
 import { PostsService } from '../../posts.services';
 
 @Component({
@@ -23,7 +23,7 @@ export class LogComponent implements OnInit {
   @Input() config;
 
 
-  constructor(public postsService: PostsService) { }
+  constructor(public postsService: PostsService, public snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.getArray();
@@ -31,7 +31,14 @@ export class LogComponent implements OnInit {
 
   sendEmailAlert(user, alertObject) {
     this.postsService.sendEmailAlert(user, alertObject).subscribe(res => {
-      console.log('alert sent!');
+      const snackBarRef = this.snackBar.open('Alert sent!', 'Close', {
+        duration: 2000
+      });
+    },
+    error => {
+      const snackBarRef = this.snackBar.open('ERROR: Failed to send notification.', 'Close', {
+        duration: 2000
+      });
     });
   }
 

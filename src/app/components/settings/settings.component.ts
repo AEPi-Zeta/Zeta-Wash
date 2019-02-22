@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, SimpleChanges, EventEmitter, Output, Inject } from '@angular/core';
 import { PostsService } from '../../posts.services';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-settings',

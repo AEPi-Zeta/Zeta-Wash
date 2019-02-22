@@ -50,6 +50,11 @@ export class PostsService {
             .map(res => res.json());
     }
 
+    finishReservation(listObj): Observable<any> {
+        return this.http.post(this.backendPath + 'finishReservation', {listObj: listObj})
+            .map(res => res.json());
+    }
+
     checkAuth(pin: string): Observable<any> {
         return this.http.post(this.backendPath + 'checkPin', {pin: pin})
             .map(res => res.json());
@@ -76,8 +81,8 @@ export class PostsService {
                         .map(res => res.json());
     }
 
-    setConfig(config): Observable<any> {
-        return this.http.post(this.backendPath + 'setConfig', {config: config})
+    setConfig(config, shouldReload = false): Observable<any> {
+        return this.http.post(this.backendPath + 'setConfig', {config: config, shouldReload: shouldReload})
             .map(res => res.json());
     }
 
