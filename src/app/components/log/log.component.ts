@@ -11,7 +11,7 @@ import { PostsService } from '../../posts.services';
 export class LogComponent implements OnInit {
 
   displayedColumns = ['name', 'machine', 'endDate', 'actions'];
-  dataSource: MatTableDataSource<Element>;
+  dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -22,11 +22,24 @@ export class LogComponent implements OnInit {
 
   @Input() config;
 
+  // MatPaginator Inputs
+  length = 100;
+  @Input() pageSize = 10;
+  pageSizeOptions: number[] = [5, 10, 25, 100];
+
+  // MatPaginator Output
+  pageEvent: PageEvent;
+
 
   constructor(public postsService: PostsService, public snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.getArray();
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   sendEmailAlert(user, alertObject) {
@@ -47,8 +60,11 @@ export class LogComponent implements OnInit {
    * be able to query its view for the initialized paginator and sort.
    */
   afterGetData() {
-    this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+  }
+
+  setPageSizeOptions(setPageSizeOptionsInput: string) {
+    this.pageSizeOptions = setPageSizeOptionsInput.split(',').map(str => +str);
   }
 
   applyFilter(filterValue: string) {
@@ -71,7 +87,7 @@ export class LogComponent implements OnInit {
         }
 
         // Assign the data to the data source for the table to render
-        this.dataSource = new MatTableDataSource(filteredData);
+        this.dataSource.data = filteredData;
 
         this.afterGetData();
 

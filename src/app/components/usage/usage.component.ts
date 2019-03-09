@@ -17,6 +17,7 @@ export class UsageComponent {
   @Input() list: any[];
 
   @Input() canRemoveFromUsageList: boolean;
+  @Input() canFinishReservation: boolean;
   @Input() MACHINES_LIST: any;
 
   @Input() machineAvailability: any;

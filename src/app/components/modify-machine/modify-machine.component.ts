@@ -23,7 +23,7 @@ export class ModifyMachineComponent implements OnInit {
   }
 
   set allowedMachinesTransferInput(val) {
-    console.log('set');
+    // console.log('set');
     this._allowedMachinesTransferInput = val;
   }
 
@@ -127,8 +127,8 @@ export class ModifyMachineComponent implements OnInit {
       this.iconInput = newMachine.icon;
       this.emailSubjectInput = newMachine.email.subject;
       this.emailTextInput = newMachine.email.text;
-      console.log('ran');
-      //this.allowedMachinesTransferInput = JSON.stringnewMachine.allowedMachinesTransfer;
+      // console.log('ran');
+      // this.allowedMachinesTransferInput = JSON.stringnewMachine.allowedMachinesTransfer;
 
       if (newMachine.minuteOptions) {
         this.minuteOptionsInput = newMachine.minuteOptions.slice();

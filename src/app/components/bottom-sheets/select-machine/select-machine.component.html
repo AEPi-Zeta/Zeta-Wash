@@ -3,6 +3,8 @@
     <span *ngIf="!machine['inUse']">
       <button (click)="openTimeSelectBottomSheet(machine)" mat-list-item>
         <h4 mat-line>{{machine.longName}}</h4>
+        <span *ngIf="!MACHINES_LIST[machine.singularName]['useOptions']" mat-line>Time: {{MACHINES_LIST[machine.singularName]['default_minutes']}} minutes</span>
+        <span *ngIf="MACHINES_LIST[machine.singularName]['useOptions']" mat-line>Click to select time</span>
       </button> 
     </span>
   </span>

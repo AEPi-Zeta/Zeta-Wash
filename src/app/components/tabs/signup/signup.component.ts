@@ -33,6 +33,7 @@ export class SignupComponent implements OnInit {
   @Input() MACHINES_LIST: any;
 
   @Input() canRemoveFromUsageList: boolean;
+  @Input() canFinishReservation: boolean;
 
   @Input() machineAvailability: any;
 

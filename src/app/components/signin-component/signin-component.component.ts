@@ -77,6 +77,7 @@ export class SigninComponentComponent implements OnChanges {
   @Output() configChange = new EventEmitter();
 
   @Input() canRemoveFromUsageList: boolean;
+  @Input() canFinishReservation: boolean;
 
   @Input() machineAvailability: any;
 

@@ -27,7 +27,6 @@ export class SelectTimeComponent implements OnInit {
 
     this.postsService = this.data['postsService'];
 
-    console.log(this.MACHINES_LIST[this.specificMachine.singularName]);
   }
 
   addToList(queueObj) {
@@ -69,8 +68,23 @@ export class SelectTimeComponent implements OnInit {
     if (parseInt(sec, 10) < 10) { sec = '0' + sec; }
     if (parseInt(hour, 10) < 10) { hour = '0' + hour; }
     if (parseInt(min, 10) < 10) { min = '0' + min; }
-    const time = hour + ':' + min + ':' + sec + ' ' + date + ' ' + month + ' ' + year ;
+    const time = (parseInt(hour, 10) % 12).toString() + ':' + min + ' ' + (parseInt(hour, 10) > 11 ? 'PM' : 'AM');
     return time;
+  }
+
+  getEndDate(minutes) {
+    const startTime = Math.round((new Date()).getTime() / 1000);
+    let endTime;
+
+    /*if (!this.isOnlyQueue) {
+      endTime = startTime + minutes * 60;
+    } else {
+      endTime = null;
+    }*/
+
+    endTime = startTime + minutes * 60;
+    const date = this.timeConverter(endTime);
+    return date;
   }
 
 }

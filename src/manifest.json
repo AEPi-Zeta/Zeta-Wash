@@ -1,11 +1,11 @@
 {
-  "name": "zeta-wash",
-  "short_name": "zeta-wash",
+  "name": "Zeta Wash",
+  "short_name": "Wash",
   "theme_color": "#1976d2",
   "background_color": "#fafafa",
   "display": "standalone",
   "scope": "/",
-  "start_url": "/",
+  "start_url": "./",
   "icons": [
     {
       "src": "assets/icons/icon-64x64.png",

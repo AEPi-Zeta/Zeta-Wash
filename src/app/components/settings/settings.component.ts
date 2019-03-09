@@ -46,6 +46,7 @@ export class SettingsComponent implements OnInit {
   requirePinForSettingsInput: boolean;
   logAdminOnlyInput: boolean;
   removeMachineAdminOnlyInput: boolean;
+  finishReservationAdminOnlyInput: boolean;
   customUsersListInput: boolean;
   forceCustomUsersListInput: boolean;
   alertServiceInput: string;
@@ -75,9 +76,16 @@ export class SettingsComponent implements OnInit {
   setValuesFromConfigAndAuth(configToUse) {
     const newConfig = configToUse;
     this.titleInput = newConfig.Extra.titleTop;
+
     this.requirePinForSettingsInput = newConfig.Users.requirePinForSettings;
     this.logAdminOnlyInput = newConfig.Users.logAdminOnly;
     this.removeMachineAdminOnlyInput = newConfig.Users.removeMachineAdminOnly;
+    if (newConfig.Users.finishReservationAdminOnly) { // defaults value if it doesn't exist
+      this.finishReservationAdminOnlyInput = newConfig.Users.finishReservationAdminOnly;
+    } else {
+      this.finishReservationAdminOnlyInput = false;
+    }
+
     this.customUsersListInput = newConfig.Users.customUsersList;
     this.forceCustomUsersListInput = newConfig.Users.forceCustomUsersList;
     this.alertServiceInput = newConfig.Users.alertService;
@@ -118,6 +126,7 @@ export class SettingsComponent implements OnInit {
     newConfig.Users.requirePinForSettings = this.requirePinForSettingsInput;
     newConfig.Users.logAdminOnly = this.logAdminOnlyInput;
     newConfig.Users.removeMachineAdminOnly = this.removeMachineAdminOnlyInput;
+    newConfig.Users.finishReservationAdminOnly = this.finishReservationAdminOnlyInput;
     newConfig.Users.customUsersList = this.customUsersListInput;
     newConfig.Users.forceCustomUsersList = this.forceCustomUsersListInput;
     newConfig.Users.alertService = this.alertServiceInput;

@@ -30,7 +30,7 @@
                         </span>
                       </ng-template>
                     </mat-menu>
-                    <span *ngIf="MACHINES_LIST[machine]['useOptions'] || useOptionsToMove; else nooptions"> <!--Change to &&-->
+                    <span *ngIf="MACHINES_LIST[machine]['useOptions']; else nooptions">
                       <button [disabled]="specificMachine['inUse']" [matMenuTriggerFor]="optionsmenu" mat-menu-item>{{specificMachine.longName}}</button>
                     </span>
                     <ng-template #nooptions>
@@ -61,7 +61,7 @@
                   Notify
                 </span>
               </button>
-              <button (click)="finishReservation(user)" mat-menu-item>
+              <button *ngIf="canFinishReservation" (click)="finishReservation(user)" mat-menu-item>
                 <mat-icon>done</mat-icon>
                 <span>
                   Finish

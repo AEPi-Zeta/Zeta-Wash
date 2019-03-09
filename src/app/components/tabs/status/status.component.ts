@@ -25,6 +25,7 @@ export class StatusComponent implements OnInit { // parent component solely for 
   @Input() list: any[];
 
   @Input() canRemoveFromUsageList: boolean;
+  @Input() canFinishReservation: boolean;
   @Input() MACHINES_LIST: any;
 
   @Input() machineAvailability: any;

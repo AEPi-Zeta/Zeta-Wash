@@ -39,6 +39,7 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
 import { SelectMachineComponent } from './components/bottom-sheets/select-machine/select-machine.component';
 import { SelectTimeComponent } from './components/bottom-sheets/select-time/select-time.component';
 import { MatBottomSheetModule } from '@angular/material';
+import { ModifyUsersComponent } from './components/modify-users/modify-users.component';
 
 @NgModule({
   declarations: [
@@ -58,7 +59,8 @@ import { MatBottomSheetModule } from '@angular/material';
     EmptyComponent,
     ConfirmDialogComponent,
     SelectMachineComponent,
-    SelectTimeComponent
+    SelectTimeComponent,
+    ModifyUsersComponent
   ],
   imports: [
     BrowserModule,

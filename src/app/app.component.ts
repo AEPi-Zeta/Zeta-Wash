@@ -28,6 +28,7 @@ export class AppComponent implements OnInit {
   queue: any[];
   machine: string;
   machineAvailability: object = null;
+  document = document;
   defaultTab = 0;
   tempBlockNavigation = false;
   _selectedIndex: any;
@@ -74,6 +75,7 @@ export class AppComponent implements OnInit {
   authReached = false;
   afterAuthFinished = false;
   canRemoveFromUsageList: boolean;
+  canFinishReservation: boolean;
   compactMode: boolean;
 
   config = null;
@@ -114,7 +116,8 @@ export class AppComponent implements OnInit {
 
       this.MACHINES_LIST = this.config.Machines.List;
 
-      this.canRemoveFromUsageList = !this.config.removeMachineAdminOnly;
+      this.canRemoveFromUsageList = !this.config.Users.removeMachineAdminOnly;
+      this.canFinishReservation = !this.config.Users.finishReservationAdminOnly;
       this.forceCustomUsersList = this.config.Users.forceCustomUsersList;
 
       this.compactMode = this.config.Extra.compactMode;
@@ -382,6 +385,7 @@ export class AppComponent implements OnInit {
       this.auth = res.auth;
       this.isAuthenticated = true;
       this.canRemoveFromUsageList = true;
+      this.canFinishReservation = true;
       const snackBarRef = this.snackBar.open('Logged in!', 'Close', {
         duration: 2000
       });
