@@ -61,9 +61,10 @@ let mailOptions;
 let users;
 let emailUser;
 
+var auth_json = JSON.parse(fs.readFileSync('./config/auth.json', 'utf8'));
+
 if (useCustomUsersList) {
     var users_json = JSON.parse(fs.readFileSync('./config/users.json', 'utf8'));
-    var auth_json = JSON.parse(fs.readFileSync('./config/auth.json', 'utf8'));
 
     users = users_json['users'];
     alertService = config.get("ZetaWash.Users.alertService");
@@ -241,6 +242,32 @@ app.post('/checkPin', (req, res) => {
 
     res.end("yes");
 })
+
+app.post('/getUsers', (req, res) => {
+    var users_json = JSON.parse(fs.readFileSync('./config/users.json', 'utf8'));
+
+    res.send({ 
+        opCode: '200',
+        users: users_json,
+     });
+
+     res.end("yes");
+})
+
+app.post('/setUsers', (req, res) => {
+    var newUsers = req.body.users;
+    fs.writeFileSync('config/users.json', JSON.stringify(newUsers, null, 4), 'utf8', function (error) {
+        if (error) {
+            console.log("Error on writing to users file!");
+        }
+    });
+
+    res.send({
+        opCode: '200'
+    });
+    console.log("users set!");
+    res.end("yes");
+});
 
 app.post('/getAuth', (req, res) => {
     var auth_json = JSON.parse(fs.readFileSync('./config/auth.json', 'utf8'));
@@ -577,7 +604,7 @@ function reloadConfig() {
     useEncryption = config.get("ZetaWash.Encryption.useEncryption");
     useCustomUsersList = config.get("ZetaWash.Users.customUsersList");
     machines = config.get("ZetaWash.Machines.List")
-    console.log(config.get("ZetaWash.Machines.List"));
+    // console.log(config.get("ZetaWash.Machines.List"));
     dbsToCheck = [];
     for (const machine in machines) { // creates db template and query string configuration
         if (machine) {
