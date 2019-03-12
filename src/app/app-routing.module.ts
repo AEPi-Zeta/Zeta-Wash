@@ -9,20 +9,23 @@ const appRoutes: Routes = [
     component: EmptyComponent,
     children: [
       { path: 'log', component: EmptyComponent },
-      { path: 'auth', component: EmptyComponent }
+      { path: 'auth', component: EmptyComponent },
+      { path: 'users', component: EmptyComponent }
     ]
   },
   { path: 'status',
     component: EmptyComponent,
     children: [
       { path: 'log', component: EmptyComponent },
-      { path: 'auth', component: EmptyComponent }
+      { path: 'auth', component: EmptyComponent },
+      { path: 'users', component: EmptyComponent }
     ]
   },
   { path: 'log',
     component: EmptyComponent,
     children: [
-      { path: 'auth', component: EmptyComponent }
+      { path: 'auth', component: EmptyComponent },
+      { path: 'users', component: EmptyComponent }
     ]
   },
   { path: '',   redirectTo: '/reserve', pathMatch: 'full' },

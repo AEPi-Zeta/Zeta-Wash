@@ -26,6 +26,8 @@ export class HeaderComponent implements OnInit, OnChanges {
 
   @Input() compactMode: boolean;
 
+  @Input() users: any[];
+
   logAdminOnly = true;
 
   constructor(public dialog: MatDialog, private router: Router, private route: ActivatedRoute) {
@@ -69,6 +71,10 @@ export class HeaderComponent implements OnInit, OnChanges {
 
   openModifySettings() {
     this.router.navigate([this.router.url + '/settings']);
+  }
+
+  openModifyUsers() {
+    this.router.navigate([this.router.url + '/users']);
   }
 
 }

@@ -34,6 +34,9 @@
               <button (click)="this.openModifySettings()" mat-menu-item>Settings</button>
             </span>
             <span *ngIf="!requirePinForSettings || isAuthenticated">
+              <button (click)="this.openModifyUsers()" mat-menu-item>Users</button>
+            </span>
+            <span *ngIf="!requirePinForSettings || isAuthenticated">
               <button (click)="this.openModifyMachines()" mat-menu-item>Modify Machines</button>
             </span>
           </mat-menu>

@@ -24,6 +24,13 @@ const DIALOG_CONFIGS = {
             title: 'Settings'
         }
     },
+    UsersDialog: {
+        width: '1200px',
+        data: {
+            id: 21,
+            title: 'Users'
+        }
+    },
     ModifyMachineDialog: {
         height: '400px',
         width: '600px'

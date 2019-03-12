@@ -13,6 +13,7 @@ import { SettingsComponent } from './components/settings/settings.component';
 import { ModifyMachineComponent } from './components/modify-machine/modify-machine.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { isDevMode } from '@angular/core';
+import { ModifyUsersComponent } from './components/modify-users/modify-users.component';
 
 @Component({
   selector: 'app-root',
@@ -36,6 +37,7 @@ export class AppComponent implements OnInit {
   openModifyMachinesDialog: any;
   openAddMachineDialog: any;
   logoutDialogContent = 'Are you sure you want to log out? You will need to sign in manually next time.';
+  openUsersDialog: boolean;
   get selectedIndex(): any {
     return this._selectedIndex;
   }
@@ -108,8 +110,16 @@ export class AppComponent implements OnInit {
     public snackBar: MatSnackBar, private router: Router, private route: ActivatedRoute,
     location: PlatformLocation) { // init for the beginning of the app
     const queueType = 'both';
-    this.postsService.getConfig(isDevMode()).subscribe(result => { // loads settings
-      this.config = result.ZetaWash;
+    const status = {};
+    this.postsService.getConfig(isDevMode(), status).subscribe(result => { // loads settings
+      // console.log(result.config);
+      if (isDevMode()) {
+        if (!status['res']) { console.log('no res!'); }
+        this.config = result.config.ZetaWash;
+      } else {
+        this.config = result.config.ZetaWash;
+      }
+
       this.topBarTitle = this.config.Extra.titleTop;
       this.useQueue = this.config.Machines.useQueue;
       this.postsService.backendPath = this.config.Host.backendURL;
@@ -135,10 +145,10 @@ export class AppComponent implements OnInit {
         });
       });
 
-      if (result.ZetaWash.Users.requirePinForSettings) {
+      if (this.config.Users.requirePinForSettings) {
         this.authReached = true;
-        this.pinSet = result.ZetaWash.Users.pinSet;
-        this.requirePinForSettings = result.ZetaWash.Users.requirePinForSettings;
+        this.pinSet = this.config.Users.pinSet;
+        this.requirePinForSettings = this.config.Users.requirePinForSettings;
 
         if (localStorage.getItem('pin')) {
           this.getAuth();
@@ -147,7 +157,7 @@ export class AppComponent implements OnInit {
         this.getAuth();
       }
 
-      if (result.ZetaWash.Users.customUsersList) {
+      if (this.config.Users.customUsersList) {
         this.postsService.getUsers().subscribe(res => {
           this.users = res.users;
           this.users.sort(function(a, b) { // properly sorts emails in alphabetical order
@@ -246,6 +256,8 @@ export class AppComponent implements OnInit {
           if (this.isAuthenticated) { this.rootOpenModifySettings(); } else { this.openSettingsDialog = true; }
         } else if (secondElement === 'machines') {
           if (this.isAuthenticated) { this.rootOpenModifyMachines(); } else { this.openModifyMachinesDialog = true; }
+        } else if (secondElement === 'users') {
+          if (this.isAuthenticated) { this.rootOpenModifyUsers(); } else { this.openUsersDialog = true; }
         }
       }
 
@@ -399,6 +411,8 @@ export class AppComponent implements OnInit {
         if (this.openAddMachineDialog) {
           this.rootOpenAddMachine();
         }
+      } else if (this.openUsersDialog) {
+        this.rootOpenModifyUsers();
       }
     }, error => {
       const snackBarRef = this.snackBar.open('ERRROR: Failed to authenticate.', 'Close', {
@@ -534,6 +548,19 @@ export class AppComponent implements OnInit {
     instance.postsService = this.postsService;
     instance.config = this.config;
     instance.auth = this.auth;
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.router.navigate([consts.setURLElement(oldURL, 2, null)]);
+    });
+  }
+
+  rootOpenModifyUsers() {
+    const oldURL = this.router.url;
+    const dialogRef = this.dialog.open(ModifyUsersComponent, consts.DIALOG_CONFIGS.UsersDialog);
+
+    const instance = dialogRef.componentInstance;
+    instance.postsService = this.postsService;
+    instance.users = this.users;
 
     dialogRef.afterClosed().subscribe(result => {
       this.router.navigate([consts.setURLElement(oldURL, 2, null)]);

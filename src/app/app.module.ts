@@ -40,6 +40,7 @@ import { SelectMachineComponent } from './components/bottom-sheets/select-machin
 import { SelectTimeComponent } from './components/bottom-sheets/select-time/select-time.component';
 import { MatBottomSheetModule } from '@angular/material';
 import { ModifyUsersComponent } from './components/modify-users/modify-users.component';
+import { AddUsersComponent } from './components/add-users/add-users.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +61,8 @@ import { ModifyUsersComponent } from './components/modify-users/modify-users.com
     ConfirmDialogComponent,
     SelectMachineComponent,
     SelectTimeComponent,
-    ModifyUsersComponent
+    ModifyUsersComponent,
+    AddUsersComponent
   ],
   imports: [
     BrowserModule,
@@ -104,7 +106,9 @@ import { ModifyUsersComponent } from './components/modify-users/modify-users.com
     PinInputComponent,
     ConfirmDialogComponent,
     SelectMachineComponent,
-    SelectTimeComponent
+    SelectTimeComponent,
+    ModifyUsersComponent,
+    AddUsersComponent
   ],
   providers: [
     PostsService,

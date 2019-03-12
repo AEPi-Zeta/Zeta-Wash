@@ -40,6 +40,11 @@ export class PostsService {
             .map(res => res.json());
     }
 
+    getUsersJSON(): Observable<any> {
+        return this.http.post(this.backendPath + 'getUsersJSON', {})
+            .map(res => res.json());
+    }
+
     addToList(listObj, onlyQueue): Observable<any> {
         return this.http.post(this.backendPath + 'addToList', {listObj: listObj, onlyQueue: onlyQueue})
             .map(res => res.json());
@@ -70,19 +75,39 @@ export class PostsService {
             .map(res => res.json());
     }
 
-    getConfig(getDev = false) {
-        let url = window.location.origin + '/';
-        const extra_url = 'backend/config/default.json';
-        url += extra_url;
-        if (getDev) {
-            url = 'http://localhost:4200/assets/dev_config.json';
-        }
-        return this.http.get(url)
-                        .map(res => res.json());
+    getConfig(getDev = false, status: any): Observable<any> {
+        return new Observable(obs => {
+            let url = window.location.origin + '/';
+            const extra_url = 'backend/config/default.json';
+            url += extra_url;
+            if (getDev) {
+                url = 'http://localhost:4200/assets/dev_config.json';
+                this.http.get(url).map(res => res.json()).subscribe(res => {
+                    this.backendPath = res.ZetaWash.Host.backendURL;
+                        const new_url = this.backendPath + 'getConfig';
+                        this.http.post(new_url, {time: new Date().getTime()})
+                            .map(inner_res => inner_res.json()).subscribe(inner_inner_res => { status['res'] = inner_inner_res;
+                            obs.next(inner_inner_res); });
+                });
+            } else {
+                this.http.get(url).map(res => res.json()).subscribe(res => {
+                        this.backendPath = res.ZetaWash.Host.backendURL;
+                        const new_url = this.backendPath + 'getConfig';
+                        this.http.post(new_url, {time: new Date().getTime()})
+                            .map(inner_res => inner_res.json()).subscribe(inner_inner_res => { status['res'] = inner_inner_res;
+                            obs.next(inner_inner_res); });
+                });
+            }
+        });
     }
 
     setConfig(config, shouldReload = false): Observable<any> {
         return this.http.post(this.backendPath + 'setConfig', {config: config, shouldReload: shouldReload})
+            .map(res => res.json());
+    }
+
+    setUsers(users): Observable<any> {
+        return this.http.post(this.backendPath + 'setUsers', {users: users})
             .map(res => res.json());
     }
 

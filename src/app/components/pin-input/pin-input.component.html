@@ -3,9 +3,14 @@
 <br/>
 
 <form (submit)="closeDialog()" action="#">
-    <table style="height: 70% !important; width: 100% !important">
-        <tr style="height: 70% !important">
-            <input matInput class="form-control" name="pin" type="number" [(ngModel)]="pinInput">
+    <table>
+        <tr>
+            <mat-form-field appearance="outline">
+                <mat-label>Input your pin</mat-label>
+                <input matInput name="pin" type="number" [(ngModel)]="pinInput" placeholder="Pin">
+                <mat-icon matSuffix>lock</mat-icon>
+                <mat-hint>Example: "1234"</mat-hint>
+            </mat-form-field>
         </tr>
         <br/>
         <br/>

@@ -1,0 +1,103 @@
+<div *ngIf="dataSource; else loading">
+  <mat-dialog-content>
+    <mat-card>
+      <div class="row">
+        <div class="table table-responsive p-5">
+          <div class="example-header">
+            <mat-form-field>
+              <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+            </mat-form-field>
+          </div>
+          
+          <div class="example-container mat-elevation-z8">
+          
+            <mat-table #table [dataSource]="dataSource" matSort>
+          
+              <!-- Name Column -->
+              <ng-container matColumnDef="name">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+
+                <mat-cell *matCellDef="let row">
+                  <span *ngIf="editObject && editObject.name === row.name; else noteditingname">
+                    <span style="width: 80%;">
+                      <mat-form-field>
+                          <input matInput [(ngModel)]="constructedObject.name" type="text" style="font-size: 12px">
+                      </mat-form-field>
+                    </span>
+                  </span>
+                  <ng-template #noteditingname>
+                    {{row.name}} 
+                  </ng-template>
+                </mat-cell>
+              </ng-container>
+          
+              <!-- Email Column -->
+              <ng-container matColumnDef="email">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Email </mat-header-cell>
+                <mat-cell *matCellDef="let row">
+                    <span *ngIf="editObject && editObject.name === row.name; else noteditingemail">
+                      <span style="width: 80%;">
+                        <mat-form-field>
+                            <input matInput [(ngModel)]="constructedObject.email" type="text" style="font-size: 12px">
+                        </mat-form-field>
+                      </span>
+                    </span>
+                    <ng-template #noteditingemail>
+                      {{row.email}} 
+                    </ng-template>
+                </mat-cell>
+              </ng-container>
+
+              <!-- Actions Column -->
+              <ng-container matColumnDef="actions">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Actions </mat-header-cell>
+                <mat-cell *matCellDef="let row">
+                  <span *ngIf="editObject && editObject.name === row.name; else notediting">
+                    <button mat-icon-button color="primary" (click)="finishEditing(row.name)"  matTooltip="Finish editing user">
+                      <mat-icon>done</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="disableEditMode()" matTooltip="Cancel editing user">
+                      <mat-icon>cancel</mat-icon>
+                    </button>
+                  </span>
+                  <ng-template #notediting>
+                    <button mat-icon-button (click)="enableEditMode(row.name)" matTooltip="Edit user">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                  </ng-template>
+                  <button mat-icon-button [disabled]="editObject && editObject.name === row.name" (click)="removeUser(row.name)" matTooltip="Delete user">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </mat-cell>
+              </ng-container>
+          
+              <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumns;">
+              </mat-row>
+            </mat-table>
+          
+            <mat-paginator #paginator [length]="length"
+                  [pageSize]="pageSize"
+                  [pageSizeOptions]="pageSizeOptions">
+            </mat-paginator>
+
+            <button color="primary" [disabled]="!this.users" mat-raised-button (click)="openAddUsersDialog()" style="float: left; top: -50px; left: 15px">
+                Add Users
+              </button>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </mat-dialog-content>
+  <mat-dialog-actions style="padding-top: 10px;">
+    <button mat-raised-button (click)="closeDialog()" type="submit" color="primary">
+        Done <mat-icon>done</mat-icon>
+    </button>
+  </mat-dialog-actions>
+</div>
+  
+  <div style="position: absolute" class="centered">
+    <ng-template #loading>
+      <mat-spinner></mat-spinner>
+    </ng-template>
+  </div>

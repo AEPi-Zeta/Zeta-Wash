@@ -1,0 +1,39 @@
+<mat-dialog-content>
+  <div *ngIf="users">
+    <mat-card style="padding-top: 30px; padding-left: 30px; padding-right: 30px; padding-bottom: 30px" class="big demo-basic">
+      <span style="display: inline-block; position: relative; left: -16px">
+        <button [disabled]="users_to_add_count < 1" mat-icon-button (click)="this.decrementUsersToAddCount()"><mat-icon>remove_circle</mat-icon></button>
+        &nbsp;&nbsp;
+        <mat-form-field style="width: 150px;" class="example-full-width">
+          <input matInput [disabled]="true" placeholder="Amount to add" [(ngModel)]="users_to_add_count" type="number">
+          <mat-error>Please input a valid entry.</mat-error>
+        </mat-form-field>
+        &nbsp;&nbsp;
+        <button mat-icon-button (click)="this.incrementUsersToAddCount()"><mat-icon>add_circle</mat-icon></button>
+      </span>
+
+      <div class="table table-responsive p-5">
+        <div *ngFor="let user of users_to_add" class="row">
+          <div class="col">
+            <mat-form-field>
+              <input matInput required [(ngModel)]="user.name" placeholder="Name" type="text">
+              <mat-error>Please input a valid entry.</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col">
+            <mat-form-field>
+              <input matInput required [(ngModel)]="user.email" placeholder="Email" type="email" email>
+              <mat-error>Please input a valid email.</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button mat-raised-button [disabled]="!canAddUsers() || users_to_add_count === 0" (click)="addUsers()" type="submit" color="primary">
+        Confirm <mat-icon>done</mat-icon>
+    </button>
+</mat-dialog-actions>
